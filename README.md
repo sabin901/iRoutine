@@ -1,602 +1,489 @@
-# iRoutine - Personal Life Operating System
+# iRoutine
 
-A comprehensive system that helps you understand, manage, and improve your daily life across **Time, Money, Energy, Focus, Planning, and Reflection**.
+**A personal life operating system that helps you understand why your days go the way they do — and improve them without burning out.**
 
-## 🎯 Mission
-
-This is not just a task manager, finance tracker, or habit app. This is a **personal feedback system** that explains why days go well or badly, and guides the next small improvement.
-
-**Core Promise**: "Understand why your days go the way they do — and improve them without burning out."
-
-**Philosophy**: Reflect reality honestly, explain patterns simply, suggest the next best action gently. No guilt. No pressure. No noise.
+Most productivity apps tell you what to do. iRoutine helps you understand what actually happened, why it happened, and what small change might make tomorrow better. It's not another task manager or habit tracker. It's a feedback system for your life.
 
 ---
 
-## ✨ Features
+## The Problem I Built This To Solve
 
-### 🕐 Time & Focus (Execution Reality)
-- ✅ **Activity Tracking** - Track actual activities with start/end time
-- ✅ **Interruption Tracking** - Type, time, frequency tracking
-- ✅ **Deep vs Shallow Work** - Classify work types
-- ✅ **Planned vs Actual** - Compare planned time with reality
-- ✅ **Focus Breakdown** - Identify where focus breaks down
-- ✅ **Today Timeline** - Interactive visual timeline
-- ✅ **Focus Heatmap** - Visual pattern of when you focus best
+Ever have one of those days where everything just... works? And then the next day, nothing does? I wanted to understand why. Not just track tasks or habits in isolation, but see how time, money, energy, focus, and planning all connect.
 
-### 💰 Finances & Security (Daily Money Reality)
-- ✅ **Income & Expense Tracking** - Manual-first transaction logging
-- ✅ **Category Management** - Organize by income/expense categories
-- ✅ **Monthly Budgets** - Set spending limits per category
-- ✅ **Savings Goals** - Track progress toward financial goals
-- ✅ **Recurring Transactions** - Manage subscriptions and bills
-- ✅ **Emotional Money Layer** - Track intent (planned/unplanned), emotion, "worth it?"
-- ✅ **Financial Summaries** - Monthly overview with budget status
-- ✅ **Safe-to-Spend Awareness** - Daily spending insights
+Traditional apps treat these as separate domains. But they're not. When you're low on energy, you spend more money on convenience. When you're interrupted constantly, tasks don't get done. When you overplan, reality feels like failure.
 
-### ⚡ Energy & Momentum (Missing Variable)
-- ✅ **Daily Energy Tracking** - Energy level (1-5), stress level (1-5)
-- ✅ **Mood Tracking** - Optional mood logging
-- ✅ **Sleep Hours** - Track sleep patterns
-- ✅ **Energy Cost Classification** - Light/medium/heavy for activities and tasks
-- ✅ **Energizing vs Draining** - Classify activities by energy impact
-- ✅ **Energy-Aware Insights** - Correlate energy with performance
+iRoutine connects the dots. It shows you patterns you wouldn't see otherwise, explains them simply, and suggests the next best action—without the guilt, pressure, or noise that most productivity apps add.
 
-### 📅 Planning (Daily & Weekly)
-- ✅ **Daily Planning** - Top 3 priorities, time blocks
-- ✅ **Weekly Planning** - Weekly goals, workload distribution
-- ✅ **Task Management** - Priority, status, due dates
-- ✅ **Energy-Aware Suggestions** - Match tasks to energy levels
-- ✅ **Task Avoidance Detection** - Identify postponed tasks
-- ✅ **Smart Task Breakdown** - Suggest breaking down large tasks
-- ✅ **Auto-Rollover** - Intelligent task carryover
+---
 
-### 🔄 Habits & Behavior Change
-- ✅ **Habit Definition** - Name, frequency, target count
-- ✅ **Daily Habit Logging** - Track completion
-- ✅ **Streak Tracking** - Current and best streaks
-- ✅ **Flexible Completion** - "Bad-day version" support
-- ✅ **Habit-Outcome Correlation** - Link habits to results
+## What Makes This Different
 
-### 🎯 Goals & Direction
-- ✅ **Long-Term Goals** - Categories, milestones, progress
-- ✅ **Progress Tracking** - 0-100% progress with milestones
-- ✅ **Goal Status** - Active, completed, paused, abandoned
-- ✅ **Goal Inactivity Detection** - Identify stalled goals
+### It's Actually Explainable
 
-### 📝 Reflection & Awareness (Critical)
-- ✅ **Daily Reflection** (≤2 min) - What worked? What didn't? Why? One adjustment
-- ✅ **Weekly Review** - Time vs plan, money vs budget, energy vs workload
-- ✅ **Monthly Review** - Trends, stability, burnout signals, financial progress
+No black-box AI that just tells you "you're less productive on Tuesdays." Every insight shows you the math. The interruption cost model? It's `duration × type_weight × context_weight`—and you can see exactly why that social media break during deep work cost you more than a quick phone call.
 
-### 🔗 Cross-Domain Intelligence (Unfair Advantage)
-- ✅ **Time ↔ Money** - Correlate busy days with spending
-- ✅ **Energy ↔ Spending** - Low energy → higher spending insights
-- ✅ **Interruptions ↔ Task Failure** - Impact of interruptions on completion
-- ✅ **Planning ↔ Reality Gaps** - Identify overplanning patterns
-- ✅ **Visual Dashboards** - Charts and graphs for all correlations
-- ✅ **Deterministic Insights** - No AI, just clear data analysis
+### It Connects Everything
 
-### Advanced Analytics (AI-Powered)
-- ✅ **AI Pattern Detection** - Automatically discovers behavioral patterns (5+ types)
-- ✅ **Productivity Curve** - 24-hour analysis with quality scoring
-- ✅ **Smart Recommendations** - Personalized action items based on your data
-- ✅ **Interruption Metrics Engine** - Deep analytics on interruptions
-- ✅ **Cost Score Calculation** - Explainable cost model (duration × type × context)
-- ✅ **Recovery Time Analysis** - Time to resume focus after interruptions
-- ✅ **Interruption Heatmap** - Visual pattern by day/hour (minutes or cost view)
-- ✅ **Focus Heatmap** - When and where you focus best
-- ✅ **Focus Quality Score** - 0-100 quality metric per session
-- ✅ **"What Changed This Week?"** - Auto-generated weekly comparison
-- ✅ **Streaks Tracking** - Current and longest activity streaks
-- ✅ **Achievements System** - 5 unlockable achievements with progress
-- ✅ **Category Breakdown** - Pie chart and detailed time distribution
+This is the unfair advantage: cross-domain intelligence. See how your busy days correlate with spending. Understand why low energy leads to impulse purchases. Discover how interruptions actually impact task completion. Most apps can't do this because they silo your data. iRoutine doesn't.
+
+### It Respects Your Time
+
+Daily reflection takes 2 minutes. Weekly reviews are automatic. Monthly insights just appear. No endless logging, no gamification pressure, no notifications begging for attention. Just clean data and clear insights.
+
+---
+
+## Features
+
+### Time & Focus Tracking
+
+Track what you actually do, not just what you plan. See your day as a timeline, identify when focus breaks down, and understand your productivity patterns. The system tracks activities, interruptions, deep vs shallow work, and compares your plans to reality.
+
+**Key Features:**
+- Activity tracking with start/end times
+- Interruption logging (type, duration, context)
+- Focus heatmaps showing when you work best
+- Planned vs actual time comparison
+- Interactive daily timeline
+
+### Financial Tracking with Emotional Context
+
+Money isn't just numbers. It's emotional. iRoutine tracks not just what you spent, but whether it was planned, how you felt about it, and whether it was worth it. This emotional layer helps you understand spending patterns that pure budgeting misses.
+
+**Key Features:**
+- Income and expense tracking
+- Category management and monthly budgets
+- Savings goals with progress tracking
+- Recurring transaction management
+- Emotional money layer (intent, emotion, "worth it?")
+- Safe-to-spend daily insights
+
+### Energy & Momentum Tracking
+
+Energy is the missing variable in most productivity systems. Track your energy levels, stress, mood, and sleep—then see how they correlate with everything else. Match tasks to your energy levels. Understand what drains you and what energizes you.
+
+**Key Features:**
+- Daily energy and stress tracking (1-5 scale)
+- Mood logging
+- Sleep hour tracking
+- Energy cost classification for activities
+- Energy-aware task suggestions
+
+### Smart Planning
+
+Plan your day and week with energy awareness. The system suggests which tasks match your current energy level, detects when you're avoiding something, and helps break down large tasks. Tasks intelligently roll over when needed.
+
+**Key Features:**
+- Daily planning (top 3 priorities, time blocks)
+- Weekly planning and goal setting
+- Task management with priorities and due dates
+- Energy-aware task matching
+- Task avoidance detection
+- Smart task breakdown suggestions
+
+### Habits & Goals
+
+Track habits with flexibility—because some days you need a "bad-day version" of your habit. Set long-term goals with milestones and see real progress. The system correlates habits with outcomes so you know what actually works.
+
+**Key Features:**
+- Habit definition and daily logging
+- Streak tracking (current and best)
+- Flexible completion (bad-day versions)
+- Long-term goals with milestones
+- Goal inactivity detection
+- Habit-outcome correlation
+
+### Reflection & Awareness
+
+The most important feature: reflection. Daily 2-minute reflections, weekly reviews, and monthly insights help you learn from your data. What worked? What didn't? Why? What's one small adjustment for tomorrow?
+
+**Key Features:**
+- Daily reflection (≤2 minutes)
+- Weekly review (time vs plan, money vs budget, energy vs workload)
+- Monthly review (trends, stability, burnout signals)
+
+### Cross-Domain Intelligence
+
+This is where iRoutine shines. It connects time, money, energy, focus, and planning to show you patterns you'd never see otherwise.
+
+**Insights Include:**
+- Time ↔ Money: How busy days affect spending
+- Energy ↔ Spending: Low energy leads to higher spending
+- Interruptions ↔ Task Failure: The real cost of distractions
+- Planning ↔ Reality: When you overplan and why
+
+### Advanced Analytics
+
+Automatically discover behavioral patterns, see your 24-hour productivity curve, get personalized recommendations, and dive deep into interruption metrics. All with explainable calculations—no black boxes.
+
+**Analytics Features:**
+- AI pattern detection (5+ behavioral pattern types)
+- 24-hour productivity curve with quality scoring
+- Smart recommendations based on your data
+- Interruption metrics engine with cost calculations
+- Recovery time analysis
+- Interruption and focus heatmaps
+- Focus quality scores (0-100 per session)
+- "What Changed This Week?" auto-comparisons
+- Streaks and achievements system
+- Category breakdown visualizations
 
 ### Export & Reports
-- ✅ **CSV Export** - Complete data export with all fields
-- ✅ **PDF Weekly Report** - Professional one-page summary
+
+Export all your data as CSV or generate a professional one-page PDF weekly report.
 
 ---
 
-## 🏗️ Architecture
+## Tech Stack
 
-### System Overview
-
-```
-┌─────────────────┐
-│   Frontend      │  Next.js 14 (App Router)
-│   (Vercel)      │  React 18 + TypeScript
-└────────┬────────┘
-         │
-         │ HTTPS + JWT
-         │
-┌────────▼────────┐
-│   Backend       │  FastAPI (Python)
-│   (Render)      │  REST API
-└────────┬────────┘
-         │
-         │ PostgreSQL
-         │
-┌────────▼────────┐
-│   Supabase      │  Database + Auth
-│   (Cloud)       │  Row Level Security
-└─────────────────┘
-```
-
-### Project Structure
-
-```
-routine/
-├── frontend/              # Next.js + TypeScript + React
-│   ├── app/              # Next.js App Router pages
-│   │   ├── dashboard/    # Dashboard pages
-│   │   └── auth/         # Authentication pages
-│   ├── components/       # React components
-│   │   └── dashboard/    # Dashboard components
-│   ├── lib/              # Utilities and business logic
-│   │   ├── interruption-metrics.ts  # Metrics engine
-│   │   ├── pdf-export.ts            # PDF generation
-│   │   └── supabase/     # Supabase client
-│   └── __tests__/        # Unit tests
-├── backend/              # FastAPI + Python
-│   ├── app/              # Application code
-│   │   ├── core/         # Config, database, auth
-│   │   ├── routers/      # API endpoints
-│   │   ├── services/     # Business logic
-│   │   └── __tests__/    # Unit tests
-│   └── supabase/         # Database schema
-├── .github/
-│   └── workflows/        # CI/CD pipelines
-├── DOCUMENTATION.md      # Complete technical documentation
-├── SECURITY.md           # Security & time handling
-└── README.md             # This file
-```
-
----
-
-## 🎓 Engineering Decisions
-
-### Key Decisions
-
-1. **Explainable Analytics (Non-ML)**
-   - Simple, transparent calculations
-   - Users understand the logic
-   - No "black box" concerns
-   - See `DOCUMENTATION.md` for details
-
-2. **UTC Time Storage**
-   - All times stored in UTC (ISO 8601)
-   - Convert to user timezone for display
-   - Prevents timezone bugs and DST issues
-   - See `SECURITY.md` for time handling details
-
-3. **Interruption Cost Model**
-   - Formula: `duration × type_weight × context_weight`
-   - Explainable and adjustable
-   - Type weights: Social Media (1.4), Phone (1.2), Noise (1.0)
-   - Context weights: Early focus (1.3), Deep work (1.2)
-
-4. **Component Architecture**
-   - Feature-based organization
-   - Reusable components
-   - Clear separation of concerns
-
-5. **Testing Strategy**
-   - Unit tests for core logic
-   - Integration tests for components
-   - CI/CD pipeline for quality assurance
-
-**See `DOCUMENTATION.md` for detailed explanations of all decisions.**
-
----
-
-## 🛠️ Tech Stack
+I built this as a full-stack application to demonstrate modern web development practices:
 
 **Frontend:**
-- Next.js 14 (App Router)
-- React 18
-- TypeScript
-- Tailwind CSS
-- Recharts (visualizations)
-- Supabase Client
-- date-fns / date-fns-tz (time handling)
+- Next.js 14 (App Router) - Server-side rendering and routing
+- React 18 - Component architecture
+- TypeScript - Type safety throughout
+- Tailwind CSS - Utility-first styling
+- Recharts - Data visualizations
+- Supabase Client - Real-time database integration
+- date-fns / date-fns-tz - Robust time handling
 
 **Backend:**
-- Python 3.11+
-- FastAPI
-- Pydantic (validation)
-- Supabase Python Client
-- python-jose (JWT)
+- Python 3.11+ - Modern Python features
+- FastAPI - High-performance async API framework
+- Pydantic - Schema validation and data modeling
+- Supabase Python Client - Database operations
+- python-jose - JWT authentication
 
-**Database & Auth:**
-- Supabase (PostgreSQL)
-- Row Level Security (RLS)
-- Supabase Auth (JWT)
+**Database & Infrastructure:**
+- Supabase (PostgreSQL) - Managed database with Row Level Security
+- JWT Authentication - Secure token-based auth
+- Row Level Security (RLS) - User data isolation at the database level
 
-**Testing:**
-- Jest + React Testing Library (frontend)
-- pytest (backend)
-- GitHub Actions (CI/CD)
+**Testing & Quality:**
+- Jest + React Testing Library - Frontend unit and integration tests
+- pytest - Backend testing framework
+- GitHub Actions - CI/CD pipeline
+
+**Deployment:**
+- Vercel - Frontend hosting (optimized for Next.js)
+- Render/Fly.io - Backend hosting options
 
 ---
 
-## 🚀 Getting Started
+## Architecture
+
+The system follows a clean separation of concerns:
+
+```
+Frontend (Next.js) → Backend (FastAPI) → Database (Supabase/PostgreSQL)
+```
+
+**Frontend:** React components organized by feature, with shared utilities for API calls, time handling, and business logic. The interruption metrics engine lives here as a pure TypeScript module.
+
+**Backend:** RESTful API with FastAPI, organized into routers (activities, finances, planner, etc.), core services (auth, database, rate limiting), and business logic services.
+
+**Database:** PostgreSQL via Supabase with Row Level Security policies ensuring users can only access their own data.
+
+All times are stored in UTC and converted to user timezones for display—this prevents the timezone bugs that plague most apps.
+
+---
+
+## Key Engineering Decisions
+
+### 1. Explainable Analytics Over Machine Learning
+
+I chose transparent, calculable metrics over ML models. Users can see exactly how their interruption cost score is calculated (`duration × type_weight × context_weight`). This builds trust and helps users understand their data.
+
+### 2. UTC Time Storage
+
+All times stored in UTC (ISO 8601), converted to user timezone for display. This prevents timezone bugs, handles DST transitions automatically, and makes calculations reliable across timezones.
+
+### 3. Component-Based Architecture
+
+Feature-based organization with reusable components. Clear separation between UI components, business logic, and API integration. This makes the codebase maintainable and testable.
+
+### 4. Security First
+
+- JWT authentication via Supabase
+- Row Level Security at the database level
+- Rate limiting (100/min read, 30/min write)
+- Input validation with Pydantic schemas
+- CORS configuration
+- No hardcoded secrets
+
+### 5. Testing Strategy
+
+Unit tests for core calculation logic (metrics, cost models, time handling), integration tests for components, and CI/CD that runs on every push. This ensures quality and prevents regressions.
+
+---
+
+## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- Python 3.11+
+You'll need:
+- Node.js 18+ (for the frontend)
+- Python 3.11+ (for the backend)
 - npm or yarn
-- Git
+- A Supabase account (free tier works fine)
 
 ### Quick Start (Demo Mode)
 
+Want to see it in action without setting up Supabase? The frontend works in demo mode:
+
 ```bash
-# Frontend
 cd frontend
 npm install
 npm run dev
 ```
 
-Visit **http://localhost:3000** - Works without Supabase setup!
+Visit `http://localhost:3000` and explore the interface. It won't save data, but you can see how everything works.
 
-### Full Setup (With Supabase)
+### Full Setup
 
-**Quick Setup:**
-1. Run the complete schema in Supabase SQL Editor: `backend/supabase/complete_schema.sql`
-2. Environment variables are already configured in `.env` files
-3. Start both servers (see commands below)
+1. **Set up Supabase:**
+   - Create a project at [supabase.com](https://supabase.com)
+   - Run the complete schema: `backend/supabase/complete_schema.sql`
+   - Copy your project URL and anon key
 
-**Detailed Setup:**
-See `SUPABASE_SETUP.md` for step-by-step instructions.
+2. **Configure environment variables:**
+   - Frontend: Create `frontend/.env.local` with your Supabase credentials
+   - Backend: Create `backend/.env` with your Supabase credentials
+   - See `.env.example` files for the exact variables needed
 
-**Start Servers:**
+3. **Start the servers:**
+
 ```bash
 # Terminal 1 - Backend
 cd backend
+pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 
 # Terminal 2 - Frontend
 cd frontend
+npm install
 npm run dev
 ```
 
-Visit **http://localhost:3000** and sign up!
+Visit `http://localhost:3000` and sign up!
+
+For detailed setup instructions, see `SUPABASE_SETUP.md`.
 
 ---
 
-## 🧪 Testing
+## Running Tests
 
-### Frontend Tests
-
+**Frontend:**
 ```bash
 cd frontend
-npm test              # Run tests
+npm test              # Run all tests
 npm run test:watch    # Watch mode
 npm run test:coverage # Coverage report
 ```
 
-### Backend Tests
-
+**Backend:**
 ```bash
 cd backend
-pytest                # Run tests
-pytest --cov          # With coverage
+pytest                # Run all tests
+pytest --cov          # With coverage report
 ```
 
-### CI/CD
-
-Tests run automatically on:
-- Push to `main` or `develop`
-- Pull requests
-
-See `.github/workflows/ci.yml` for configuration.
+Tests run automatically on push via GitHub Actions. See `.github/workflows/ci.yml` for the CI/CD configuration.
 
 ---
 
-## 📦 Deployment
+## Deployment
 
 ### Frontend (Vercel)
 
-1. Push to GitHub
-2. Import in Vercel
-3. Set environment variables
-4. Deploy automatically
+1. Push your code to GitHub
+2. Import the repository in Vercel
+3. Add environment variables:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_API_URL`
+4. Deploy (automatic on every push)
 
-**Environment Variables:**
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `NEXT_PUBLIC_API_URL`
-
-### Backend (Render/Fly.io)
+### Backend (Render or Fly.io)
 
 **Render:**
-- Connect GitHub repo
-- Set build: `pip install -r requirements.txt`
-- Set start: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+- Connect your GitHub repo
+- Set build command: `pip install -r requirements.txt`
+- Set start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
 - Add environment variables
 
 **Fly.io:**
-- `fly launch`
-- `fly secrets set SUPABASE_URL=...`
-- `fly deploy`
+```bash
+fly launch
+fly secrets set SUPABASE_URL=...
+fly deploy
+```
 
-See `DOCUMENTATION.md` for detailed instructions.
-
----
-
-## 📚 Documentation
-
-- **`DOCUMENTATION.md`** - Complete technical documentation (architecture, deployment, time handling, API reference)
-- **`SECURITY.md`** - Security practices, threat model, and OWASP compliance
+See `DOCUMENTATION.md` for detailed deployment instructions.
 
 ---
 
-## 🔒 Security
+## API Reference
 
-### Implemented
+The backend exposes a RESTful API with the following endpoints:
 
-- ✅ JWT authentication (Supabase Auth)
-- ✅ Row Level Security (RLS) - Verified user isolation
-- ✅ Rate limiting (IP and user-based, 100/min read, 30/min write)
-- ✅ Input validation (Pydantic schema-based, type checks, length limits)
-- ✅ Input sanitization (trim, reject unexpected fields)
-- ✅ CORS configuration (restricted origins)
-- ✅ Environment variable management (no hardcoded keys)
-- ✅ Secure API key handling (OWASP best practices)
-- ✅ UTC time storage
-- ✅ Timezone-safe calculations
-
-### Security Features
-
-**Authentication & Authorization:**
-- All endpoints require Bearer token
-- RLS policies enforce user data isolation
-- Unauthenticated requests rejected (401)
-
-**Input Validation:**
-- Schema-based validation (Pydantic)
-- Type checking and length limits
-- Unexpected fields rejected
-- Business logic validation (time ranges, durations)
-
-**Rate Limiting:**
-- IP-based rate limiting
-- Graceful 429 responses
-- Different limits for read/write operations
-
-**See `SECURITY.md` for complete security documentation including threat model.**
-
----
-
-## ⏰ Time Handling
-
-### Principles
-
-1. **Storage**: All times in UTC (ISO 8601)
-2. **Display**: Convert to user timezone
-3. **Calculations**: Always use UTC internally
-4. **Validation**: End time must be after start time
-5. **DST**: UTC storage avoids DST edge cases
-
-### Implementation
-
-- `date-fns` for date manipulation
-- `date-fns-tz` for timezone conversions
-- User timezone stored in profile
-- All date comparisons use UTC
-- DST transitions handled automatically
-
-**See `DOCUMENTATION.md` for detailed time handling documentation.**
-
----
-
-## 📊 API Endpoints
-
-### Core
-- `POST /api/activities` - Create activity (with energy_cost, work_type)
+**Core:**
+- `POST /api/activities` - Create activity
 - `GET /api/activities` - List activities
-- `POST /api/interruptions` - Create interruption
+- `POST /api/interruptions` - Log interruption
 - `GET /api/interruptions` - List interruptions
 
-### Finances
-- `POST /api/finances/transactions` - Create transaction (with intent, emotion, worth_it)
+**Finances:**
+- `POST /api/finances/transactions` - Create transaction
 - `GET /api/finances/transactions` - List transactions
 - `POST /api/finances/budgets` - Create/update budget
 - `GET /api/finances/budgets` - Get budgets
-- `GET /api/finances/summary` - Monthly financial summary
+- `GET /api/finances/summary` - Monthly summary
 
-### Planner
+**Planner:**
 - `POST /api/planner/tasks` - Create task
 - `GET /api/planner/tasks` - List tasks
 - `GET /api/planner/today` - Today's summary
 - `POST /api/planner/goals` - Create goal
 - `POST /api/planner/habits` - Create habit
-- `POST /api/planner/habit-logs` - Log habit completion
 
-### Energy & Reflections
+**Energy & Reflections:**
 - `POST /api/energy` - Log energy/mood
 - `GET /api/energy/today` - Today's energy log
 - `POST /api/reflections/daily` - Daily reflection
 - `POST /api/reflections/weekly` - Weekly reflection
 - `POST /api/reflections/monthly` - Monthly reflection
 
-### Cross-Domain Analytics
+**Analytics:**
 - `GET /api/cross-domain/time-money` - Time vs Money correlation
 - `GET /api/cross-domain/energy-spending` - Energy vs Spending correlation
 - `GET /api/cross-domain/interruption-tasks` - Interruptions vs Task completion
-- `GET /api/cross-domain/insights` - Cross-domain insights
-
-### Analytics & Export
-- `GET /api/analytics/summary` - Analytics summary
 - `GET /api/insights` - Get insights
 - `GET /api/export` - Export data as CSV
 
-**All endpoints require Bearer token authentication.**
-
-See FastAPI docs at `http://localhost:8000/docs` when backend is running.
+All endpoints require Bearer token authentication. When the backend is running, see `http://localhost:8000/docs` for interactive API documentation (FastAPI auto-generates this).
 
 ---
 
-## 🎨 Design Philosophy
+## Security & Privacy
 
-Routine follows Apple-like principles:
+Security was a priority from day one:
+
+**Authentication & Authorization:**
+- JWT tokens via Supabase Auth
+- Row Level Security (RLS) policies ensure users can only access their own data
+- All endpoints require authentication (401 for unauthenticated requests)
+
+**Input Validation:**
+- Pydantic schemas validate all inputs
+- Type checking and length limits
+- Unexpected fields are rejected
+- Business logic validation (e.g., end time must be after start time)
+
+**Rate Limiting:**
+- IP-based rate limiting
+- Different limits for read (100/min) and write (30/min) operations
+- Graceful 429 responses when limits are exceeded
+
+**Data Protection:**
+- No hardcoded secrets (all in environment variables)
+- CORS configured to restrict origins
+- UTC time storage prevents timezone-related vulnerabilities
+- Secure API key handling following OWASP best practices
+
+For complete security documentation including threat model, see `SECURITY.md`.
+
+---
+
+## Performance & Reliability
+
+**Frontend Optimizations:**
+- Code splitting (automatic with Next.js App Router)
+- Lazy loading for chart components
+- Memoization for heavy calculations
+- Efficient date handling with date-fns
+- Optimized re-renders with React.memo
+
+**Backend Optimizations:**
+- Efficient database queries (indexed on user_id, start_time)
+- Connection pooling via Supabase
+- Rate limiting to prevent abuse
+
+**Error Handling:**
+- Global error boundary catches React errors
+- Empty states for all views
+- Loading states for async operations
+- Graceful fallbacks for failed API calls
+- Proper HTTP status codes
+
+**Target Metrics:**
+- Page load: < 2s
+- Time to interactive: < 3s
+- API response: < 200ms
+
+---
+
+## Design Philosophy
+
+iRoutine follows Apple-like design principles:
+
 - **Less, but better** - Every feature justifies its existence
 - **Calm UI** - No unnecessary colors or animations
 - **Clear typography** - Readable and accessible
 - **Respectful** - No pressure, gamification, or noise
 - **Explainable** - Users understand how insights are calculated
 
----
-
-## 🧪 Testing & Quality
-
-### Test Coverage
-
-- **Unit Tests**: Core calculation logic (metrics, cost, quality)
-- **Integration Tests**: Component behavior
-- **CI/CD**: Automated testing on every push
-
-### Code Quality
-
-- TypeScript strict mode
-- ESLint configuration
-- Prettier (recommended)
-- Type safety throughout
+The goal is to feel like a tool that helps, not an app that demands attention.
 
 ---
 
-## 📸 Screenshots
+## Documentation
 
-### Dashboard Overview
-![Dashboard](https://via.placeholder.com/800x400/4F46E5/FFFFFF?text=Dashboard+View)
-*Clean, minimal interface showing today's timeline and activity forms*
-
-### Weekly Insights
-![Insights](https://via.placeholder.com/800x400/10B981/FFFFFF?text=Weekly+Insights)
-*Interruption heatmap, focus quality, and "What Changed This Week?" panel*
-
-### Interruption Heatmap
-![Heatmap](https://via.placeholder.com/800x400/F59E0B/FFFFFF?text=Interruption+Heatmap)
-*Visual pattern of interruptions by day and hour, toggleable between minutes and cost views*
-
-**Note**: Replace placeholder images with actual screenshots after deployment.
+- **`DOCUMENTATION.md`** - Complete technical documentation (architecture, deployment, time handling, API reference)
+- **`SECURITY.md`** - Security practices, threat model, and OWASP compliance
+- **`SUPABASE_SETUP.md`** - Step-by-step Supabase setup guide
 
 ---
 
-## 📈 Performance
+## What I Learned Building This
 
-### Optimizations Implemented
+This project was an opportunity to build something meaningful while demonstrating full-stack capabilities:
 
-**Frontend:**
-- ✅ Code splitting (automatic with Next.js App Router)
-- ✅ Lazy loading for chart components (Recharts)
-- ✅ Memoization for heavy calculations (useMemo)
-- ✅ Efficient date calculations (date-fns)
-- ✅ Optimized re-renders (React.memo where needed)
+**Technical Skills Demonstrated:**
+- Full-stack development (React/Next.js + Python/FastAPI)
+- Database design and Row Level Security
+- Authentication and authorization
+- API design and RESTful principles
+- Time handling and timezone management
+- Data visualization and analytics
+- Testing strategies (unit, integration, CI/CD)
+- Deployment and DevOps
 
-**Backend:**
-- ✅ Efficient database queries (indexed on user_id, start_time)
-- ✅ Connection pooling (via Supabase)
-- ✅ Rate limiting to prevent abuse
+**Product Thinking:**
+- User experience design
+- Feature prioritization
+- Explainable analytics over black-box AI
+- Cross-domain data correlation
+- Privacy and security considerations
 
-**Metrics:**
-- Page load: < 2s (target)
-- Time to interactive: < 3s (target)
-- API response: < 200ms (typical)
-- Bundle size: Optimized with tree-shaking
-
-### Future Optimizations
-
-**Planned:**
-- [ ] Cache weekly insights (Redis)
-- [ ] Database indexes on frequently queried columns
-- [ ] CDN for static assets
-- [ ] Service worker for offline support
-- [ ] Virtual scrolling for long timelines
-
-**Scalability Considerations:**
-- Current: Suitable for 100-1000 users
-- Next: Add caching layer (Redis)
-- Future: Read replicas, horizontal scaling
+**Engineering Practices:**
+- Type safety with TypeScript
+- Schema validation with Pydantic
+- Component architecture
+- Error handling and edge cases
+- Documentation and code organization
 
 ---
 
-## 🛡️ Reliability
+## License
 
-### Error Handling
-
-**Frontend:**
-- ✅ Global error boundary (catches React errors)
-- ✅ Empty states for all charts and lists
-- ✅ Loading states for async operations
-- ✅ Graceful fallbacks for failed API calls
-- ✅ PDF export error handling
-
-**Backend:**
-- ✅ Generic error messages (no sensitive data)
-- ✅ Proper HTTP status codes
-- ✅ Rate limit error responses (429)
-- ✅ Validation error messages
-
-### Empty States
-
-**Implemented:**
-- ✅ "No data yet" for timeline
-- ✅ "No interruptions" for heatmap
-- ✅ "No activities" for weekly insights
-- ✅ "Start logging" prompts
-
-### Loading States
-
-**Implemented:**
-- ✅ Skeleton loaders for charts
-- ✅ Loading spinners for forms
-- ✅ Disabled buttons during submission
+MIT License - feel free to use this as inspiration for your own projects.
 
 ---
 
-## 🚀 Production Readiness
+## Acknowledgments
 
-### Checklist
-
-**Features:**
-- [x] All P0 features implemented
-- [x] Tests written and passing
-- [x] CI/CD pipeline configured
-
-**Security:**
-- [x] Rate limiting on all endpoints
-- [x] Input validation (server-side)
-- [x] RLS policies verified
-- [x] No hardcoded keys
-- [x] CORS configured
-
-**Reliability:**
-- [x] Error boundaries implemented
-- [x] Empty states for all views
-- [x] Loading states
-- [x] Error handling robust
-
-**Quality:**
-- [x] Time handling correct (UTC storage)
-- [x] Documentation complete
-- [x] Performance optimized
-- [x] Type safety (TypeScript)
+Built with intention and care. Inspired by Apple's philosophy of simplicity and clarity, and by the idea that the best productivity tools are the ones that help you understand yourself better—not the ones that try to optimize you into a machine.
 
 ---
 
-## 📝 License
-
-MIT
-
----
-
-## 🙏 Acknowledgments
-
-Built with intention and care. Inspired by Apple's philosophy of simplicity and clarity.
-
----
-
-**For complete technical documentation, see `DOCUMENTATION.md`**
-
-**For security details, see `SECURITY.md`**
+**Questions?** Check out `DOCUMENTATION.md` for technical details, or `SECURITY.md` for security information.

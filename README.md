@@ -1,4 +1,4 @@
-# Personal Life Operating System
+# iRoutine - Personal Life Operating System
 
 A comprehensive system that helps you understand, manage, and improve your daily life across **Time, Money, Energy, Focus, Planning, and Reflection**.
 

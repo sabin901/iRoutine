@@ -17,6 +17,7 @@ export function EnergyTracker() {
   const supabase = createClient()
 
   // Load today's energy log when component mounts
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadTodayEnergy()
   }, [])

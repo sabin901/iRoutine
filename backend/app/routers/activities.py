@@ -42,29 +42,30 @@ VALID_CATEGORIES = ["Study", "Coding", "Work", "Reading", "Rest", "Social", "Oth
 class ActivityCreate(BaseModel):
     """
     Request model for creating a new activity.
-    
+
     This defines what data the API expects when creating an activity.
     Pydantic automatically validates the data types and constraints.
     """
+
     # Required fields
     category: Literal[
         "Study", "Coding", "Work", "Reading", "Rest", "Social", "Other"
     ] = Field(..., description="Activity category")
     start_time: datetime = Field(..., description="Activity start time (UTC)")
     end_time: datetime = Field(..., description="Activity end time (UTC)")
-    
+
     # Optional basic fields
     note: Optional[str] = Field(
         None, max_length=1000, description="Optional note (max 1000 chars)"
     )
-    
+
     # Enhanced fields for Personal Life OS features
     # Energy cost: How much energy did this activity require?
     # Used for energy-aware planning and insights
     energy_cost: Optional[Literal["light", "medium", "heavy"]] = Field(
         None, description="Energy cost of the activity"
     )
-    
+
     # Work type: Deep work vs shallow work classification
     # Deep = focused, uninterrupted work
     # Shallow = administrative, reactive work
@@ -72,7 +73,7 @@ class ActivityCreate(BaseModel):
     work_type: Optional[Literal["deep", "shallow", "mixed", "rest"]] = Field(
         None, description="Type of work (deep vs shallow)"
     )
-    
+
     # Planned vs actual time tracking
     # Compare what you planned to do vs what actually happened
     # Used for planning accuracy insights
@@ -82,7 +83,7 @@ class ActivityCreate(BaseModel):
     planned_end_time: Optional[datetime] = Field(
         None, description="Planned end time (for planning vs actual comparison)"
     )
-    
+
     # Link to task if this activity is completing a specific task
     # Allows tracking which activities contribute to which tasks
     task_id: Optional[str] = Field(
@@ -94,7 +95,7 @@ class ActivityCreate(BaseModel):
     def validate_note(cls, v: Optional[str]) -> Optional[str]:
         """
         Sanitize and validate note field.
-        
+
         Ensures note is safe and within length limits.
         Strips whitespace to prevent empty strings with spaces.
         """
@@ -112,7 +113,7 @@ class ActivityCreate(BaseModel):
     def validate_times(cls, v: datetime, info) -> datetime:
         """
         Validate that end_time is after start_time and duration is reasonable.
-        
+
         Business rules:
         1. End time must be after start time (can't have negative duration)
         2. Duration cannot exceed 24 hours (prevents data entry errors)
@@ -120,7 +121,7 @@ class ActivityCreate(BaseModel):
         """
         if "start_time" in info.data and v <= info.data["start_time"]:
             raise ValueError("End time must be after start time")
-        
+
         # Validate duration is reasonable (max 24 hours)
         # This prevents accidental data entry errors (e.g., selecting wrong date)
         if "start_time" in info.data:
@@ -160,23 +161,23 @@ async def create_activity(
 ):
     """
     Create a new activity for the authenticated user.
-    
+
     This endpoint allows users to log their activities with optional metadata:
     - energy_cost: How much energy the activity required (light/medium/heavy)
     - work_type: Type of work performed (deep/shallow/mixed/rest)
     - planned vs actual: Compare planned time with actual time spent
     - task_id: Link activity to a specific task
-    
+
     Rate limited to 30 requests per minute (write operations are more expensive).
-    
+
     Args:
         request: FastAPI request object (needed for rate limiting)
         activity: ActivityCreate model with activity details
         user_id: Authenticated user's ID (from JWT token)
-    
+
     Returns:
         ActivityResponse: Created activity with generated ID and timestamps
-    
+
     Raises:
         HTTPException: 400 if validation fails, 500 if database error
     """
@@ -244,24 +245,24 @@ async def get_activities(
 ):
     """
     Get activities for the authenticated user, optionally filtered by date range.
-    
+
     This endpoint retrieves all activities for the user, with optional filtering:
     - start_date: Only return activities on or after this date
     - end_date: Only return activities on or before this date
     - If no dates provided, returns all activities
-    
+
     Results are ordered chronologically (oldest first).
     Rate limited to 100 requests per minute (read operations are cheaper).
-    
+
     Args:
         request: FastAPI request object (needed for rate limiting)
         start_date: Optional start date filter (inclusive)
         end_date: Optional end date filter (inclusive)
         user_id: Authenticated user's ID (from JWT token)
-    
+
     Returns:
         List[ActivityResponse]: List of activities matching the filters
-    
+
     Raises:
         HTTPException: 500 if database error occurs
     """
@@ -281,7 +282,7 @@ async def get_activities(
         # Execute query and order by start_time (oldest first)
         # desc=False means ascending order (earliest activities first)
         result = query.order("start_time", desc=False).execute()
-        
+
         # Convert each database record to ActivityResponse model
         # This ensures consistent response format and validates data
         return [ActivityResponse(**item) for item in result.data]

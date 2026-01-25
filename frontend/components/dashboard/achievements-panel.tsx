@@ -23,6 +23,7 @@ export function AchievementsPanel() {
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
   }, [])

@@ -14,6 +14,7 @@ export function CrossDomainInsights() {
   const [error, setError] = useState<string | null>(null)
   const supabase = createClient()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
   }, [])

@@ -13,6 +13,7 @@ export function SmartRecommendations() {
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
   }, [])
@@ -184,7 +185,7 @@ export function SmartRecommendations() {
         ))}
         {insights.predictions.recommendations.length === 0 && (
           <div className="text-center py-6 text-sm text-gray-500">
-            You're doing great! Keep up the good work.
+            You&apos;re doing great! Keep up the good work.
           </div>
         )}
       </div>

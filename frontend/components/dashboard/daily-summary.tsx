@@ -15,6 +15,7 @@ export function DailySummary() {
 
   const today = format(new Date(), 'yyyy-MM-dd')
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
   }, [])
@@ -125,7 +126,7 @@ export function DailySummary() {
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
       <div className="mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">Today's Summary</h2>
+        <h2 className="text-lg font-semibold text-gray-900">Today&apos;s Summary</h2>
         <p className="mt-1 text-sm text-gray-500">
           How did your day align with your plan?
         </p>

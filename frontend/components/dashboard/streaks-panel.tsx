@@ -13,6 +13,7 @@ export function StreaksPanel() {
   const [longestStreak, setLongestStreak] = useState(0)
   const supabase = createClient()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
   }, [])
@@ -152,7 +153,7 @@ export function StreaksPanel() {
         {streak > 0 && (
           <div className="rounded-lg bg-blue-50 p-3 border border-blue-100">
             <div className="text-xs text-blue-800">
-              🔥 Keep it up! You're on a {streak}-day streak. Log an activity today to continue.
+              🔥 Keep it up! You&apos;re on a {streak}-day streak. Log an activity today to continue.
             </div>
           </div>
         )}

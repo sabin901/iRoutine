@@ -19,16 +19,16 @@ from typing import List
 class Settings(BaseSettings):
     """
     Application settings loaded from environment variables.
-    
+
     Uses Pydantic BaseSettings to automatically load from .env file
     and validate types. All fields are required unless they have defaults.
     """
-    
+
     # Supabase configuration
     SUPABASE_URL: str  # e.g., "https://your-project.supabase.co"
     SUPABASE_SERVICE_ROLE_KEY: str  # Secret key - never expose to frontend!
     SUPABASE_ANON_KEY: str  # Public key - safe for frontend use
-    
+
     # CORS configuration
     # Default allows local development frontend
     # In production, set to your actual frontend URL(s)
@@ -38,10 +38,10 @@ class Settings(BaseSettings):
     def cors_origins_list(self) -> List[str]:
         """
         Convert comma-separated CORS_ORIGINS string to list.
-        
+
         Example: "http://localhost:3000,https://app.example.com"
         Returns: ["http://localhost:3000", "https://app.example.com"]
-        
+
         This is used by CORS middleware to allow requests from these origins.
         """
         return [origin.strip() for origin in self.CORS_ORIGINS.split(",")]
@@ -49,10 +49,11 @@ class Settings(BaseSettings):
     class Config:
         """
         Pydantic configuration.
-        
+
         Tells Pydantic to load environment variables from .env file
         in the project root directory.
         """
+
         env_file = ".env"
 
 

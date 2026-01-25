@@ -67,6 +67,7 @@ export default function PlannerPage() {
 
   const supabase = createClient()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchData()
   }, [])
@@ -352,7 +353,7 @@ export default function PlannerPage() {
           <div className="bg-white rounded-xl border border-neutral-200 p-5">
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <Calendar className="h-5 w-5 text-primary-500" />
-              Today's Tasks
+              Today&apos;s Tasks
             </h2>
             <div className="space-y-2">
               {tasks.length === 0 ? (

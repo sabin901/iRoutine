@@ -15,6 +15,7 @@ export function FocusHeatmap() {
   const [selectedCell, setSelectedCell] = useState<{ day: string; hour: number } | null>(null)
   const supabase = createClient()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
   }, [])
@@ -488,7 +489,7 @@ export function FocusHeatmap() {
           <div className="flex-1">
             <div className="text-sm font-semibold text-primary-900 mb-1.5">Focus Pattern</div>
             <div className="text-xs text-primary-700 leading-relaxed">
-              You've logged <span className="font-semibold">{stats.totalHours}h</span> of focus time across <span className="font-semibold">{stats.totalSessions}</span> sessions this week.
+              You&apos;ve logged <span className="font-semibold">{stats.totalHours}h</span> of focus time across <span className="font-semibold">{stats.totalSessions}</span> sessions this week.
               Your peak productivity is at <span className="font-semibold">{stats.peak}</span> with an average quality score of <span className="font-semibold">{stats.avgQuality}</span>.
             </div>
           </div>

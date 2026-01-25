@@ -39,33 +39,36 @@ limiter = Limiter(key_func=get_remote_address)
 class EnergyLogCreate(BaseModel):
     """
     Request model for creating/updating an energy log.
-    
+
     Represents a user's daily energy, stress, mood, and sleep state.
     If date is not provided, defaults to today.
     """
+
     # Date defaults to today if not provided
     date: Optional[date] = None
-    
+
     # Energy level: 1 (very low) to 5 (very high)
     # Required field - core metric for energy tracking
     energy_level: int = Field(..., ge=1, le=5, description="Energy level from 1-5")
-    
+
     # Stress level: 1 (very low) to 5 (very high)
     # Required field - important for understanding burnout patterns
     stress_level: int = Field(..., ge=1, le=5, description="Stress level from 1-5")
-    
+
     # Optional mood tracking
     # Uses regex pattern to ensure only valid mood values
     mood: Optional[str] = Field(
         None,
         pattern="^(excited|happy|neutral|tired|stressed|anxious|calm|focused|other)$",
-        description="Emotional state/mood"
+        description="Emotional state/mood",
     )
-    
+
     # Sleep hours: 0 to 24 (allows decimal values like 7.5)
     # Used to correlate sleep with energy levels
-    sleep_hours: Optional[float] = Field(None, ge=0, le=24, description="Hours of sleep")
-    
+    sleep_hours: Optional[float] = Field(
+        None, ge=0, le=24, description="Hours of sleep"
+    )
+
     # Optional note for additional context
     note: Optional[str] = None
 
@@ -183,22 +186,22 @@ async def get_today_energy_log(
 ):
     """
     Get today's energy log for the authenticated user.
-    
+
     Convenience endpoint to quickly fetch today's energy state.
     Returns None if no log exists for today (user hasn't logged yet).
-    
+
     This is commonly used by the frontend to:
     - Pre-fill the energy tracker form if data exists
     - Show current energy state on dashboard
     - Allow updating today's log
-    
+
     Args:
         request: FastAPI request object (needed for rate limiting)
         user_id: Authenticated user's ID (from JWT token)
-    
+
     Returns:
         Optional[EnergyLogResponse]: Today's energy log, or None if not found
-    
+
     Raises:
         HTTPException: 500 if database error occurs
     """

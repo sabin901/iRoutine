@@ -11,6 +11,7 @@ export function SettingsForm() {
   const [saving, setSaving] = useState(false)
   const supabase = createClient()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadProfile()
   }, [])

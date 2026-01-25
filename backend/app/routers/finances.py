@@ -105,25 +105,25 @@ async def create_transaction(
 ):
     """
     Create a new financial transaction (income or expense).
-    
+
     Supports the "Emotional Money Layer" by allowing users to track:
     - Intent: Was this planned, unplanned, or impulse?
     - Emotion: How did they feel (joy, stress, guilt, etc.)?
     - Worth it: After the fact, was it worth it?
-    
+
     This data enables insights like:
     - "You spend more when stressed"
     - "Impulse purchases are rarely worth it"
     - "Planned purchases bring more joy"
-    
+
     Args:
         request: FastAPI request object (needed for rate limiting)
         transaction: TransactionCreate with amount, type, category, etc.
         user_id: Authenticated user's ID (from JWT token)
-    
+
     Returns:
         TransactionResponse: Created transaction with generated ID
-    
+
     Raises:
         HTTPException: 500 if database error occurs
     """

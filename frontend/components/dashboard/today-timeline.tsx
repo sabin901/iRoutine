@@ -23,6 +23,7 @@ export function TodayTimeline() {
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadTodayData()
   }, [])
@@ -158,7 +159,7 @@ export function TodayTimeline() {
             <Clock className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-neutral-900">Today's Timeline</h2>
+            <h2 className="text-xl font-semibold text-neutral-900">Today&apos;s Timeline</h2>
             <p className="text-xs text-neutral-500">Your activities and interruptions throughout the day</p>
           </div>
         </div>

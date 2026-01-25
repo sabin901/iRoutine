@@ -21,6 +21,7 @@ export function WhatChangedThisWeek() {
   const [comparison, setComparison] = useState<WeekComparison | null>(null)
   const supabase = createClient()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
   }, [])

@@ -49,6 +49,7 @@ export function DailyReflectionComponent() {
   // Get Supabase client for authentication
   const supabase = createClient()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadTodayReflection()
   }, [])
@@ -176,7 +177,7 @@ export function DailyReflectionComponent() {
       <div className="relative bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-4 border border-orange-200">
         <label className="flex text-sm font-bold text-orange-800 mb-3 items-center gap-2">
           <span className="text-lg">🤔</span>
-          What didn't work?
+          What didn&apos;t work?
         </label>
         <textarea
           value={whatDidnt}

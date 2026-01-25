@@ -30,6 +30,7 @@ export function DailyPlanComponent() {
 
   const today = format(new Date(), 'yyyy-MM-dd')
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadTodayPlan()
   }, [])
@@ -154,7 +155,7 @@ export function DailyPlanComponent() {
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
       <div className="mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">Today's Plan</h2>
+        <h2 className="text-lg font-semibold text-gray-900">Today&apos;s Plan</h2>
         <p className="mt-1 text-sm text-gray-500">
           {isToday(parseISO(today)) ? 'Set your intentions for today' : `Plan for ${format(parseISO(today), 'MMMM d')}`}
         </p>

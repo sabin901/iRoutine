@@ -17,6 +17,7 @@ export function InterruptionHeatmap() {
   const [selectedCell, setSelectedCell] = useState<{ day: string; hour: number } | null>(null)
   const supabase = createClient()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
   }, [])

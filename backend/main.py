@@ -112,7 +112,7 @@ app.include_router(cross_domain.router, prefix="/api", tags=["cross-domain"])
 async def root(request: Request):
     """
     Root endpoint - API information
-    
+
     Returns basic API information.
     Rate limited to 100 requests per minute.
     """
@@ -124,7 +124,7 @@ async def root(request: Request):
 async def health(request: Request):
     """
     Health check endpoint
-    
+
     Used by deployment platforms and monitoring tools to verify the API is running.
     Returns {"status": "ok"} if the server is healthy.
     Rate limited to 100 requests per minute.

@@ -141,10 +141,10 @@ export function AchievementsPanel() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg">
+      <div className="card p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-neutral-100 rounded-lg w-1/2"></div>
-          <div className="h-32 bg-neutral-100 rounded-xl"></div>
+          <div className="h-4 bg-slate-200 rounded-lg w-1/2" />
+          <div className="h-32 bg-slate-200 rounded-xl" />
         </div>
       </div>
     )
@@ -153,17 +153,15 @@ export function AchievementsPanel() {
   const unlockedCount = achievements.filter(a => a.unlocked).length
 
   return (
-    <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg card-hover">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-gradient-to-br from-warning-500 to-warning-600">
-            <Trophy className="h-4 w-4 text-white" />
+    <div className="card card-hover p-5">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2.5">
+          <div className="p-2 rounded-xl bg-amber-50 border border-amber-100">
+            <Trophy className="h-4 w-4 text-amber-600" />
           </div>
-          <h2 className="text-lg font-semibold text-neutral-900">Achievements</h2>
+          <h2 className="text-base font-semibold text-slate-900">Achievements</h2>
         </div>
-        <div className="text-sm font-bold text-neutral-500">
-          {unlockedCount} / {achievements.length}
-        </div>
+        <span className="text-xs font-semibold text-slate-500">{unlockedCount}/{achievements.length}</span>
       </div>
 
       <div className="space-y-3">
@@ -174,40 +172,36 @@ export function AchievementsPanel() {
           return (
             <div
               key={achievement.id}
-              className={`rounded-xl p-4 border transition-all hover:shadow-soft ${
+              className={`rounded-xl p-4 border transition-all ${
                 achievement.unlocked
-                  ? 'bg-gradient-to-br from-warning-50 to-warning-100/50 border-warning-200/50'
-                  : 'bg-neutral-50 border-neutral-200/60'
+                  ? 'bg-amber-50 border-amber-200'
+                  : 'bg-slate-50 border-slate-200'
               }`}
             >
               <div className="flex items-start gap-3">
                 <div className={`p-2 rounded-lg ${
                   achievement.unlocked
-                    ? 'bg-yellow-500 text-white'
-                    : 'bg-gray-200 text-gray-400'
+                    ? 'bg-amber-500 text-white'
+                    : 'bg-slate-200 text-slate-500'
                 }`}>
                   <Icon className="h-4 w-4" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className={`text-sm font-semibold ${
-                      achievement.unlocked ? 'text-gray-900' : 'text-gray-600'
-                    }`}>
+                    <h3 className={`text-sm font-semibold ${achievement.unlocked ? 'text-slate-900' : 'text-slate-700'}`}>
                       {achievement.name}
                     </h3>
                     {achievement.unlocked && (
-                      <span className="text-xs font-medium text-yellow-700 bg-yellow-100 px-2 py-0.5 rounded-full">
+                      <span className="text-xs font-medium text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
                         Unlocked
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500 mb-2">{achievement.description}</p>
+                  <p className="text-xs text-slate-500 mb-2">{achievement.description}</p>
                   <div className="space-y-1">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-gray-500">Progress</span>
-                      <span className={`font-medium ${
-                        achievement.unlocked ? 'text-yellow-700' : 'text-gray-600'
-                      }`}>
+                      <span className="text-slate-500">Progress</span>
+                      <span className={`font-medium ${achievement.unlocked ? 'text-amber-700' : 'text-slate-600'}`}>
                         {achievement.maxProgress === 1 
                           ? (achievement.unlocked ? 'Complete' : 'Incomplete')
                           : `${Math.round(achievement.progress)} / ${achievement.maxProgress}`
@@ -215,12 +209,10 @@ export function AchievementsPanel() {
                       </span>
                     </div>
                     {achievement.maxProgress > 1 && (
-                      <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
                         <div
                           className={`h-full transition-all duration-500 ${
-                            achievement.unlocked
-                              ? 'bg-gradient-to-r from-yellow-400 to-orange-500'
-                              : 'bg-gray-300'
+                            achievement.unlocked ? 'bg-amber-500' : 'bg-slate-400'
                           }`}
                           style={{ width: `${Math.min(progressPercent, 100)}%` }}
                         />

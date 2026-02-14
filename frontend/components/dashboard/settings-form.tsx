@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { apiRequest } from '@/lib/api'
+import { useToast } from '@/contexts/toast-context'
 
 export function SettingsForm() {
   const [name, setName] = useState('')
@@ -10,6 +11,7 @@ export function SettingsForm() {
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const supabase = createClient()
+  const toast = useToast()
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -64,9 +66,8 @@ export function SettingsForm() {
                             process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')
       
       if (isPlaceholder) {
-        // Save to localStorage
         localStorage.setItem('routine_profile', JSON.stringify({ name, timezone }))
-        alert('Settings saved')
+        toast.success('Settings saved')
         setSaving(false)
         return
       }
@@ -87,9 +88,9 @@ export function SettingsForm() {
 
       if (error) throw error
 
-      alert('Settings saved')
+      toast.success('Settings saved')
     } catch (err: any) {
-      alert(err.message || 'Failed to save settings')
+      toast.error(err.message || 'Failed to save settings')
     } finally {
       setSaving(false)
     }
@@ -132,7 +133,7 @@ export function SettingsForm() {
       const data = await apiRequest<{ url: string }>('/api/export')
       window.open(data.url, '_blank')
     } catch (err: any) {
-      alert(err.message || 'Failed to export data')
+      toast.error(err.message || 'Failed to export data')
     }
   }
 
@@ -147,47 +148,45 @@ export function SettingsForm() {
       if (isPlaceholder) {
         const activities = JSON.parse(localStorage.getItem('routine_activities') || '[]')
         const interruptions = JSON.parse(localStorage.getItem('routine_interruptions') || '[]')
-        
         const reportData = generateWeeklyReportData(activities, interruptions)
-        exportWeeklyPDF(reportData)
+        exportWeeklyPDF(reportData, { onPopupBlocked: () => toast.error('Please allow popups to export PDF') })
         return
       }
 
-      // For real Supabase, would fetch from API
-      alert('PDF export requires data from server. Please use CSV export for now.')
+      toast.show('PDF export requires data from server. Use CSV export for now.', 'info')
     } catch (err: any) {
-      alert(err.message || 'Failed to export PDF')
+      toast.error(err.message || 'Failed to export PDF')
     }
   }
 
   if (loading) {
     return (
-      <div className="rounded-lg border border-border bg-background p-6">
-        <p className="text-sm text-muted-foreground">Loading...</p>
+      <div className="card p-6 animate-slide-up">
+        <p className="text-sm text-slate-500">Loading...</p>
       </div>
     )
   }
 
   return (
-    <div className="rounded-lg border border-border bg-background p-6">
-      <h2 className="text-lg font-medium mb-6">Profile</h2>
+    <div className="card p-6 animate-slide-up">
+      <h2 className="text-lg font-semibold text-slate-900 mb-6">Profile</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium mb-1">Name</label>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Name</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-lg border border-border bg-background px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
+            className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Timezone</label>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Timezone</label>
           <select
             value={timezone}
             onChange={(e) => setTimezone(e.target.value)}
-            className="w-full rounded-lg border border-border bg-background px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
+            className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
           >
             {Intl.supportedValuesOf('timeZone').map((tz) => (
               <option key={tz} value={tz}>
@@ -200,24 +199,26 @@ export function SettingsForm() {
         <button
           type="submit"
           disabled={saving}
-          className="w-full rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90 disabled:opacity-50"
+          className="w-full rounded-lg btn-primary px-4 py-2 text-sm font-medium disabled:opacity-50"
         >
           {saving ? 'Saving...' : 'Save Settings'}
         </button>
       </form>
 
-      <div className="mt-8 pt-8 border-t border-gray-200">
-        <h3 className="text-sm font-semibold text-gray-900 mb-4">Data Export</h3>
+      <div className="mt-8 pt-8 border-t border-slate-200">
+        <h3 className="text-sm font-semibold text-slate-900 mb-4">Data Export</h3>
         <div className="space-y-3">
           <button
+            type="button"
             onClick={handleExport}
-            className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+            className="w-full rounded-lg btn-secondary px-4 py-2.5 text-sm font-medium"
           >
             Export Data (CSV)
           </button>
           <button
+            type="button"
             onClick={handleExportPDF}
-            className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            className="w-full rounded-lg btn-primary px-4 py-2.5 text-sm font-medium"
           >
             Export Weekly Report (PDF)
           </button>

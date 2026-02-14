@@ -72,10 +72,10 @@ export function CategoryBreakdown() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-soft">
+      <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 shadow-soft">
         <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-          <div className="h-64 bg-gray-200 rounded"></div>
+          <div className="h-4 bg-neutral-700 rounded w-1/2"></div>
+          <div className="h-64 bg-neutral-700 rounded"></div>
         </div>
       </div>
     )
@@ -83,10 +83,10 @@ export function CategoryBreakdown() {
 
   if (data.length === 0) {
     return (
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-soft">
+      <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 shadow-soft">
         <div className="text-center py-12">
           <BarChart3 className="h-10 w-10 text-gray-300 mx-auto mb-3" />
-          <p className="text-sm text-gray-500">No category data yet</p>
+          <p className="text-sm text-neutral-400">No category data yet</p>
         </div>
       </div>
     )
@@ -100,10 +100,10 @@ export function CategoryBreakdown() {
   }))
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-soft card-hover">
+    <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 shadow-soft card-hover">
       <div className="mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">Category Breakdown</h2>
-        <p className="mt-1 text-sm text-gray-500">Time distribution by activity category</p>
+        <h2 className="text-lg font-semibold text-white">Category Breakdown</h2>
+        <p className="mt-1 text-sm text-neutral-400">Time distribution by activity category</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -143,13 +143,13 @@ export function CategoryBreakdown() {
                     className="w-3 h-3 rounded-full" 
                     style={{ backgroundColor: COLORS[idx % COLORS.length] }}
                   />
-                  <span className="text-sm font-medium text-gray-900">{item.category}</span>
+                  <span className="text-sm font-medium text-white">{item.category}</span>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-semibold text-gray-900">
+                  <div className="text-sm font-semibold text-white">
                     {Math.round(item.total_minutes / 60 * 10) / 10}h
                   </div>
-                  <div className="text-xs text-gray-500">{item.percentage}%</div>
+                  <div className="text-xs text-neutral-400">{item.percentage}%</div>
                 </div>
               </div>
               <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -161,7 +161,7 @@ export function CategoryBreakdown() {
                   }}
                 />
               </div>
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-neutral-400">
                 {item.session_count} sessions • {item.avg_duration} min avg
               </div>
             </div>

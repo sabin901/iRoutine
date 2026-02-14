@@ -75,9 +75,9 @@ export function ProductivityCurve() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg">
+      <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 shadow-soft-lg">
         <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-neutral-100 rounded-lg w-1/3"></div>
+          <div className="h-4 bg-neutral-700 rounded-lg w-1/3"></div>
           <div className="h-64 bg-neutral-100 rounded-xl"></div>
         </div>
       </div>
@@ -86,10 +86,10 @@ export function ProductivityCurve() {
 
   if (activities.length === 0) {
     return (
-      <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg">
+      <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 shadow-soft-lg">
         <div className="text-center py-12">
           <TrendingUp className="h-10 w-10 text-neutral-300 mx-auto mb-3" />
-          <p className="text-sm text-neutral-500 font-medium">
+          <p className="text-sm text-neutral-400 font-medium">
             No data yet. Start tracking to see your productivity curve.
           </p>
         </div>
@@ -102,15 +102,15 @@ export function ProductivityCurve() {
   const avgQuality = Math.round(curveData.reduce((sum, h) => sum + h.quality, 0) / curveData.length)
 
   return (
-    <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg card-hover">
+    <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 shadow-soft-lg card-hover">
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
           <div className="p-2.5 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 shadow-glow-primary">
             <TrendingUp className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-neutral-900">Productivity Curve</h2>
-            <p className="text-xs text-neutral-500">Your focus and quality patterns throughout the day</p>
+            <h2 className="text-lg font-semibold text-white">Productivity Curve</h2>
+            <p className="text-xs text-neutral-400">Your focus and quality patterns throughout the day</p>
           </div>
         </div>
       </div>
@@ -197,7 +197,7 @@ export function ProductivityCurve() {
       {/* Insights */}
       <div className="rounded-xl bg-gradient-to-r from-primary-50 to-primary-100/50 p-4 border border-primary-200/50">
         <div className="flex items-start gap-3">
-          <div className="p-2 rounded-lg bg-white shadow-soft">
+          <div className="p-2 rounded-lg bg-neutral-800 border border-neutral-700/50">
             <Zap className="h-4 w-4 text-primary-600" />
           </div>
           <div className="flex-1">

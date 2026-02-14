@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { ActivityCategory } from '@/lib/types'
 import { format } from 'date-fns'
 import { Plus, Check } from 'lucide-react'
+import { useToast } from '@/contexts/toast-context'
 
 const categories: ActivityCategory[] = [
   'Study',
@@ -17,13 +18,13 @@ const categories: ActivityCategory[] = [
 ]
 
 const categoryColors: Record<ActivityCategory, string> = {
-  Study: 'bg-blue-100 text-blue-700 border-blue-200',
-  Coding: 'bg-purple-100 text-purple-700 border-purple-200',
-  Work: 'bg-green-100 text-green-700 border-green-200',
-  Reading: 'bg-orange-100 text-orange-700 border-orange-200',
-  Rest: 'bg-gray-100 text-gray-700 border-gray-200',
-  Social: 'bg-pink-100 text-pink-700 border-pink-200',
-  Other: 'bg-gray-100 text-gray-700 border-gray-200',
+  Study: 'bg-blue-50 text-blue-700 border-blue-200',
+  Coding: 'bg-violet-50 text-violet-700 border-violet-200',
+  Work: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  Reading: 'bg-amber-50 text-amber-700 border-amber-200',
+  Rest: 'bg-slate-100 text-slate-600 border-slate-200',
+  Social: 'bg-pink-50 text-pink-700 border-pink-200',
+  Other: 'bg-slate-100 text-slate-600 border-slate-200',
 }
 
 export function ActivityForm() {
@@ -38,6 +39,7 @@ export function ActivityForm() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const supabase = createClient()
+  const toast = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -87,7 +89,7 @@ export function ActivityForm() {
         window.location.reload()
       }, 1000)
     } catch (err: any) {
-      alert(err.message || 'Failed to log activity')
+      toast.error(err.message || 'Failed to log activity')
     } finally {
       setLoading(false)
     }
@@ -96,28 +98,20 @@ export function ActivityForm() {
   const duration = Math.round((new Date(endTime).getTime() - new Date(startTime).getTime()) / 1000 / 60)
 
   return (
-    <div className="relative rounded-3xl border border-white/20 bg-white/90 backdrop-blur-xl p-6 shadow-xl card-hover animate-scale-in overflow-hidden">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-200/20 via-indigo-200/20 to-purple-200/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-      <div className="relative z-10">
-      <div className="mb-6 relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-indigo-50/30 to-purple-50/50 rounded-3xl"></div>
-        <div className="relative flex items-center gap-4">
-          <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 shadow-lg shadow-blue-500/30">
-            <Plus className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold text-neutral-900">Log Activity</h2>
-            <p className="text-sm text-neutral-600 font-medium">Track your time and focus</p>
-          </div>
+    <div className="card card-hover p-5">
+      <div className="mb-4 flex items-center gap-3">
+        <div className="p-2.5 rounded-xl bg-sky-50 border border-sky-100">
+          <Plus className="h-5 w-5 text-sky-600" />
+        </div>
+        <div>
+          <h2 className="text-base font-semibold text-slate-900">Log Activity</h2>
+          <p className="text-xs text-slate-500">Track time and focus</p>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Category Selection */}
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-semibold text-neutral-700 mb-3">
-            Category
-          </label>
+          <label className="block text-sm font-semibold text-slate-700 mb-3">Category</label>
           <div className="grid grid-cols-2 gap-2">
             {categories.map((cat) => (
               <button
@@ -126,8 +120,8 @@ export function ActivityForm() {
                 onClick={() => setCategory(cat)}
                 className={`px-3 py-2.5 text-sm font-semibold rounded-xl border transition-all ${
                   category === cat
-                    ? `${categoryColors[cat]} ring-2 ring-offset-1 ring-primary-500 shadow-soft`
-                    : 'bg-white text-neutral-700 border-neutral-200 hover:border-neutral-300 hover:shadow-soft'
+                    ? `${categoryColors[cat]} ring-2 ring-offset-1 ring-offset-white ring-sky-400`
+                    : 'bg-slate-50 text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-700'
                 }`}
               >
                 {cat}
@@ -136,77 +130,61 @@ export function ActivityForm() {
           </div>
         </div>
 
-        {/* Time Inputs */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Start Time
-            </label>
+            <label className="block text-sm font-medium text-slate-600 mb-2">Start Time</label>
             <input
               type="datetime-local"
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              End Time
-            </label>
+            <label className="block text-sm font-medium text-slate-600 mb-2">End Time</label>
             <input
               type="datetime-local"
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all"
               required
             />
           </div>
         </div>
 
-        {/* Duration Display - Enhanced */}
         {duration > 0 && (
-          <div className="relative rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 p-4 border-2 border-blue-200 overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-200/30 to-indigo-200/30 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
-            <div className="relative z-10">
-              <div className="text-xs font-bold text-blue-700 uppercase tracking-wide mb-1">Duration</div>
-              <div className="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                {Math.floor(duration / 60)}h {duration % 60}m
-              </div>
+          <div className="rounded-xl bg-slate-50 border border-slate-200 p-4">
+            <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Duration</div>
+            <div className="text-xl font-bold text-slate-900">
+              {Math.floor(duration / 60)}h {duration % 60}m
             </div>
           </div>
         )}
 
-        {/* Note */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Note (optional)
-          </label>
+          <label className="block text-sm font-medium text-slate-600 mb-2">Note (optional)</label>
           <textarea
             value={note}
             onChange={(e) => setNote(e.target.value)}
             rows={2}
-            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none"
+            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all resize-none"
             placeholder="What did you work on?"
             maxLength={200}
           />
-          <div className="text-xs text-gray-500 mt-1 text-right">
-            {note.length} / 200
-          </div>
+          <div className="text-xs text-slate-500 mt-1 text-right">{note.length} / 200</div>
         </div>
 
-        {/* Enhanced Submit Button */}
         <button
           type="submit"
           disabled={loading || duration <= 0}
-          className={`relative w-full rounded-xl px-6 py-4 text-base font-bold text-white transition-all overflow-hidden group ${
+          className={`w-full rounded-xl px-6 py-3.5 text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${
             success
-              ? 'bg-gradient-to-r from-green-500 to-emerald-600 shadow-lg shadow-green-500/30'
-              : 'bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98]'
-          } disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2`}
+              ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
+              : 'btn-primary'
+          }`}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <span className="relative z-10 flex items-center gap-2">
+          <span className="flex items-center gap-2">
             {loading ? (
               <>
                 <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
@@ -229,7 +207,6 @@ export function ActivityForm() {
           </span>
         </button>
       </form>
-      </div>
     </div>
   )
 }

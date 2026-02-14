@@ -45,8 +45,8 @@ export function InsightsPanel() {
           }
         })
         
-        const peakHour = Object.entries(hourFocus).reduce((a, b) => 
-          hourFocus[parseInt(a[0])] > hourFocus[parseInt(b[0])] ? a : b, ['0', '0'])[0]
+        const peakHour = (Object.entries(hourFocus) as [string, number][]).reduce((a, b) =>
+          hourFocus[parseInt(a[0])] > hourFocus[parseInt(b[0])] ? a : b, ['0', 0])[0]
         const nextHour = (parseInt(peakHour) + 1) % 24
         const peakWindow = `Your focus is strongest between ${peakHour.padStart(2, '0')}:00 - ${nextHour.toString().padStart(2, '0')}:00`
         
@@ -58,8 +58,8 @@ export function InsightsPanel() {
           hourInterruptions[hour] = (hourInterruptions[hour] || 0) + 1
         })
         
-        const hotspotHour = Object.entries(hourInterruptions).reduce((a, b) => 
-          hourInterruptions[parseInt(a[0])] > hourInterruptions[parseInt(b[0])] ? a : b, ['0', '0'])[0]
+        const hotspotHour = (Object.entries(hourInterruptions) as [string, number][]).reduce((a, b) =>
+          hourInterruptions[parseInt(a[0])] > hourInterruptions[parseInt(b[0])] ? a : b, ['0', 0])[0]
         const distractionHotspot = hourInterruptions[parseInt(hotspotHour)] 
           ? `Most interruptions around ${hotspotHour.padStart(2, '0')}:00`
           : 'No interruptions logged'
@@ -158,10 +158,10 @@ export function InsightsPanel() {
 
   if (loading) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-          <div className="h-20 bg-gray-200 rounded"></div>
+      <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 animate-pulse">
+        <div className="space-y-4">
+          <div className="h-4 bg-neutral-700 rounded w-1/2" />
+          <div className="h-20 bg-neutral-700 rounded" />
         </div>
       </div>
     )
@@ -169,10 +169,10 @@ export function InsightsPanel() {
 
   if (!insights) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6">
         <div className="text-center py-8">
-          <BarChart3 className="h-10 w-10 text-gray-300 mx-auto mb-3" />
-          <p className="text-sm text-gray-500">
+          <BarChart3 className="h-10 w-10 text-neutral-600 mx-auto mb-3" />
+          <p className="text-sm text-neutral-400">
             Not enough data yet. Log a few days of activities to see insights.
           </p>
         </div>
@@ -181,65 +181,65 @@ export function InsightsPanel() {
   }
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm space-y-6">
+    <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 space-y-6">
       <div>
-        <h2 className="text-xl font-semibold text-gray-900">Your Patterns</h2>
-        <p className="mt-1 text-sm text-gray-500">Insights from your activity data</p>
+        <h2 className="text-lg font-semibold text-white">Your Patterns</h2>
+        <p className="mt-1 text-sm text-neutral-400">Insights from your activity data</p>
       </div>
 
       {/* Key Metrics Grid */}
       {metrics && (
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-blue-50 rounded-lg p-3 border border-blue-100">
+          <div className="bg-neutral-800/50 rounded-lg p-3 border border-neutral-700/50">
             <div className="flex items-center gap-2 mb-1">
-              <Target className="h-4 w-4 text-blue-600" />
-              <span className="text-xs font-medium text-blue-900">Focus Time</span>
+              <Target className="h-4 w-4 text-blue-400" />
+              <span className="text-xs font-medium text-neutral-400">Focus Time</span>
             </div>
-            <div className="text-lg font-semibold text-blue-900">
+            <div className="text-lg font-semibold text-white">
               {Math.round(metrics.totalFocusMinutes / 60 * 10) / 10}h
             </div>
-            <div className="text-xs text-blue-700 mt-0.5">
+            <div className="text-xs text-neutral-500 mt-0.5">
               {Math.round(metrics.avgDailyFocus / 60 * 10) / 10}h/day avg
             </div>
           </div>
 
-          <div className="bg-purple-50 rounded-lg p-3 border border-purple-100">
+          <div className="bg-neutral-800/50 rounded-lg p-3 border border-neutral-700/50">
             <div className="flex items-center gap-2 mb-1">
-              <Star className="h-4 w-4 text-purple-600" />
-              <span className="text-xs font-medium text-purple-900">Quality</span>
+              <Star className="h-4 w-4 text-purple-400" />
+              <span className="text-xs font-medium text-neutral-400">Quality</span>
             </div>
-            <div className="text-lg font-semibold text-purple-900">
+            <div className="text-lg font-semibold text-white">
               {metrics.qualityMetrics.avg_quality}%
             </div>
-            <div className="text-xs text-purple-700 mt-0.5">
+            <div className="text-xs text-neutral-500 mt-0.5">
               {metrics.qualityMetrics.high_quality_sessions}/{metrics.qualityMetrics.total_sessions} high quality
             </div>
           </div>
 
           {interruptions.length > 0 && (
             <>
-              <div className="bg-red-50 rounded-lg p-3 border border-red-100">
+              <div className="bg-neutral-800/50 rounded-lg p-3 border border-neutral-700/50">
                 <div className="flex items-center gap-2 mb-1">
-                  <AlertTriangle className="h-4 w-4 text-red-600" />
-                  <span className="text-xs font-medium text-red-900">Interruptions</span>
+                  <AlertTriangle className="h-4 w-4 text-red-400" />
+                  <span className="text-xs font-medium text-neutral-400">Interruptions</span>
                 </div>
-                <div className="text-lg font-semibold text-red-900">
+                <div className="text-lg font-semibold text-white">
                   {interruptions.length}
                 </div>
-                <div className="text-xs text-red-700 mt-0.5">
+                <div className="text-xs text-neutral-500 mt-0.5">
                   {metrics.dailyMetrics.total_interruptions_minutes ? Math.round(metrics.dailyMetrics.total_interruptions_minutes) : 0} min today
                 </div>
               </div>
 
-              <div className="bg-orange-50 rounded-lg p-3 border border-orange-100">
+              <div className="bg-neutral-800/50 rounded-lg p-3 border border-neutral-700/50">
                 <div className="flex items-center gap-2 mb-1">
-                  <TrendingUp className="h-4 w-4 text-orange-600" />
-                  <span className="text-xs font-medium text-orange-900">Recovery</span>
+                  <TrendingUp className="h-4 w-4 text-amber-400" />
+                  <span className="text-xs font-medium text-neutral-400">Recovery</span>
                 </div>
-                <div className="text-lg font-semibold text-orange-900">
+                <div className="text-lg font-semibold text-white">
                   {metrics.weeklyMetrics.avg_recovery_time ? Math.round(metrics.weeklyMetrics.avg_recovery_time) : 0}m
                 </div>
-                <div className="text-xs text-orange-700 mt-0.5">
+                <div className="text-xs text-neutral-500 mt-0.5">
                   avg recovery time
                 </div>
               </div>

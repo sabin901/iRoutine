@@ -56,10 +56,12 @@ INCOME_CATEGORIES = ["Salary", "Freelance", "Investment", "Gift", "Refund", "Oth
 
 class TransactionCreate(BaseModel):
     amount: float = Field(..., gt=0, description="Transaction amount")
-    type: Literal["income", "expense"] = Field(..., description="Transaction type")
+    transaction_type: Literal["income", "expense"] = Field(
+        ..., alias="type", description="Transaction type"
+    )
     category: str = Field(..., description="Category")
     description: Optional[str] = Field(None, max_length=500)
-    date: date = Field(default_factory=date.today)
+    transaction_date: date = Field(default_factory=date.today, alias="date")
     is_recurring: bool = False
     recurring_id: Optional[str] = None
     intent: Optional[Literal["planned", "unplanned", "impulse"]] = Field(
@@ -131,10 +133,10 @@ async def create_transaction(
     data = {
         "user_id": user_id,
         "amount": transaction.amount,
-        "type": transaction.type,  # "income" or "expense"
+        "type": transaction.transaction_type,  # "income" or "expense"
         "category": transaction.category,
         "description": transaction.description,
-        "date": transaction.date.isoformat(),
+        "date": transaction.transaction_date.isoformat(),
         "is_recurring": transaction.is_recurring,
         "recurring_id": transaction.recurring_id,
     }
@@ -386,7 +388,7 @@ async def update_savings_goal(
 
 class RecurringTransactionCreate(BaseModel):
     amount: float = Field(..., gt=0)
-    type: Literal["income", "expense"]
+    transaction_type: Literal["income", "expense"] = Field(..., alias="type")
     category: str
     description: str = Field(..., max_length=200)
     frequency: Literal["daily", "weekly", "biweekly", "monthly", "yearly"]
@@ -419,7 +421,7 @@ async def create_recurring_transaction(
     data = {
         "user_id": user_id,
         "amount": recurring.amount,
-        "type": recurring.type,
+        "type": recurring.transaction_type,
         "category": recurring.category,
         "description": recurring.description,
         "frequency": recurring.frequency,

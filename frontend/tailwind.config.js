@@ -10,6 +10,42 @@ module.exports = {
       colors: {
         background: '#ffffff',
         foreground: '#0a0a0a',
+        // Artoo Color System - 60-30-10 Rule
+        // Primary (60%): Deep muted blue for backgrounds
+        artoo: {
+          primary: {
+            DEFAULT: '#375E97', // Deep muted blue - main background
+            dark: '#31473A',    // Alternative darker variant
+            light: '#4A6FA5',   // Lighter variant for hover states
+          },
+          // Secondary (30%): Cool grey for cards and sections
+          secondary: {
+            DEFAULT: '#4B5563', // Cool grey - cards/sections (rgb(75, 85, 99))
+            50: '#F9FAFB',
+            100: '#F3F4F6',
+            200: '#E5E7EB',
+            300: '#D1D5DB',
+            400: '#9CA3AF',
+            500: '#6B7280',
+            600: '#4B5563',
+            700: '#374151',
+            800: '#1F2937',
+            900: '#111827',
+          },
+          // Accent (10%): Light blue/teal for interactive elements
+          accent: {
+            DEFAULT: '#66A5AD', // Light blue/teal - buttons, highlights
+            dark: '#1995AD',    // Darker accent variant
+            light: '#7FB3BA',   // Lighter variant
+          },
+          // Text colors - grayscale avoiding pure black/white
+          text: {
+            primary: '#F5F5F5',   // Near-white (not pure #FFFFFF)
+            secondary: '#E6E6E6', // Soft white
+            muted: '#D4D4D4',     // Muted grey
+            dark: '#1F1F1F',      // Near-black (not pure #000000)
+          },
+        },
         // Modern, sophisticated palette
         primary: {
           50: '#f0f4ff',

@@ -153,19 +153,18 @@ export function DailyPlanComponent() {
   const totalGoals = plan?.goals.length || 0
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">Today&apos;s Plan</h2>
-        <p className="mt-1 text-sm text-gray-500">
-          {isToday(parseISO(today)) ? 'Set your intentions for today' : `Plan for ${format(parseISO(today), 'MMMM d')}`}
-        </p>
+    <div className="card p-6">
+      <div className="mb-5 flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-semibold text-slate-900">Today&apos;s Plan</h2>
+          <p className="mt-0.5 text-sm text-slate-500">
+            {totalGoals > 0 ? `${completedGoalsCount}/${totalGoals} goals` : 'Set your intentions'}
+          </p>
+        </div>
       </div>
 
-      {/* Focus Hours Goal */}
-      <div className="mb-6 rounded-lg bg-gray-50 p-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Planned Focus Hours
-        </label>
+      <div className="mb-5 rounded-xl bg-slate-50/80 border border-slate-200 p-3.5">
+        <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Planned focus</label>
         <div className="flex items-center gap-3">
           <input
             type="number"
@@ -177,112 +176,95 @@ export function DailyPlanComponent() {
               setPlannedHours(hours)
               updatePlannedHours(hours)
             }}
-            className="w-20 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-16 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
           />
-          <span className="text-sm text-gray-600">hours of focused work</span>
+          <span className="text-sm text-slate-500">hours</span>
         </div>
       </div>
 
-      {/* Goals */}
-      <div className="mb-6">
-        <div className="mb-3 flex items-center justify-between">
-          <label className="text-sm font-medium text-gray-700">
-            Goals {totalGoals > 0 && `(${completedGoalsCount}/${totalGoals})`}
-          </label>
-        </div>
-        <div className="space-y-2">
+      <div className="mb-5">
+        <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Goals</label>
+        <div className="space-y-1.5">
           {plan?.goals.map((goal, index) => (
             <div
               key={index}
-              className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-3"
+              className="flex items-start gap-2.5 rounded-xl border border-slate-200 bg-slate-50/80 p-2.5"
             >
               <button
                 onClick={() => toggleGoalComplete(index)}
-                className="mt-0.5 text-gray-400 hover:text-gray-600 transition-colors"
+                className="mt-0.5 text-slate-500 hover:text-slate-700 transition-colors"
               >
                 {isGoalCompleted(index) ? (
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
+                  <CheckCircle2 className="h-5 w-5 text-emerald-600" />
                 ) : (
                   <Circle className="h-5 w-5" />
                 )}
               </button>
-              <span
-                className={`flex-1 text-sm ${
-                  isGoalCompleted(index)
-                    ? 'text-gray-400 line-through'
-                    : 'text-gray-900'
-                }`}
-              >
+              <span className={`flex-1 text-sm ${isGoalCompleted(index) ? 'text-slate-500 line-through' : 'text-slate-900'}`}>
                 {goal}
               </span>
-              <button
-                onClick={() => removeGoal(index)}
-                className="text-gray-400 hover:text-red-500 transition-colors"
-              >
+              <button onClick={() => removeGoal(index)} className="text-slate-500 hover:text-red-600 transition-colors">
                 <X className="h-4 w-4" />
               </button>
             </div>
           ))}
         </div>
-        <div className="mt-3 flex gap-2">
+        <div className="mt-2 flex gap-2">
           <input
             type="text"
             value={newGoal}
             onChange={(e) => setNewGoal(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && addGoal()}
             placeholder="Add a goal..."
-            className="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
           <button
             onClick={addGoal}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            className="rounded-xl btn-primary p-2.5 text-sm font-medium"
           >
             <Plus className="h-4 w-4" />
           </button>
         </div>
       </div>
 
-      {/* Planned Activities */}
       <div>
-        <div className="mb-3 flex items-center justify-between">
-          <label className="text-sm font-medium text-gray-700">
-            Planned Time Blocks
-          </label>
+        <div className="mb-2 flex items-center justify-between">
+          <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Time blocks</label>
           {!showAddActivity && (
             <button
               onClick={() => setShowAddActivity(true)}
-              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+              className="text-xs text-sky-600 hover:text-sky-700 font-medium"
             >
-              + Add Block
+              + Add block
             </button>
           )}
         </div>
         {showAddActivity && (
-          <div className="mb-3 rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-3">
+          <div className="mb-3 rounded-lg border border-slate-200 bg-slate-50 p-4 space-y-3">
             <input
               type="text"
               value={newActivity.description || ''}
               onChange={(e) => setNewActivity({ ...newActivity, description: e.target.value })}
               placeholder="What will you work on?"
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
             />
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-gray-600 mb-1">Start</label>
+                <label className="block text-xs text-slate-500 mb-1">Start</label>
                 <input
                   type="datetime-local"
                   value={newActivity.planned_start}
                   onChange={(e) => setNewActivity({ ...newActivity, planned_start: e.target.value })}
-                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
                 />
               </div>
               <div>
-                <label className="block text-xs text-gray-600 mb-1">End</label>
+                <label className="block text-xs text-slate-500 mb-1">End</label>
                 <input
                   type="datetime-local"
                   value={newActivity.planned_end}
                   onChange={(e) => setNewActivity({ ...newActivity, planned_end: e.target.value })}
-                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
                 />
               </div>
             </div>
@@ -290,7 +272,7 @@ export function DailyPlanComponent() {
               <select
                 value={newActivity.category}
                 onChange={(e) => setNewActivity({ ...newActivity, category: e.target.value as ActivityCategory })}
-                className="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
               >
                 {categories.map((cat) => (
                   <option key={cat} value={cat}>{cat}</option>
@@ -299,7 +281,7 @@ export function DailyPlanComponent() {
               <select
                 value={newActivity.priority}
                 onChange={(e) => setNewActivity({ ...newActivity, priority: e.target.value as 'high' | 'medium' | 'low' })}
-                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -309,13 +291,13 @@ export function DailyPlanComponent() {
             <div className="flex gap-2">
               <button
                 onClick={addPlannedActivity}
-                className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                className="flex-1 rounded-lg btn-primary px-4 py-2 text-sm font-medium"
               >
                 Add
               </button>
               <button
                 onClick={() => setShowAddActivity(false)}
-                className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                className="rounded-lg btn-secondary px-4 py-2 text-sm font-medium"
               >
                 Cancel
               </button>
@@ -326,35 +308,33 @@ export function DailyPlanComponent() {
           {plan?.planned_activities.map((activity) => (
             <div
               key={activity.id}
-              className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-3"
+              className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 p-3"
             >
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-900">{activity.description}</span>
+                  <span className="text-sm font-medium text-slate-900">{activity.description}</span>
                   <span className={`text-xs px-2 py-0.5 rounded ${
                     activity.priority === 'high' ? 'bg-red-100 text-red-700' :
-                    activity.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                    'bg-gray-100 text-gray-700'
+                    activity.priority === 'medium' ? 'bg-amber-100 text-amber-700' :
+                    'bg-slate-200 text-slate-600'
                   }`}>
                     {activity.priority}
                   </span>
                 </div>
-                <div className="mt-1 text-xs text-gray-500">
+                <div className="mt-1 text-xs text-slate-500">
                   {format(parseISO(activity.planned_start), 'h:mm a')} - {format(parseISO(activity.planned_end), 'h:mm a')} • {activity.category}
                 </div>
               </div>
               <button
                 onClick={() => removePlannedActivity(activity.id)}
-                className="ml-3 text-gray-400 hover:text-red-500 transition-colors"
+                className="ml-3 text-slate-500 hover:text-red-600 transition-colors"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
           ))}
           {(!plan?.planned_activities || plan.planned_activities.length === 0) && (
-            <p className="text-sm text-gray-400 text-center py-4">
-              No planned time blocks yet
-            </p>
+            <p className="text-sm text-slate-500 text-center py-4">No planned time blocks yet</p>
           )}
         </div>
       </div>

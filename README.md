@@ -1,8 +1,21 @@
-# iRoutine
+# iRoutine — Personal Life Operating System
 
 **A personal life operating system that helps you understand why your days go the way they do — and improve them without burning out.**
 
 Most productivity apps tell you what to do. iRoutine helps you understand what actually happened, why it happened, and what small change might make tomorrow better. It's not another task manager or habit tracker. It's a feedback system for your life.
+
+---
+
+## Project Overview
+
+| | |
+|---|---|
+| **Problem** | Personal productivity tools are fragmented—time tracking, expense management, energy monitoring, and focus analysis exist in separate silos. Users can't see how time spent affects energy, how expenses correlate with productivity, or how interruptions impact focus. There's no unified system that connects these domains to provide actionable insights. |
+| **Context** | Built a personal life operating system that connects time, money, energy, and focus with cross-domain intelligence. The system handles time-series data for multiple users with 1000+ data points per day, provides real-time dashboard updates, and offers explainable analytics where users understand how insights are calculated. |
+| **Approach** | Full-stack application with Next.js 14 frontend (TypeScript) and FastAPI backend. Supabase PostgreSQL with optimized indexes for time-range queries. Analytics engine calculating cross-domain correlations (time × energy × focus). PDF/CSV export for weekly reviews and data portability. Row-level security (RLS) for data isolation and JWT token validation. |
+| **Technologies** | Next.js 14, TypeScript, FastAPI, Supabase, PostgreSQL, time-series analysis, data visualization |
+| **Results** | Weekly reviews with PDF/CSV exports; cross-domain intelligence (time ↔ energy ↔ focus); real-time dashboard updates with &lt;500ms query times for time-range data; every insight shows the underlying calculation. |
+| **Lessons & Next Steps** | Normalized schema with separate tables for time, expenses, energy, and focus; junction tables for cross-domain relationships; materialized views for common correlation queries; graceful handling of missing data; timezone-safe time-series analysis. Next: queueing for heavy correlation calculations, Redis caching, and observability metrics. |
 
 ---
 
@@ -293,15 +306,18 @@ Tests run automatically on push via GitHub Actions. See `.github/workflows/ci.ym
 
 ## Deployment
 
+**Follow [DEPLOY.md](./DEPLOY.md) step-by-step** for production: Supabase → Backend → Frontend, with env vars and Auth URL config.
+
 ### Frontend (Vercel)
 
 1. Push your code to GitHub
 2. Import the repository in Vercel
-3. Add environment variables:
+3. **Set Root Directory to `frontend`** (Project Settings → General → Root Directory → Edit → enter `frontend`). Required so Vercel detects Next.js; otherwise you’ll see “No Next.js version detected.”
+4. Add environment variables:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `NEXT_PUBLIC_API_URL`
-4. Deploy (automatic on every push)
+5. Deploy (automatic on every push)
 
 ### Backend (Render or Fly.io)
 

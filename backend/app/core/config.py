@@ -50,11 +50,12 @@ class Settings(BaseSettings):
         """
         Pydantic configuration.
 
-        Tells Pydantic to load environment variables from .env file
-        in the project root directory.
+        Loads from .env when present (local dev). In production, platforms
+        (Render, Fly.io, etc.) inject env vars directly; .env is not required.
         """
 
         env_file = ".env"
+        extra = "ignore"
 
 
 # Create global settings instance

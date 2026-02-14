@@ -72,10 +72,10 @@ export function PatternDetector() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg">
-        <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-neutral-100 rounded-lg w-1/2"></div>
-          <div className="h-32 bg-neutral-100 rounded-xl"></div>
+      <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 animate-pulse">
+        <div className="space-y-4">
+          <div className="h-4 bg-neutral-700 rounded-lg w-1/2" />
+          <div className="h-32 bg-neutral-700 rounded-xl" />
         </div>
       </div>
     )
@@ -83,10 +83,10 @@ export function PatternDetector() {
 
   if (activities.length < 3) {
     return (
-      <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg">
+      <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6">
         <div className="text-center py-12">
-          <Brain className="h-10 w-10 text-neutral-300 mx-auto mb-3" />
-          <p className="text-sm text-neutral-500 font-medium">
+          <Brain className="h-10 w-10 text-neutral-600 mx-auto mb-3" />
+          <p className="text-sm text-neutral-400 font-medium">
             Need more data to detect patterns. Keep tracking!
           </p>
         </div>
@@ -111,41 +111,41 @@ export function PatternDetector() {
     switch (type) {
       case 'positive':
         return {
-          bg: 'bg-success-50',
-          border: 'border-success-200/50',
-          text: 'text-success-900',
-          subtext: 'text-success-700',
-          badge: 'bg-success-100 text-success-700',
+          bg: 'bg-emerald-500/10',
+          border: 'border-emerald-500/30',
+          text: 'text-white',
+          subtext: 'text-neutral-300',
+          badge: 'bg-emerald-500/20 text-emerald-300',
         }
       case 'negative':
         return {
-          bg: 'bg-danger-50',
-          border: 'border-danger-200/50',
-          text: 'text-danger-900',
-          subtext: 'text-danger-700',
-          badge: 'bg-danger-100 text-danger-700',
+          bg: 'bg-red-500/10',
+          border: 'border-red-500/30',
+          text: 'text-white',
+          subtext: 'text-neutral-300',
+          badge: 'bg-red-500/20 text-red-300',
         }
       default:
         return {
-          bg: 'bg-primary-50',
-          border: 'border-primary-200/50',
-          text: 'text-primary-900',
-          subtext: 'text-primary-700',
-          badge: 'bg-primary-100 text-primary-700',
+          bg: 'bg-neutral-800/50',
+          border: 'border-neutral-700/50',
+          text: 'text-white',
+          subtext: 'text-neutral-300',
+          badge: 'bg-neutral-700 text-neutral-300',
         }
     }
   }
 
   return (
-    <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg card-hover">
+    <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 card-hover">
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2.5 rounded-xl bg-gradient-to-br from-primary-600 to-primary-800 shadow-glow-primary">
-            <Brain className="h-5 w-5 text-white" />
+          <div className="p-2.5 rounded-xl bg-neutral-800 border border-neutral-700/50">
+            <Brain className="h-5 w-5 text-neutral-300" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-neutral-900">AI Pattern Detection</h2>
-            <p className="text-xs text-neutral-500">Discovered patterns in your behavior and productivity</p>
+            <h2 className="text-lg font-semibold text-white">AI Pattern Detection</h2>
+            <p className="text-xs text-neutral-400">Discovered patterns in your behavior and productivity</p>
           </div>
         </div>
       </div>
@@ -158,7 +158,7 @@ export function PatternDetector() {
           return (
             <div
               key={idx}
-              className={`rounded-xl p-4 border transition-all hover:shadow-md ${colors.bg} ${colors.border} animate-slide-up`}
+              className={`rounded-xl p-4 border transition-all ${colors.bg} ${colors.border} animate-slide-up`}
               style={{ animationDelay: `${idx * 100}ms` }}
             >
               <div className="flex items-start gap-3">
@@ -177,7 +177,7 @@ export function PatternDetector() {
                   <p className={`text-sm ${colors.subtext} mb-2`}>
                     {pattern.description}
                   </p>
-                  <div className="flex items-start gap-2 mt-3 pt-3 border-t border-opacity-20 border-gray-400">
+                  <div className="flex items-start gap-2 mt-3 pt-3 border-t border-neutral-700/50">
                     <Sparkles className={`h-3 w-3 mt-0.5 ${colors.subtext}`} />
                     <p className={`text-xs ${colors.subtext} italic`}>
                       {pattern.suggestion}
@@ -192,8 +192,8 @@ export function PatternDetector() {
 
       {patterns.length === 0 && (
         <div className="text-center py-8">
-          <Brain className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-sm text-gray-500">
+          <Brain className="h-12 w-12 text-neutral-600 mx-auto mb-3" />
+          <p className="text-sm text-neutral-400">
             No clear patterns detected yet. Keep tracking consistently!
           </p>
         </div>
@@ -201,25 +201,25 @@ export function PatternDetector() {
 
       {/* Summary */}
       {patterns.length > 0 && (
-        <div className="mt-6 pt-6 border-t border-gray-200">
+        <div className="mt-6 pt-6 border-t border-neutral-700/50">
           <div className="grid grid-cols-3 gap-3 text-center">
             <div>
-              <div className="text-2xl font-bold text-green-600">
+              <div className="text-2xl font-bold text-emerald-400">
                 {patterns.filter(p => p.type === 'positive').length}
               </div>
-              <div className="text-xs text-gray-500">Strengths</div>
+              <div className="text-xs text-neutral-500">Strengths</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-blue-600">
+              <div className="text-2xl font-bold text-blue-400">
                 {patterns.filter(p => p.type === 'neutral').length}
               </div>
-              <div className="text-xs text-gray-500">Observations</div>
+              <div className="text-xs text-neutral-500">Observations</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-red-600">
+              <div className="text-2xl font-bold text-red-400">
                 {patterns.filter(p => p.type === 'negative').length}
               </div>
-              <div className="text-xs text-gray-500">Improvements</div>
+              <div className="text-xs text-neutral-500">Improvements</div>
             </div>
           </div>
         </div>

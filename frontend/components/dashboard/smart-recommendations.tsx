@@ -72,10 +72,10 @@ export function SmartRecommendations() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg">
-        <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-neutral-100 rounded-lg w-1/2"></div>
-          <div className="h-32 bg-neutral-100 rounded-xl"></div>
+      <div className="card rounded-xl p-6 animate-pulse">
+        <div className="space-y-4">
+          <div className="h-4 bg-slate-200 rounded-lg w-1/2" />
+          <div className="h-32 bg-slate-200 rounded-xl" />
         </div>
       </div>
     )
@@ -83,10 +83,10 @@ export function SmartRecommendations() {
 
   if (activities.length < 3) {
     return (
-      <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg">
+      <div className="card rounded-xl p-6">
         <div className="text-center py-12">
-          <Lightbulb className="h-10 w-10 text-neutral-300 mx-auto mb-3" />
-          <p className="text-sm text-neutral-500 font-medium">
+          <Lightbulb className="h-10 w-10 text-neutral-600 mx-auto mb-3" />
+          <p className="text-sm text-slate-500 font-medium">
             Track more activities to get personalized recommendations
           </p>
         </div>
@@ -136,15 +136,15 @@ export function SmartRecommendations() {
   ]
 
   return (
-    <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg card-hover">
+    <div className="card rounded-xl p-6 card-hover">
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2.5 rounded-xl bg-gradient-to-br from-warning-500 to-warning-700 shadow-lg">
-            <Lightbulb className="h-5 w-5 text-white" />
+          <div className="p-2.5 rounded-xl bg-slate-100 border border-slate-200">
+            <Lightbulb className="h-5 w-5 text-slate-600" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-neutral-900">Smart Recommendations</h2>
-            <p className="text-xs text-neutral-500">Personalized insights based on your data</p>
+            <h2 className="text-lg font-semibold text-slate-900">Smart Recommendations</h2>
+            <p className="text-xs text-slate-500">Personalized insights based on your data</p>
           </div>
         </div>
       </div>
@@ -156,15 +156,15 @@ export function SmartRecommendations() {
           return (
             <div
               key={idx}
-              className="rounded-xl p-4 bg-gradient-to-br from-neutral-50 to-white border border-neutral-200/60 hover:shadow-soft-lg transition-all animate-scale-in"
+              className="rounded-xl p-4 bg-slate-100/50 border border-slate-200 transition-all animate-scale-in"
               style={{ animationDelay: `${idx * 100}ms` }}
             >
-              <div className={`inline-flex p-2.5 rounded-xl bg-gradient-to-br ${rec.color} shadow-soft mb-3`}>
-                <Icon className="h-4 w-4 text-white" />
+              <div className="inline-flex p-2.5 rounded-xl bg-slate-200 mb-3">
+                <Icon className="h-4 w-4 text-slate-600" />
               </div>
               <div className="text-xs font-semibold text-neutral-500 mb-1 uppercase tracking-wide">{rec.title}</div>
-              <div className="text-lg font-bold text-neutral-900 mb-1 capitalize">{rec.value}</div>
-              <div className="text-xs text-neutral-600">{rec.description}</div>
+              <div className="text-lg font-bold text-slate-900 mb-1 capitalize">{rec.value}</div>
+              <div className="text-xs text-slate-500">{rec.description}</div>
             </div>
           )
         })}
@@ -172,19 +172,19 @@ export function SmartRecommendations() {
 
       {/* Action Items */}
       <div className="space-y-2">
-        <div className="text-sm font-semibold text-neutral-900 mb-3">Recommended Actions</div>
+        <div className="text-sm font-semibold text-slate-900 mb-3">Recommended Actions</div>
         {insights.predictions.recommendations.map((recommendation, idx) => (
           <div
             key={idx}
-            className="flex items-start gap-3 rounded-xl bg-warning-50 p-3.5 border border-warning-200/50 hover:bg-warning-100/50 hover:shadow-soft transition-all animate-slide-up"
+            className="flex items-start gap-3 rounded-xl bg-amber-500/10 p-3.5 border border-amber-500/30 transition-all animate-slide-up"
             style={{ animationDelay: `${(idx + 4) * 100}ms` }}
           >
-            <Zap className="h-4 w-4 text-warning-600 mt-0.5 flex-shrink-0" />
-            <p className="text-sm text-warning-900 font-medium">{recommendation}</p>
+            <Zap className="h-4 w-4 text-amber-400 mt-0.5 flex-shrink-0" />
+            <p className="text-sm text-amber-200 font-medium">{recommendation}</p>
           </div>
         ))}
         {insights.predictions.recommendations.length === 0 && (
-          <div className="text-center py-6 text-sm text-gray-500">
+          <div className="text-center py-6 text-sm text-neutral-500">
             You&apos;re doing great! Keep up the good work.
           </div>
         )}
@@ -192,12 +192,12 @@ export function SmartRecommendations() {
 
       {/* Risk Periods Warning */}
       {insights.predictions.riskPeriods.length > 0 && (
-        <div className="mt-6 pt-6 border-t border-gray-200">
-          <div className="flex items-start gap-3 rounded-lg bg-red-50 p-4 border border-red-100">
-            <Shield className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+        <div className="mt-6 pt-6 border-t border-slate-200">
+          <div className="flex items-start gap-3 rounded-lg bg-red-500/10 p-4 border border-red-500/30">
+            <Shield className="h-5 w-5 text-red-400 mt-0.5 flex-shrink-0" />
             <div>
-              <div className="text-sm font-semibold text-red-900 mb-1">High-Risk Periods</div>
-              <div className="text-xs text-red-700">
+              <div className="text-sm font-semibold text-red-300 mb-1">High-Risk Periods</div>
+              <div className="text-xs text-slate-500">
                 Avoid scheduling important work during: {insights.predictions.riskPeriods.join(', ')}
               </div>
             </div>

@@ -64,8 +64,8 @@ export function CrossDomainInsights() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 p-6">
-        <div className="animate-pulse">Loading insights...</div>
+      <div className="rounded-xl card p-6 animate-pulse">
+        <div className="text-slate-500">Loading insights...</div>
       </div>
     )
   }
@@ -87,20 +87,17 @@ export function CrossDomainInsights() {
 
   return (
     <div className="relative space-y-8">
-      {/* Enhanced Header with Gradient */}
-      <div className="relative bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 p-8 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-purple-50/30 to-pink-50/50"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-indigo-200/20 via-purple-200/20 to-pink-200/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-        
-        <div className="relative z-10 flex items-center gap-4">
-          <div className="p-4 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-lg shadow-purple-500/30">
-            <Brain className="h-7 w-7 text-white" />
+      {/* Header - Dark Artoo style */}
+      <div className="rounded-xl card p-6">
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-xl bg-slate-100 border border-slate-200">
+            <Brain className="h-6 w-6 text-slate-600" />
           </div>
           <div>
-            <h2 className="text-3xl font-extrabold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold text-slate-900">
               Cross-Domain Insights
             </h2>
-            <p className="text-base text-neutral-600 font-medium mt-1">
+            <p className="text-sm text-slate-500 mt-1">
               Discover how time, money, energy, and focus interconnect
             </p>
           </div>
@@ -122,60 +119,56 @@ export function CrossDomainInsights() {
             return (
               <div
                 key={idx}
-                className="relative bg-white/90 backdrop-blur-xl rounded-3xl border border-white/20 p-6 shadow-xl card-hover overflow-hidden group"
+                className="rounded-xl card p-6 card-hover"
                 style={{ animationDelay: `${idx * 100}ms` }}
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${config.bg} opacity-60`}></div>
-                <div className="absolute -top-12 -right-12 w-32 h-32 bg-gradient-to-br from-white/20 to-transparent rounded-full blur-2xl"></div>
+                <div className="flex items-start gap-4 mb-4">
+                  <div className={`p-3 rounded-xl bg-slate-100 border border-slate-200`}>
+                    <Icon className="h-5 w-5 text-slate-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-slate-900 mb-2">{insight.title}</h3>
+                    <p className="text-sm text-slate-500 leading-relaxed">{insight.description}</p>
+                  </div>
+                </div>
                 
-                <div className="relative z-10">
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className={`p-3 rounded-2xl bg-gradient-to-br ${config.gradient} shadow-lg group-hover:scale-110 transition-transform`}>
-                      <Icon className="h-6 w-6 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold text-neutral-900 mb-2">{insight.title}</h3>
-                      <p className="text-sm text-neutral-600 leading-relaxed">{insight.description}</p>
+                {insight.recommendation && (
+                  <div className="mt-4 p-4 bg-slate-100/50 rounded-xl border border-slate-200">
+                    <div className="flex items-start gap-2">
+                      <Sparkles className="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                      <p className="text-sm font-medium text-slate-600 leading-relaxed">
+                        {insight.recommendation}
+                      </p>
                     </div>
                   </div>
-                  
-                  {insight.recommendation && (
-                    <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
-                      <div className="flex items-start gap-2">
-                        <Sparkles className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                        <p className="text-sm font-medium text-blue-900 leading-relaxed">
-                          {insight.recommendation}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
             )
           })}
         </div>
       ) : (
-        <div className="bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-3xl p-12 text-center border-2 border-dashed border-neutral-300">
-          <Brain className="h-12 w-12 text-neutral-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-neutral-700 mb-2">No Insights Yet</h3>
-          <p className="text-sm text-neutral-500">Start tracking your activities, energy, and spending to see insights here.</p>
+        <div className="rounded-xl card p-12 text-center border-dashed">
+          <Brain className="h-12 w-12 text-neutral-600 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-slate-900 mb-2">No Insights Yet</h3>
+          <p className="text-sm text-slate-500">Start tracking your activities, energy, and spending to see insights here.</p>
         </div>
       )}
 
       {/* Time vs Money Chart */}
-      <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 p-6">
-        <h3 className="text-lg font-semibold text-neutral-900 mb-4">Time vs Spending (Last 14 Days)</h3>
+      <div className="rounded-xl card p-6">
+        <h3 className="text-lg font-semibold text-slate-900 mb-4">Time vs Spending (Last 14 Days)</h3>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={timeMoneyChartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-            <XAxis dataKey="date" stroke="#6b7280" fontSize={12} />
-            <YAxis yAxisId="left" stroke="#6b7280" fontSize={12} />
-            <YAxis yAxisId="right" orientation="right" stroke="#6b7280" fontSize={12} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#404040" />
+            <XAxis dataKey="date" stroke="#a3a3a3" fontSize={12} tick={{ fill: '#a3a3a3' }} />
+            <YAxis yAxisId="left" stroke="#a3a3a3" fontSize={12} tick={{ fill: '#a3a3a3' }} />
+            <YAxis yAxisId="right" orientation="right" stroke="#a3a3a3" fontSize={12} tick={{ fill: '#a3a3a3' }} />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#fff',
-                border: '1px solid #e5e7eb',
+                backgroundColor: '#262626',
+                border: '1px solid #404040',
                 borderRadius: '8px',
+                color: '#fff',
               }}
             />
             <Legend />
@@ -203,15 +196,13 @@ export function CrossDomainInsights() {
 
       {/* Enhanced Energy vs Spending Chart */}
       {energySpendingChartData.length > 0 ? (
-        <div className="relative bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 p-8 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 via-emerald-50/30 to-teal-50/50"></div>
-          <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600">
-                <Zap className="h-5 w-5 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-neutral-900">Energy vs Spending (Last 14 Days)</h3>
+        <div className="rounded-xl card p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 rounded-xl bg-slate-100 border border-slate-200">
+              <Zap className="h-5 w-5 text-slate-600" />
             </div>
+            <h3 className="text-lg font-bold text-slate-900">Energy vs Spending (Last 14 Days)</h3>
+          </div>
             <ResponsiveContainer width="100%" height={350}>
               <BarChart data={energySpendingChartData} barCategoryGap="20%">
                 <defs>
@@ -224,12 +215,12 @@ export function CrossDomainInsights() {
                     <stop offset="95%" stopColor="#ef4444" stopOpacity={0.4}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.5} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#404040" opacity={0.5} />
                 <XAxis 
                   dataKey="date" 
-                  stroke="#6b7280" 
+                  stroke="#a3a3a3" 
                   fontSize={12}
-                  tick={{ fill: '#6b7280' }}
+                  tick={{ fill: '#a3a3a3' }}
                 />
                 <YAxis 
                   yAxisId="left" 
@@ -249,11 +240,11 @@ export function CrossDomainInsights() {
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    backgroundColor: '#262626',
                     backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
+                    border: '1px solid #404040',
                     borderRadius: '12px',
-                    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+                    color: '#fff',
                   }}
                 />
                 <Legend wrapperStyle={{ paddingTop: '20px' }} />
@@ -273,12 +264,11 @@ export function CrossDomainInsights() {
                 />
               </BarChart>
             </ResponsiveContainer>
-          </div>
         </div>
       ) : (
-        <div className="bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-3xl p-12 text-center border-2 border-dashed border-neutral-300">
-          <Zap className="h-12 w-12 text-neutral-400 mx-auto mb-4" />
-          <p className="text-sm text-neutral-500">No energy vs spending data available yet.</p>
+        <div className="rounded-xl card p-12 text-center border-dashed">
+          <Zap className="h-12 w-12 text-neutral-600 mx-auto mb-4" />
+          <p className="text-sm text-slate-500">No energy vs spending data available yet.</p>
         </div>
       )}
 
@@ -287,58 +277,49 @@ export function CrossDomainInsights() {
         <div className="grid gap-6 md:grid-cols-3">
           {timeMoneyData.length > 0 && (
             <>
-              <div className="relative bg-white/90 backdrop-blur-xl rounded-3xl border border-white/20 p-6 shadow-xl card-hover overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-indigo-50/50"></div>
-                <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600">
-                      <Activity className="h-5 w-5 text-white" />
-                    </div>
-                    <div className="text-sm font-semibold text-neutral-600 uppercase tracking-wide">Avg Daily Hours</div>
+              <div className="rounded-xl card p-6 card-hover">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 rounded-xl bg-slate-100 border border-slate-200">
+                    <Activity className="h-5 w-5 text-slate-600" />
                   </div>
-                  <div className="text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                    {(
-                      timeMoneyData.reduce((sum, d) => sum + d.total_hours, 0) / timeMoneyData.length
-                    ).toFixed(1)}h
-                  </div>
+                  <div className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Avg Daily Hours</div>
+                </div>
+                <div className="text-4xl font-extrabold text-slate-900">
+                  {(
+                    timeMoneyData.reduce((sum, d) => sum + d.total_hours, 0) / timeMoneyData.length
+                  ).toFixed(1)}h
                 </div>
               </div>
-              <div className="relative bg-white/90 backdrop-blur-xl rounded-3xl border border-white/20 p-6 shadow-xl card-hover overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 to-emerald-50/50"></div>
-                <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600">
-                      <DollarSign className="h-5 w-5 text-white" />
-                    </div>
-                    <div className="text-sm font-semibold text-neutral-600 uppercase tracking-wide">Avg Daily Expenses</div>
+              <div className="rounded-xl card p-6 card-hover">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 rounded-xl bg-slate-100 border border-slate-200">
+                    <DollarSign className="h-5 w-5 text-slate-600" />
                   </div>
-                  <div className="text-4xl font-extrabold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                    $
-                    {(
-                      timeMoneyData.reduce((sum, d) => sum + d.daily_expenses, 0) / timeMoneyData.length
-                    ).toFixed(2)}
-                  </div>
+                  <div className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Avg Daily Expenses</div>
+                </div>
+                <div className="text-4xl font-extrabold text-slate-900">
+                  $
+                  {(
+                    timeMoneyData.reduce((sum, d) => sum + d.daily_expenses, 0) / timeMoneyData.length
+                  ).toFixed(2)}
                 </div>
               </div>
             </>
           )}
           {energySpendingData.length > 0 && (
-            <div className="relative bg-white/90 backdrop-blur-xl rounded-3xl border border-white/20 p-6 shadow-xl card-hover overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-50/50 to-orange-50/50"></div>
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-600">
-                    <Zap className="h-5 w-5 text-white" />
-                  </div>
-                  <div className="text-sm font-semibold text-neutral-600 uppercase tracking-wide">Avg Energy Level</div>
+            <div className="rounded-xl card p-6 card-hover">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 rounded-xl bg-slate-100 border border-slate-200">
+                  <Zap className="h-5 w-5 text-slate-600" />
                 </div>
-                <div className="text-4xl font-extrabold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent">
-                  {(
-                    energySpendingData.reduce((sum, d) => sum + d.energy_level, 0) /
-                    energySpendingData.length
-                  ).toFixed(1)}
-                  <span className="text-2xl text-neutral-500">/5</span>
-                </div>
+                <div className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Avg Energy Level</div>
+              </div>
+              <div className="text-4xl font-extrabold text-slate-900">
+                {(
+                  energySpendingData.reduce((sum, d) => sum + d.energy_level, 0) /
+                  energySpendingData.length
+                ).toFixed(1)}
+                <span className="text-2xl text-slate-500">/5</span>
               </div>
             </div>
           )}

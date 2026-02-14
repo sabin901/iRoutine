@@ -77,9 +77,9 @@ export function DashboardStats() {
     return (
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="rounded-2xl border border-gray-200 bg-white p-6 animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-            <div className="h-8 bg-gray-200 rounded w-1/3"></div>
+          <div key={i} className="card p-5 sm:p-6 animate-pulse">
+            <div className="h-4 bg-slate-100 rounded-lg w-1/2 mb-4" />
+            <div className="h-8 bg-slate-100 rounded-lg w-1/3 mt-3" />
           </div>
         ))}
       </div>
@@ -102,7 +102,7 @@ export function DashboardStats() {
   const qualityMetrics = calculateAverageFocusQuality(activities, interruptions)
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <StatsCard
         title="Focus Time"
         value={`${Math.round(totalFocusMinutes / 60 * 10) / 10}h`}

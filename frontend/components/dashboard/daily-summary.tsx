@@ -68,7 +68,7 @@ export function DailySummary() {
 
     // Count completed goals
     const completed = JSON.parse(localStorage.getItem('routine_completed_goals') || '{}')
-    const completedCount = todayPlan?.goals.filter((_, i) => completed[`${today}-${i}`]).length || 0
+    const completedCount = todayPlan?.goals.filter((_: string, i: number) => completed[`${today}-${i}`]).length || 0
     setCompletedGoals(completedCount)
 
     // Load reflection
@@ -107,8 +107,8 @@ export function DailySummary() {
 
   if (!plan) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <p className="text-sm text-gray-500 text-center py-4">
+      <div className="card p-6">
+        <p className="text-sm text-slate-500 text-center py-4">
           Set a daily plan to see your summary
         </p>
       </div>
@@ -124,103 +124,83 @@ export function DailySummary() {
     : 0
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">Today&apos;s Summary</h2>
-        <p className="mt-1 text-sm text-gray-500">
-          How did your day align with your plan?
-        </p>
+    <div className="card p-6">
+      <div className="mb-5">
+        <h2 className="text-lg font-semibold text-slate-900">Today&apos;s Summary</h2>
+        <p className="mt-0.5 text-sm text-slate-500">How your day aligned with your plan</p>
       </div>
 
       <div className="space-y-6">
-        {/* Goals Progress */}
         <div>
           <div className="mb-2 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">Goals</span>
+              <Target className="h-4 w-4 text-slate-500" />
+              <span className="text-sm font-medium text-slate-700">Goals</span>
             </div>
-            <span className="text-sm font-semibold text-gray-900">
-              {completedGoals} / {plan.goals.length}
-            </span>
+            <span className="text-sm font-semibold text-slate-900">{completedGoals} / {plan.goals.length}</span>
           </div>
-          <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
-            <div
-              className="h-full bg-green-500 transition-all duration-500"
-              style={{ width: `${goalsProgress}%` }}
-            />
+          <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
+            <div className="h-full bg-emerald-500 transition-all duration-500" style={{ width: `${goalsProgress}%` }} />
           </div>
         </div>
 
-        {/* Focus Hours Progress */}
         <div>
           <div className="mb-2 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">Focus Time</span>
+              <Clock className="h-4 w-4 text-slate-500" />
+              <span className="text-sm font-medium text-slate-700">Focus Time</span>
             </div>
-            <span className="text-sm font-semibold text-gray-900">
-              {actualFocusHours}h / {plan.planned_focus_hours}h
-            </span>
+            <span className="text-sm font-semibold text-slate-900">{actualFocusHours}h / {plan.planned_focus_hours}h</span>
           </div>
-          <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+          <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
             <div
               className={`h-full transition-all duration-500 ${
-                focusProgress >= 100 ? 'bg-green-500' :
-                focusProgress >= 75 ? 'bg-blue-500' :
-                focusProgress >= 50 ? 'bg-yellow-500' :
-                'bg-red-500'
+                focusProgress >= 100 ? 'bg-emerald-500' :
+                focusProgress >= 75 ? 'bg-sky-500' :
+                focusProgress >= 50 ? 'bg-amber-500' : 'bg-red-500'
               }`}
               style={{ width: `${focusProgress}%` }}
             />
           </div>
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-slate-500">
             {timeAccuracy}% of planned time
             {timeAccuracy < 80 && ' • Consider adjusting your planning'}
           </p>
         </div>
 
-        {/* Interruption Time */}
         <div>
           <div className="mb-2 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-gray-700">Interruptions</span>
-            </div>
-            <span className="text-sm font-semibold text-gray-900">
+            <span className="text-sm font-medium text-slate-700">Interruptions</span>
+            <span className="text-sm font-semibold text-slate-900">
               {Math.floor(totalInterruptionMinutes / 60)}h {totalInterruptionMinutes % 60}m
             </span>
           </div>
-          <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+          <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
             <div
               className="h-full bg-red-500 transition-all duration-500"
               style={{ width: `${Math.min((totalInterruptionMinutes / 60 / 8) * 100, 100)}%` }}
             />
           </div>
-          <p className="mt-1 text-xs text-gray-500">
-            {totalInterruptionMinutes > 0 
+          <p className="mt-1 text-xs text-slate-500">
+            {totalInterruptionMinutes > 0
               ? `${totalInterruptionMinutes} minutes of interruptions today`
               : 'No interruptions logged'}
           </p>
         </div>
 
-        {/* Time Accuracy Insight */}
         {plan.planned_focus_hours > 0 && (
-          <div className="rounded-lg bg-blue-50 p-4">
+          <div className="rounded-lg bg-sky-50 border border-sky-200 p-4">
             <div className="flex items-start gap-3">
-              <TrendingUp className="h-5 w-5 text-blue-600 mt-0.5" />
+              <TrendingUp className="h-5 w-5 text-sky-600 mt-0.5" />
               <div className="flex-1">
-                <p className="text-sm font-medium text-blue-900">
-                  {timeAccuracy >= 90 
-                    ? 'Great planning accuracy!'
-                    : timeAccuracy >= 70
-                    ? 'Close to your plan'
-                    : 'Consider planning less time'}
+                <p className="text-sm font-medium text-slate-900">
+                  {timeAccuracy >= 90 ? 'Great planning accuracy!' : timeAccuracy >= 70 ? 'Close to your plan' : 'Consider planning less time'}
                 </p>
-                <p className="mt-1 text-xs text-blue-700">
+                <p className="mt-1 text-xs text-slate-600">
                   {timeAccuracy >= 90
-                    ? 'You\'re accurately estimating your focus time.'
+                    ? "You're accurately estimating your focus time."
                     : timeAccuracy >= 70
-                    ? 'You\'re within 30% of your planned time.'
+                    ? "You're within 30% of your planned time."
                     : 'You planned more time than you actually focused. Try reducing by 20-30%.'}
                 </p>
               </div>
@@ -228,15 +208,12 @@ export function DailySummary() {
           </div>
         )}
 
-        {/* Reflection */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Daily Reflection
-          </label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Daily Reflection</label>
           {!showReflection ? (
             <button
               onClick={() => setShowReflection(true)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-gray-50 text-left"
+              className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-500 transition-colors hover:bg-slate-100 text-left"
             >
               Add reflection...
             </button>
@@ -247,11 +224,11 @@ export function DailySummary() {
                 onChange={(e) => setReflection(e.target.value)}
                 placeholder="What worked well? What would you do differently?"
                 rows={3}
-                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none"
               />
               <button
                 onClick={saveReflection}
-                className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                className="w-full rounded-lg btn-primary px-4 py-2 text-sm font-medium"
               >
                 Save Reflection
               </button>

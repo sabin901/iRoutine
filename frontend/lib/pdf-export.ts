@@ -257,18 +257,21 @@ export function generatePDFHTML(data: WeeklyReportData): string {
 /**
  * Export as PDF using browser print (fallback)
  */
-export function exportWeeklyPDF(data: WeeklyReportData) {
+export function exportWeeklyPDF(
+  data: WeeklyReportData,
+  options?: { onPopupBlocked?: (message: string) => void }
+) {
   const html = generatePDFHTML(data)
   const printWindow = window.open('', '_blank')
   if (!printWindow) {
-    alert('Please allow popups to export PDF')
+    const msg = 'Please allow popups to export PDF'
+    options?.onPopupBlocked ? options.onPopupBlocked(msg) : alert(msg)
     return
   }
-  
+
   printWindow.document.write(html)
   printWindow.document.close()
-  
-  // Wait for content to load, then print
+
   setTimeout(() => {
     printWindow.print()
   }, 250)

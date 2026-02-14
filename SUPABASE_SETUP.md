@@ -2,7 +2,7 @@
 
 ## Step 1: Run the Complete Schema
 
-1. Go to your Supabase project dashboard: https://supabase.com/dashboard/project/nbylefpryatipeotqvis
+1. Go to your Supabase project dashboard: [supabase.com/dashboard](https://supabase.com/dashboard) → select your project
 2. Navigate to **SQL Editor** (left sidebar)
 3. Click **New Query**
 4. Copy and paste the entire contents of `backend/supabase/complete_schema.sql`
@@ -91,6 +91,16 @@ Both servers should now connect to your Supabase instance automatically.
    - `handle_new_user()` - Auto-create profiles on signup
 5. **Triggers**: Auto-update timestamps on all tables
 6. **Views**: Cross-domain correlation views for analytics
+
+## Production: Auth URL configuration
+
+When you deploy the frontend (e.g. to Vercel), configure Supabase so login/signup redirects work:
+
+1. In Supabase: **Authentication** → **URL Configuration**
+2. **Site URL**: set to your production frontend URL (e.g. `https://your-app.vercel.app`)
+3. **Redirect URLs**: add the same URL and `https://your-app.vercel.app/**`
+
+Without this, users may get redirect errors after sign up or sign in. See **DEPLOY.md** for the full deployment checklist.
 
 ## Next Steps
 

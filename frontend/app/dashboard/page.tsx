@@ -8,64 +8,61 @@ import { AchievementsPanel } from '@/components/dashboard/achievements-panel'
 import { DashboardStats } from '@/components/dashboard/dashboard-stats'
 import { EnergyTracker } from '@/components/dashboard/energy-tracker'
 import { DailyReflectionComponent } from '@/components/dashboard/daily-reflection'
+import { format } from 'date-fns'
+
+function getGreeting() {
+  const hour = new Date().getHours()
+  if (hour < 12) return 'Good morning'
+  if (hour < 17) return 'Good afternoon'
+  return 'Good evening'
+}
 
 export default function DashboardPage() {
-  return (
-    <div className="space-y-8 animate-fade-in pb-12">
-      {/* Enhanced Header with Gradient */}
-      <div className="animate-slide-up relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl blur-3xl"></div>
-        <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl border border-white/20 p-8 shadow-xl">
-          <div className="flex items-center gap-4 mb-3">
-            <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg shadow-blue-500/30">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-                Today
-              </h1>
-              <p className="text-base text-neutral-600 font-medium">
-                Plan your day, track your time, reflect on your progress
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+  const today = format(new Date(), 'EEEE, MMMM d')
+  const greeting = getGreeting()
 
-      {/* Quick Stats */}
-      <div className="animate-slide-up">
+  return (
+    <div className="animate-fade-in pb-16">
+      {/* Hero: greeting + date, minimal */}
+      <header className="mb-8">
+        <p className="text-sm font-medium text-slate-500 mb-0.5">{today}</p>
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight sm:text-3xl">
+          {greeting}
+        </h1>
+      </header>
+
+      {/* Stats strip */}
+      <div className="mb-8 animate-slide-up">
         <DashboardStats />
       </div>
 
-      {/* Daily Plan Section */}
-      <div className="animate-slide-up">
-        <DailyPlanComponent />
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid gap-6 lg:grid-cols-3 animate-slide-up">
-        <div className="lg:col-span-2 space-y-6">
+      {/* Main: Plan | Timeline | Sidebar */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
+        <section className="lg:col-span-4 xl:col-span-3 animate-slide-up" style={{ animationDelay: '50ms' }} aria-label="Today's plan">
+          <DailyPlanComponent />
+        </section>
+        <section className="lg:col-span-5 xl:col-span-6 min-w-0 animate-slide-up" style={{ animationDelay: '100ms' }} aria-label="Today's timeline">
           <TodayTimeline />
-        </div>
-        <div className="space-y-6">
+        </section>
+        <aside className="lg:col-span-3 xl:col-span-3 flex flex-col gap-6 animate-slide-up" style={{ animationDelay: '150ms' }} aria-label="Quick actions and progress">
           <EnergyTracker />
           <ActivityForm />
           <InterruptionForm />
-          <StreaksPanel />
-          <AchievementsPanel />
-        </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1">
+            <StreaksPanel />
+            <AchievementsPanel />
+          </div>
+        </aside>
       </div>
 
-      {/* Daily Summary */}
-      <div className="animate-slide-up">
-        <DailySummary />
-      </div>
-
-      {/* Daily Reflection */}
-      <div className="animate-slide-up">
-        <DailyReflectionComponent />
+      {/* Bottom: Summary + Reflection */}
+      <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <section className="animate-slide-up min-w-0" aria-label="Daily summary">
+          <DailySummary />
+        </section>
+        <section className="animate-slide-up min-w-0" aria-label="Daily reflection">
+          <DailyReflectionComponent />
+        </section>
       </div>
     </div>
   )

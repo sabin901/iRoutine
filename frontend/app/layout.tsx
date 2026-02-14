@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { ErrorBoundaryWrapper } from '@/components/error-boundary-wrapper'
+import { ToastProvider } from '@/contexts/toast-context'
 
 export const metadata: Metadata = {
-  title: 'Routine',
-  description: 'A calm system for understanding how you spend your time and attention',
+  title: 'iRoutine — Personal Life Operating System',
+  description: 'A calm system that connects time, money, energy, and focus with cross-domain intelligence.',
 }
 
 export default function RootLayout({
@@ -15,7 +16,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <ErrorBoundaryWrapper>{children}</ErrorBoundaryWrapper>
+        <ErrorBoundaryWrapper>
+          <ToastProvider>
+            {children}
+          </ToastProvider>
+        </ErrorBoundaryWrapper>
       </body>
     </html>
   )

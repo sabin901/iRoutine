@@ -145,10 +145,10 @@ export function WhatChangedThisWeek() {
       }
     })
 
-    const thisWeekPeakHour = Object.entries(thisWeekHourFocus).reduce((a, b) => 
-      thisWeekHourFocus[parseInt(a[0])] > thisWeekHourFocus[parseInt(b[0])] ? a : b, ['0', '0'])[0]
-    const lastWeekPeakHour = Object.entries(lastWeekHourFocus).reduce((a, b) => 
-      lastWeekHourFocus[parseInt(a[0])] > lastWeekHourFocus[parseInt(b[0])] ? a : b, ['0', '0'])[0]
+    const thisWeekPeakHour = (Object.entries(thisWeekHourFocus) as [string, number][]).reduce((a, b) =>
+      thisWeekHourFocus[parseInt(a[0])] > thisWeekHourFocus[parseInt(b[0])] ? a : b, ['0', 0])[0]
+    const lastWeekPeakHour = (Object.entries(lastWeekHourFocus) as [string, number][]).reduce((a, b) =>
+      lastWeekHourFocus[parseInt(a[0])] > lastWeekHourFocus[parseInt(b[0])] ? a : b, ['0', 0])[0]
 
     let focusWindowChange: string | null = null
     if (thisWeekPeakHour !== lastWeekPeakHour && Object.keys(thisWeekHourFocus).length > 0) {
@@ -182,10 +182,10 @@ export function WhatChangedThisWeek() {
 
   if (loading) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-          <div className="h-20 bg-gray-200 rounded"></div>
+      <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 animate-pulse">
+        <div className="space-y-4">
+          <div className="h-4 bg-neutral-700 rounded w-1/3" />
+          <div className="h-20 bg-neutral-700 rounded" />
         </div>
       </div>
     )
@@ -193,9 +193,9 @@ export function WhatChangedThisWeek() {
 
   if (!comparison) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">What Changed This Week?</h2>
-        <p className="text-sm text-gray-500">
+      <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6">
+        <h2 className="text-lg font-semibold text-white mb-4">What Changed This Week?</h2>
+        <p className="text-sm text-neutral-400">
           Track for a full week to see changes and patterns.
         </p>
       </div>
@@ -203,54 +203,54 @@ export function WhatChangedThisWeek() {
   }
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+    <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6">
       <div className="mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">What Changed This Week?</h2>
-        <p className="mt-1 text-sm text-gray-500">
+        <h2 className="text-lg font-semibold text-white">What Changed This Week?</h2>
+        <p className="mt-1 text-sm text-neutral-400">
           Key changes and insights from your activity
         </p>
       </div>
 
       <div className="space-y-4">
         {comparison.biggestIncrease && (
-          <div className="flex items-start gap-3 rounded-lg bg-blue-50 p-4 border border-blue-100">
+          <div className="flex items-start gap-3 rounded-lg bg-blue-500/10 p-4 border border-blue-500/30">
             {comparison.biggestIncrease.includes('increased') ? (
-              <TrendingUp className="h-5 w-5 text-blue-600 mt-0.5" />
+              <TrendingUp className="h-5 w-5 text-blue-400 mt-0.5" />
             ) : (
-              <TrendingDown className="h-5 w-5 text-green-600 mt-0.5" />
+              <TrendingDown className="h-5 w-5 text-emerald-400 mt-0.5" />
             )}
             <div className="flex-1">
-              <p className="text-sm font-medium text-gray-900">Interruption Change</p>
-              <p className="mt-1 text-sm text-gray-700">{comparison.biggestIncrease}</p>
+              <p className="text-sm font-medium text-white">Interruption Change</p>
+              <p className="mt-1 text-sm text-neutral-300">{comparison.biggestIncrease}</p>
             </div>
           </div>
         )}
 
         {comparison.topCostDriver && (
-          <div className="flex items-start gap-3 rounded-lg bg-amber-50 p-4 border border-amber-100">
-            <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
+          <div className="flex items-start gap-3 rounded-lg bg-amber-500/10 p-4 border border-amber-500/30">
+            <AlertCircle className="h-5 w-5 text-amber-400 mt-0.5" />
             <div className="flex-1">
-              <p className="text-sm font-medium text-gray-900">Top Cost Driver</p>
-              <p className="mt-1 text-sm text-gray-700">{comparison.topCostDriver}</p>
+              <p className="text-sm font-medium text-white">Top Cost Driver</p>
+              <p className="mt-1 text-sm text-neutral-300">{comparison.topCostDriver}</p>
             </div>
           </div>
         )}
 
         {comparison.focusWindowChange && (
-          <div className="flex items-start gap-3 rounded-lg bg-purple-50 p-4 border border-purple-100">
-            <TrendingUp className="h-5 w-5 text-purple-600 mt-0.5" />
+          <div className="flex items-start gap-3 rounded-lg bg-purple-500/10 p-4 border border-purple-500/30">
+            <TrendingUp className="h-5 w-5 text-purple-400 mt-0.5" />
             <div className="flex-1">
-              <p className="text-sm font-medium text-gray-900">Focus Window</p>
-              <p className="mt-1 text-sm text-gray-700">{comparison.focusWindowChange}</p>
+              <p className="text-sm font-medium text-white">Focus Window</p>
+              <p className="mt-1 text-sm text-neutral-300">{comparison.focusWindowChange}</p>
             </div>
           </div>
         )}
 
-        <div className="flex items-start gap-3 rounded-lg bg-green-50 p-4 border border-green-100">
-          <Lightbulb className="h-5 w-5 text-green-600 mt-0.5" />
+        <div className="flex items-start gap-3 rounded-lg bg-emerald-500/10 p-4 border border-emerald-500/30">
+          <Lightbulb className="h-5 w-5 text-emerald-400 mt-0.5" />
           <div className="flex-1">
-            <p className="text-sm font-medium text-gray-900">Suggestion</p>
-            <p className="mt-1 text-sm text-gray-700">{comparison.suggestion}</p>
+            <p className="text-sm font-medium text-white">Suggestion</p>
+            <p className="mt-1 text-sm text-neutral-300">{comparison.suggestion}</p>
           </div>
         </div>
       </div>

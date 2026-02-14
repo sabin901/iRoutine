@@ -20,12 +20,10 @@ export default function SignUpPage() {
     setLoading(true)
 
     try {
-      // Check if using placeholder Supabase (demo mode)
-      const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || 
+      const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL ||
                             process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')
-      
+
       if (isPlaceholder) {
-        // Skip signup in demo mode
         router.push('/dashboard')
         router.refresh()
         return
@@ -34,29 +32,17 @@ export default function SignUpPage() {
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: {
-            name,
-          },
-        },
+        options: { data: { name } },
       })
 
       if (signUpError) throw signUpError
 
       if (data.user) {
-        // Try to create profile (might already exist from trigger)
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .upsert({
-            id: data.user.id,
-            name,
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          }, { onConflict: 'id' })
-
-        // Ignore profile errors - trigger may have created it
-        if (profileError) {
-          console.warn('Profile creation note:', profileError.message)
-        }
+        await supabase.from('profiles').upsert({
+          id: data.user.id,
+          name,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        }, { onConflict: 'id' })
       }
 
       router.push('/dashboard')
@@ -69,57 +55,49 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-6">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center">
-          <h1 className="text-3xl font-light tracking-tight">Get Started</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Create your Routine account
-          </p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
+      <div className="w-full max-w-md">
+        <div className="card p-8 shadow-lg">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-semibold text-slate-900">Get started</h1>
+            <p className="mt-1 text-sm text-slate-500">Create your iRoutine account</p>
+          </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
-            <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
-              {error}
-            </div>
-          )}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {error && (
+              <div className="rounded-lg bg-red-50 border border-red-200 px-3 py-2 text-sm text-red-700">
+                {error}
+              </div>
+            )}
 
-          <div className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium mb-1">
-                Name
-              </label>
+              <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">Name</label>
               <input
                 id="name"
                 type="text"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-lg border border-border bg-background px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
+                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
                 placeholder="Your name"
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-1">
-                Email
-              </label>
+              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">Email</label>
               <input
                 id="email"
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg border border-border bg-background px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
+                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
                 placeholder="you@example.com"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-1">
-                Password
-              </label>
+              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1">Password</label>
               <input
                 id="password"
                 type="password"
@@ -127,30 +105,28 @@ export default function SignUpPage() {
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg border border-border bg-background px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
+                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
                 placeholder="••••••••"
               />
-              <p className="mt-1 text-xs text-muted-foreground">
-                At least 6 characters
-              </p>
+              <p className="mt-1 text-xs text-slate-500">At least 6 characters</p>
             </div>
-          </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90 disabled:opacity-50"
-          >
-            {loading ? 'Creating account...' : 'Create Account'}
-          </button>
-        </form>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full py-3 disabled:opacity-50"
+            >
+              {loading ? 'Creating account…' : 'Create account'}
+            </button>
+          </form>
 
-        <p className="text-center text-sm text-muted-foreground">
-          Already have an account?{' '}
-          <Link href="/auth/login" className="font-medium hover:underline">
-            Sign in
-          </Link>
-        </p>
+          <p className="mt-6 text-center text-sm text-slate-500">
+            Already have an account?{' '}
+            <Link href="/auth/login" className="font-medium text-sky-600 hover:text-sky-700">
+              Sign in
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   )

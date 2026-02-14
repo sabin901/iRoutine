@@ -146,10 +146,10 @@ export function WeeklyInsights() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg">
-        <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-neutral-100 rounded-lg w-1/3"></div>
-          <div className="h-64 bg-neutral-100 rounded-xl"></div>
+      <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 animate-pulse">
+        <div className="space-y-4">
+          <div className="h-4 bg-neutral-700 rounded-lg w-1/3" />
+          <div className="h-64 bg-neutral-700 rounded-xl" />
         </div>
       </div>
     )
@@ -157,9 +157,9 @@ export function WeeklyInsights() {
 
   if (activities.length === 0) {
     return (
-      <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg">
+      <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6">
         <div className="text-center py-12">
-          <p className="text-sm text-neutral-500 font-medium">
+          <p className="text-sm text-neutral-400 font-medium">
             No activities logged this week. Start tracking to see insights.
           </p>
         </div>
@@ -168,22 +168,22 @@ export function WeeklyInsights() {
   }
 
   return (
-    <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg card-hover">
+    <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 card-hover">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-xl font-semibold text-neutral-900">Weekly Trends</h2>
-            <p className="mt-1 text-sm text-neutral-500">
+            <h2 className="text-lg font-semibold text-white">Weekly Trends</h2>
+            <p className="mt-1 text-sm text-neutral-400">
               Focus time and interruptions over the past week
             </p>
           </div>
-          <div className="flex gap-2 rounded-lg border border-neutral-200/60 p-0.5 bg-neutral-100/50">
+          <div className="flex gap-2 rounded-lg border border-neutral-700/50 p-0.5 bg-neutral-800/50">
             <button
               onClick={() => setViewMode('focus')}
               className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${
                 viewMode === 'focus'
-                  ? 'bg-white text-primary-700 shadow-soft'
-                  : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/60'
+                  ? 'bg-neutral-700 text-white'
+                  : 'text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800'
               }`}
             >
               Focus
@@ -192,8 +192,8 @@ export function WeeklyInsights() {
               onClick={() => setViewMode('interruptions')}
               className={`px-4 py-2 text-sm font-semibold rounded-md transition-all ${
                 viewMode === 'interruptions'
-                  ? 'bg-white text-primary-700 shadow-soft'
-                  : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/60'
+                  ? 'bg-neutral-700 text-white'
+                  : 'text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800'
               }`}
             >
               Interruptions
@@ -203,19 +203,19 @@ export function WeeklyInsights() {
 
         {/* Trend Indicators */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-gradient-to-br from-primary-50 to-primary-100/50 rounded-xl p-4 border border-primary-100/50">
+          <div className="bg-neutral-800/50 rounded-xl p-4 border border-neutral-700/50">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-xs font-semibold text-primary-600 mb-1.5 uppercase tracking-wide">Focus Trend</div>
+                <div className="text-xs font-semibold text-neutral-400 mb-1.5 uppercase tracking-wide">Focus Trend</div>
                 <div className="flex items-center gap-2">
                   {trends.focusTrend === 'up' ? (
-                    <TrendingUp className="h-5 w-5 text-success-600" />
+                    <TrendingUp className="h-5 w-5 text-emerald-400" />
                   ) : trends.focusTrend === 'down' ? (
-                    <TrendingDown className="h-5 w-5 text-danger-600" />
+                    <TrendingDown className="h-5 w-5 text-red-400" />
                   ) : (
-                    <div className="h-5 w-5 border-t-2 border-neutral-400"></div>
+                    <div className="h-5 w-5 border-t-2 border-neutral-500"></div>
                   )}
-                  <span className="text-lg font-bold text-primary-900">
+                  <span className="text-lg font-bold text-white">
                     {trends.focusTrend === 'up' ? '+' : trends.focusTrend === 'down' ? '-' : '='} {trends.focusChange}m
                   </span>
                 </div>
@@ -224,19 +224,19 @@ export function WeeklyInsights() {
           </div>
 
           {interruptions.length > 0 && (
-            <div className="bg-gradient-to-br from-danger-50 to-warning-50 rounded-xl p-4 border border-danger-100/50">
+            <div className="bg-neutral-800/50 rounded-xl p-4 border border-neutral-700/50">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-xs font-semibold text-danger-600 mb-1.5 uppercase tracking-wide">Interruption Trend</div>
+                  <div className="text-xs font-semibold text-neutral-400 mb-1.5 uppercase tracking-wide">Interruption Trend</div>
                   <div className="flex items-center gap-2">
                     {trends.intTrend === 'up' ? (
-                      <TrendingUp className="h-5 w-5 text-danger-600" />
+                      <TrendingUp className="h-5 w-5 text-red-400" />
                     ) : trends.intTrend === 'down' ? (
-                      <TrendingDown className="h-5 w-5 text-success-600" />
+                      <TrendingDown className="h-5 w-5 text-emerald-400" />
                     ) : (
-                      <div className="h-5 w-5 border-t-2 border-neutral-400"></div>
+                      <div className="h-5 w-5 border-t-2 border-neutral-500"></div>
                     )}
-                    <span className="text-lg font-bold text-danger-900">
+                    <span className="text-lg font-bold text-white">
                       {trends.intTrend === 'up' ? '+' : trends.intTrend === 'down' ? '-' : '='} {trends.intChange}m
                     </span>
                   </div>
@@ -252,12 +252,12 @@ export function WeeklyInsights() {
         <ResponsiveContainer width="100%" height="100%">
           {viewMode === 'focus' ? (
             <BarChart data={dailyData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="day" stroke="#6b7280" />
-              <YAxis stroke="#6b7280" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#404040" />
+              <XAxis dataKey="day" stroke="#a3a3a3" tick={{ fill: '#a3a3a3' }} />
+              <YAxis stroke="#a3a3a3" tick={{ fill: '#a3a3a3' }} />
               <Tooltip 
                 formatter={(value: number) => [`${value} min`, 'Focus Time']}
-                contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                contentStyle={{ backgroundColor: '#262626', border: '1px solid #404040', borderRadius: '8px', color: '#fff' }}
               />
               <Bar dataKey="focusMinutes" radius={[8, 8, 0, 0]}>
                 {dailyData.map((entry, index) => {
@@ -273,16 +273,16 @@ export function WeeklyInsights() {
             </BarChart>
           ) : (
             <BarChart data={dailyData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="day" stroke="#6b7280" />
-              <YAxis stroke="#6b7280" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#404040" />
+              <XAxis dataKey="day" stroke="#a3a3a3" tick={{ fill: '#a3a3a3' }} />
+              <YAxis stroke="#a3a3a3" tick={{ fill: '#a3a3a3' }} />
               <Tooltip 
                 formatter={(value: number, name: string) => {
                   if (name === 'interruptionMinutes') return [`${value} min`, 'Interruption Time']
                   if (name === 'interruptionCount') return [`${value}`, 'Count']
                   return [value, name]
                 }}
-                contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                contentStyle={{ backgroundColor: '#262626', border: '1px solid #404040', borderRadius: '8px', color: '#fff' }}
               />
               <Bar dataKey="interruptionMinutes" fill="#ef4444" radius={[8, 8, 0, 0]} opacity={0.9} />
             </BarChart>
@@ -291,19 +291,19 @@ export function WeeklyInsights() {
       </div>
 
       {/* Summary Stats */}
-      <div className="flex items-center justify-between text-sm pt-4 border-t border-gray-200">
+      <div className="flex items-center justify-between text-sm pt-4 border-t border-neutral-700/50">
         <div className="flex items-center gap-6">
           {viewMode === 'focus' ? (
             <>
               <div>
-                <span className="text-gray-500">Total: </span>
-                <span className="font-semibold text-gray-900">
+                <span className="text-neutral-500">Total: </span>
+                <span className="font-semibold text-white">
                   {Math.round(dailyData.reduce((sum, d) => sum + d.focusMinutes, 0) / 60 * 10) / 10}h
                 </span>
               </div>
               <div>
-                <span className="text-gray-500">Daily Avg: </span>
-                <span className="font-semibold text-gray-900">
+                <span className="text-neutral-500">Daily Avg: </span>
+                <span className="font-semibold text-white">
                   {Math.round((dailyData.reduce((sum, d) => sum + d.focusMinutes, 0) / 7) / 60 * 10) / 10}h
                 </span>
               </div>
@@ -311,14 +311,14 @@ export function WeeklyInsights() {
           ) : (
             <>
               <div>
-                <span className="text-gray-500">Total Time: </span>
-                <span className="font-semibold text-gray-900">
+                <span className="text-neutral-500">Total Time: </span>
+                <span className="font-semibold text-white">
                   {Math.round(dailyData.reduce((sum, d) => sum + d.interruptionMinutes, 0))}m
                 </span>
               </div>
               <div>
-                <span className="text-gray-500">Total Count: </span>
-                <span className="font-semibold text-gray-900">
+                <span className="text-neutral-500">Total Count: </span>
+                <span className="font-semibold text-white">
                   {dailyData.reduce((sum, d) => sum + d.interruptionCount, 0)}
                 </span>
               </div>
@@ -327,8 +327,8 @@ export function WeeklyInsights() {
         </div>
         {qualityMetrics.total_sessions > 0 && (
           <div className="flex items-center gap-2">
-            <span className="text-gray-500">Avg Quality:</span>
-            <span className="font-semibold text-gray-900">
+            <span className="text-neutral-500">Avg Quality:</span>
+            <span className="font-semibold text-white">
               {qualityMetrics.avg_quality}%
             </span>
           </div>

@@ -20,10 +20,10 @@ import type { Task, Goal, Habit, HabitLog, TodaySummary } from '@/lib/types'
 const TASK_CATEGORIES = ['Work', 'Personal', 'Health', 'Learning', 'Errands', 'Other']
 const GOAL_CATEGORIES = ['Career', 'Health', 'Learning', 'Financial', 'Personal', 'Relationships', 'Other']
 const PRIORITY_COLORS = {
-  low: 'bg-neutral-100 text-neutral-600',
-  medium: 'bg-blue-100 text-blue-600',
-  high: 'bg-orange-100 text-orange-600',
-  urgent: 'bg-red-100 text-red-600'
+  low: 'bg-neutral-700 text-neutral-300',
+  medium: 'bg-blue-500/20 text-blue-300',
+  high: 'bg-amber-500/20 text-amber-300',
+  urgent: 'bg-red-500/20 text-red-300'
 }
 
 export default function PlannerPage() {
@@ -253,7 +253,7 @@ export default function PlannerPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neutral-600" />
       </div>
     )
   }
@@ -261,84 +261,92 @@ export default function PlannerPage() {
   const completedHabitIds = new Set(habitLogs.filter(l => l.completed).map(l => l.habit_id))
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-neutral-900">Planner</h1>
-          <p className="text-neutral-600">Plan your day, track habits, achieve goals</p>
-        </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setShowAddTask(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-          >
-            <Plus className="h-4 w-4" />
-            Task
-          </button>
-          <button
-            onClick={() => setShowAddHabit(true)}
-            className="flex items-center gap-2 px-4 py-2 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors"
-          >
-            <Flame className="h-4 w-4" />
-            Habit
-          </button>
-          <button
-            onClick={() => setShowAddGoal(true)}
-            className="flex items-center gap-2 px-4 py-2 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors"
-          >
-            <Target className="h-4 w-4" />
-            Goal
-          </button>
+    <div className="space-y-8 animate-fade-in pb-12">
+      {/* Header - Artoo style */}
+      <div className="animate-slide-up rounded-2xl bg-neutral-900/95 border border-neutral-700/50 p-6 lg:p-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-xl bg-neutral-800 border border-neutral-700/50">
+              <Calendar className="h-6 w-6 text-neutral-300" />
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-0.5">/ Planner</p>
+              <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">Planner</h1>
+              <p className="text-sm text-neutral-400 mt-1">Plan your day, track habits, achieve goals</p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowAddTask(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-lg transition-colors border border-neutral-700"
+            >
+              <Plus className="h-4 w-4" />
+              Task
+            </button>
+            <button
+              onClick={() => setShowAddHabit(true)}
+              className="flex items-center gap-2 px-4 py-2 border border-neutral-700 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-lg transition-colors"
+            >
+              <Flame className="h-4 w-4" />
+              Habit
+            </button>
+            <button
+              onClick={() => setShowAddGoal(true)}
+              className="flex items-center gap-2 px-4 py-2 border border-neutral-700 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-lg transition-colors"
+            >
+              <Target className="h-4 w-4" />
+              Goal
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-neutral-200 p-4">
-          <div className="flex items-center gap-2 text-neutral-600 text-sm mb-1">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-slide-up">
+        <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-4">
+          <div className="flex items-center gap-2 text-neutral-400 text-sm mb-1">
             <CheckCircle2 className="h-4 w-4" />
             Tasks Today
           </div>
-          <p className="text-2xl font-bold">
+          <p className="text-2xl font-bold text-white">
             {stats.tasks_completed}/{stats.tasks_total}
           </p>
         </div>
-        <div className="bg-white rounded-xl border border-neutral-200 p-4">
-          <div className="flex items-center gap-2 text-neutral-600 text-sm mb-1">
-            <Flame className="h-4 w-4 text-orange-500" />
+        <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-4">
+          <div className="flex items-center gap-2 text-neutral-400 text-sm mb-1">
+            <Flame className="h-4 w-4 text-amber-400" />
             Habits
           </div>
-          <p className="text-2xl font-bold">
+          <p className="text-2xl font-bold text-white">
             {stats.habits_completed}/{stats.habits_total}
           </p>
         </div>
-        <div className="bg-white rounded-xl border border-neutral-200 p-4">
-          <div className="flex items-center gap-2 text-neutral-600 text-sm mb-1">
-            <AlertCircle className="h-4 w-4 text-red-500" />
+        <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-4">
+          <div className="flex items-center gap-2 text-neutral-400 text-sm mb-1">
+            <AlertCircle className="h-4 w-4 text-red-400" />
             Overdue
           </div>
-          <p className="text-2xl font-bold text-red-600">{overdueTasks.length}</p>
+          <p className="text-2xl font-bold text-red-400">{overdueTasks.length}</p>
         </div>
-        <div className="bg-white rounded-xl border border-neutral-200 p-4">
-          <div className="flex items-center gap-2 text-neutral-600 text-sm mb-1">
-            <Target className="h-4 w-4 text-primary-500" />
+        <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-4">
+          <div className="flex items-center gap-2 text-neutral-400 text-sm mb-1">
+            <Target className="h-4 w-4 text-neutral-400" />
             Active Goals
           </div>
-          <p className="text-2xl font-bold">{goals.length}</p>
+          <p className="text-2xl font-bold text-white">{goals.length}</p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-neutral-200">
+      <div className="flex gap-2 border-b border-neutral-700/50">
         {(['today', 'tasks', 'habits', 'goals'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 font-medium capitalize transition-colors border-b-2 -mb-px ${
               activeTab === tab 
-                ? 'border-primary-600 text-primary-600' 
-                : 'border-transparent text-neutral-600 hover:text-neutral-900'
+                ? 'border-neutral-400 text-white' 
+                : 'border-transparent text-neutral-500 hover:text-neutral-300'
             }`}
           >
             {tab}
@@ -348,11 +356,11 @@ export default function PlannerPage() {
 
       {/* Today Tab */}
       {activeTab === 'today' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-slide-up">
           {/* Today's Tasks */}
-          <div className="bg-white rounded-xl border border-neutral-200 p-5">
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-primary-500" />
+          <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5">
+            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <Calendar className="h-5 w-5 text-neutral-400" />
               Today&apos;s Tasks
             </h2>
             <div className="space-y-2">
@@ -362,19 +370,19 @@ export default function PlannerPage() {
                 tasks.map(task => (
                   <div 
                     key={task.id} 
-                    className={`flex items-center gap-3 p-3 rounded-lg group transition-colors ${
-                      task.status === 'completed' ? 'bg-green-50' : 'bg-neutral-50 hover:bg-neutral-100'
+                    className={`flex items-center gap-3 p-3 rounded-lg group transition-colors border ${
+                      task.status === 'completed' ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-neutral-800/50 border-neutral-700/30 hover:bg-neutral-800'
                     }`}
                   >
                     <button onClick={() => toggleTaskStatus(task)}>
                       {task.status === 'completed' ? (
-                        <CheckCircle2 className="h-5 w-5 text-green-600" />
+                        <CheckCircle2 className="h-5 w-5 text-emerald-400" />
                       ) : (
-                        <Circle className="h-5 w-5 text-neutral-400" />
+                        <Circle className="h-5 w-5 text-neutral-500" />
                       )}
                     </button>
                     <div className="flex-1 min-w-0">
-                      <p className={`font-medium ${task.status === 'completed' ? 'line-through text-neutral-500' : 'text-neutral-900'}`}>
+                      <p className={`font-medium ${task.status === 'completed' ? 'line-through text-neutral-500' : 'text-white'}`}>
                         {task.title}
                       </p>
                       <div className="flex items-center gap-2 mt-1">
@@ -391,9 +399,9 @@ export default function PlannerPage() {
                     </div>
                     <button 
                       onClick={() => deleteTask(task.id)}
-                      className="opacity-0 group-hover:opacity-100 p-1 hover:bg-neutral-200 rounded transition-all"
+                      className="opacity-0 group-hover:opacity-100 p-1 hover:bg-neutral-700 rounded transition-all"
                     >
-                      <X className="h-4 w-4 text-neutral-500" />
+                      <X className="h-4 w-4 text-neutral-400" />
                     </button>
                   </div>
                 ))
@@ -402,17 +410,17 @@ export default function PlannerPage() {
 
             {/* Overdue */}
             {overdueTasks.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-neutral-200">
-                <h3 className="text-sm font-medium text-red-600 mb-2 flex items-center gap-1">
+              <div className="mt-4 pt-4 border-t border-neutral-700/50">
+                <h3 className="text-sm font-medium text-red-400 mb-2 flex items-center gap-1">
                   <AlertCircle className="h-4 w-4" />
                   Overdue ({overdueTasks.length})
                 </h3>
                 {overdueTasks.slice(0, 3).map(task => (
-                  <div key={task.id} className="flex items-center gap-3 p-2 bg-red-50 rounded-lg mb-1">
+                  <div key={task.id} className="flex items-center gap-3 p-2 bg-red-500/10 rounded-lg mb-1 border border-red-500/30">
                     <button onClick={() => toggleTaskStatus(task)}>
                       <Circle className="h-4 w-4 text-red-400" />
                     </button>
-                    <span className="text-sm text-red-800">{task.title}</span>
+                    <span className="text-sm text-red-300">{task.title}</span>
                   </div>
                 ))}
               </div>
@@ -420,9 +428,9 @@ export default function PlannerPage() {
           </div>
 
           {/* Habits */}
-          <div className="bg-white rounded-xl border border-neutral-200 p-5">
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Flame className="h-5 w-5 text-orange-500" />
+          <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5">
+            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <Flame className="h-5 w-5 text-amber-400" />
               Daily Habits
             </h2>
             <div className="space-y-2">
@@ -434,31 +442,31 @@ export default function PlannerPage() {
                   return (
                     <div 
                       key={habit.id} 
-                      className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
-                        isCompleted ? 'bg-green-50' : 'bg-neutral-50 hover:bg-neutral-100'
+                      className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors border ${
+                        isCompleted ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-neutral-800/50 border-neutral-700/30 hover:bg-neutral-800'
                       }`}
                       onClick={() => toggleHabit(habit)}
                     >
                       <div 
                         className={`w-8 h-8 rounded-full flex items-center justify-center text-lg transition-colors ${
-                          isCompleted ? 'bg-green-500 text-white' : 'bg-neutral-200'
+                          isCompleted ? 'text-white' : 'bg-neutral-700'
                         }`}
                         style={{ backgroundColor: isCompleted ? habit.color : undefined }}
                       >
                         {isCompleted ? '✓' : habit.icon}
                       </div>
                       <div className="flex-1">
-                        <p className={`font-medium ${isCompleted ? 'text-green-700' : 'text-neutral-900'}`}>
+                        <p className={`font-medium ${isCompleted ? 'text-emerald-300' : 'text-white'}`}>
                           {habit.name}
                         </p>
                         {habit.current_streak > 0 && (
-                          <p className="text-xs text-orange-600 flex items-center gap-1">
+                          <p className="text-xs text-amber-400 flex items-center gap-1">
                             <Flame className="h-3 w-3" />
                             {habit.current_streak} day streak
                           </p>
                         )}
                       </div>
-                      {isCompleted && <CheckCircle2 className="h-5 w-5 text-green-600" />}
+                      {isCompleted && <CheckCircle2 className="h-5 w-5 text-emerald-400" />}
                     </div>
                   )
                 })
@@ -470,7 +478,7 @@ export default function PlannerPage() {
 
       {/* Tasks Tab */}
       {activeTab === 'tasks' && (
-        <div className="bg-white rounded-xl border border-neutral-200 p-5">
+        <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5 animate-slide-up">
           <div className="space-y-2">
             {[...overdueTasks, ...tasks].length === 0 ? (
               <p className="text-neutral-500 text-center py-12">No tasks. Add one to get started!</p>
@@ -478,20 +486,20 @@ export default function PlannerPage() {
               [...overdueTasks, ...tasks].map(task => (
                 <div 
                   key={task.id} 
-                  className={`flex items-center gap-3 p-3 rounded-lg group ${
-                    task.status === 'completed' ? 'bg-green-50' : 
-                    overdueTasks.includes(task) ? 'bg-red-50' : 'bg-neutral-50'
+                  className={`flex items-center gap-3 p-3 rounded-lg group border ${
+                    task.status === 'completed' ? 'bg-emerald-500/10 border-emerald-500/30' : 
+                    overdueTasks.includes(task) ? 'bg-red-500/10 border-red-500/30' : 'bg-neutral-800/50 border-neutral-700/30'
                   }`}
                 >
                   <button onClick={() => toggleTaskStatus(task)}>
                     {task.status === 'completed' ? (
-                      <CheckCircle2 className="h-5 w-5 text-green-600" />
+                      <CheckCircle2 className="h-5 w-5 text-emerald-400" />
                     ) : (
-                      <Circle className="h-5 w-5 text-neutral-400" />
+                      <Circle className="h-5 w-5 text-neutral-500" />
                     )}
                   </button>
                   <div className="flex-1">
-                    <p className={`font-medium ${task.status === 'completed' ? 'line-through text-neutral-500' : ''}`}>
+                    <p className={`font-medium ${task.status === 'completed' ? 'line-through text-neutral-500' : 'text-white'}`}>
                       {task.title}
                     </p>
                     <div className="flex items-center gap-2 mt-1 text-xs text-neutral-500">
@@ -504,9 +512,9 @@ export default function PlannerPage() {
                   </div>
                   <button 
                     onClick={() => deleteTask(task.id)}
-                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-neutral-200 rounded"
+                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-neutral-700 rounded"
                   >
-                    <X className="h-4 w-4 text-neutral-500" />
+                    <X className="h-4 w-4 text-neutral-400" />
                   </button>
                 </div>
               ))
@@ -517,9 +525,9 @@ export default function PlannerPage() {
 
       {/* Habits Tab */}
       {activeTab === 'habits' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-slide-up">
           {habits.map(habit => (
-            <div key={habit.id} className="bg-white rounded-xl border border-neutral-200 p-5">
+            <div key={habit.id} className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5">
               <div className="flex items-center gap-3 mb-3">
                 <div 
                   className="w-10 h-10 rounded-full flex items-center justify-center text-xl text-white"
@@ -528,12 +536,12 @@ export default function PlannerPage() {
                   {habit.icon}
                 </div>
                 <div>
-                  <h3 className="font-semibold">{habit.name}</h3>
+                  <h3 className="font-semibold text-white">{habit.name}</h3>
                   <p className="text-xs text-neutral-500">{habit.frequency}</p>
                 </div>
               </div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-orange-600">
+                <div className="flex items-center gap-1 text-amber-400">
                   <Flame className="h-4 w-4" />
                   <span className="text-sm font-medium">{habit.current_streak} day streak</span>
                 </div>
@@ -549,25 +557,25 @@ export default function PlannerPage() {
 
       {/* Goals Tab */}
       {activeTab === 'goals' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-slide-up">
           {goals.map(goal => (
-            <div key={goal.id} className="bg-white rounded-xl border border-neutral-200 p-5">
+            <div key={goal.id} className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5">
               <div className="flex items-center gap-3 mb-3">
                 <Target className="h-6 w-6" style={{ color: goal.color }} />
                 <div>
-                  <h3 className="font-semibold">{goal.title}</h3>
+                  <h3 className="font-semibold text-white">{goal.title}</h3>
                   <p className="text-xs text-neutral-500">{goal.category}</p>
                 </div>
               </div>
               {goal.description && (
-                <p className="text-sm text-neutral-600 mb-3">{goal.description}</p>
+                <p className="text-sm text-neutral-400 mb-3">{goal.description}</p>
               )}
               <div className="mb-2">
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="text-neutral-600">Progress</span>
-                  <span className="font-medium">{goal.progress}%</span>
+                  <span className="text-neutral-400">Progress</span>
+                  <span className="font-medium text-white">{goal.progress}%</span>
                 </div>
-                <div className="h-2 bg-neutral-100 rounded-full overflow-hidden">
+                <div className="h-2 bg-neutral-700 rounded-full overflow-hidden">
                   <div 
                     className="h-full rounded-full transition-all"
                     style={{ width: `${goal.progress}%`, backgroundColor: goal.color }}
@@ -579,8 +587,8 @@ export default function PlannerPage() {
                   <button
                     key={p}
                     onClick={() => updateGoalProgress(goal.id, p)}
-                    className={`flex-1 py-1 text-xs rounded ${
-                      goal.progress >= p ? 'bg-primary-100 text-primary-700' : 'bg-neutral-100 text-neutral-600'
+                    className={`flex-1 py-1 text-xs rounded transition-colors ${
+                      goal.progress >= p ? 'bg-neutral-700 text-white' : 'bg-neutral-800 text-neutral-500 border border-neutral-700'
                     }`}
                   >
                     {p}%
@@ -597,37 +605,37 @@ export default function PlannerPage() {
 
       {/* Add Task Modal */}
       {showAddTask && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4">
-            <h3 className="text-lg font-semibold mb-4">Add Task</h3>
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold text-white mb-4">Add Task</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Task Title</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Task Title</label>
                 <input
                   type="text"
                   value={taskForm.title}
                   onChange={(e) => setTaskForm(f => ({ ...f, title: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   placeholder="What do you need to do?"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-1">Due Date</label>
+                  <label className="block text-sm font-medium text-neutral-300 mb-1">Due Date</label>
                   <input
                     type="date"
                     value={taskForm.due_date}
                     onChange={(e) => setTaskForm(f => ({ ...f, due_date: e.target.value }))}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-1">Priority</label>
+                  <label className="block text-sm font-medium text-neutral-300 mb-1">Priority</label>
                   <select
                     value={taskForm.priority}
                     onChange={(e) => setTaskForm(f => ({ ...f, priority: e.target.value as any }))}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -638,11 +646,11 @@ export default function PlannerPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Category</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Category</label>
                 <select
                   value={taskForm.category}
                   onChange={(e) => setTaskForm(f => ({ ...f, category: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                 >
                   {TASK_CATEGORIES.map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
@@ -651,12 +659,12 @@ export default function PlannerPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Estimated Time (minutes)</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Estimated Time (minutes)</label>
                 <input
                   type="number"
                   value={taskForm.estimated_minutes}
                   onChange={(e) => setTaskForm(f => ({ ...f, estimated_minutes: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   placeholder="30"
                 />
               </div>
@@ -664,13 +672,13 @@ export default function PlannerPage() {
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => setShowAddTask(false)}
-                  className="flex-1 py-2 border border-neutral-300 rounded-lg hover:bg-neutral-50"
+                  className="flex-1 py-2 border border-neutral-700 bg-neutral-800 text-neutral-300 rounded-lg hover:bg-neutral-700 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={addTask}
-                  className="flex-1 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+                  className="flex-1 py-2 bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg transition-colors border border-neutral-600"
                 >
                   Add Task
                 </button>
@@ -682,27 +690,27 @@ export default function PlannerPage() {
 
       {/* Add Habit Modal */}
       {showAddHabit && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4">
-            <h3 className="text-lg font-semibold mb-4">Create Habit</h3>
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold text-white mb-4">Create Habit</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Habit Name</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Habit Name</label>
                 <input
                   type="text"
                   value={habitForm.name}
                   onChange={(e) => setHabitForm(f => ({ ...f, name: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   placeholder="e.g., Morning meditation"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Frequency</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Frequency</label>
                 <select
                   value={habitForm.frequency}
                   onChange={(e) => setHabitForm(f => ({ ...f, frequency: e.target.value as any }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                 >
                   <option value="daily">Daily</option>
                   <option value="weekdays">Weekdays</option>
@@ -711,14 +719,14 @@ export default function PlannerPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Icon</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Icon</label>
                 <div className="flex gap-2 flex-wrap">
                   {['✓', '💪', '📚', '🧘', '💧', '🏃', '✍️', '💤', '🎯', '⭐'].map(icon => (
                     <button
                       key={icon}
                       onClick={() => setHabitForm(f => ({ ...f, icon }))}
-                      className={`w-10 h-10 text-xl rounded-lg border-2 ${
-                        habitForm.icon === icon ? 'border-primary-500 bg-primary-50' : 'border-neutral-200'
+                      className={`w-10 h-10 text-xl rounded-lg border-2 transition-colors ${
+                        habitForm.icon === icon ? 'border-neutral-400 bg-neutral-700' : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600'
                       }`}
                     >
                       {icon}
@@ -730,13 +738,13 @@ export default function PlannerPage() {
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => setShowAddHabit(false)}
-                  className="flex-1 py-2 border border-neutral-300 rounded-lg hover:bg-neutral-50"
+                  className="flex-1 py-2 border border-neutral-700 bg-neutral-800 text-neutral-300 rounded-lg hover:bg-neutral-700 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={addHabit}
-                  className="flex-1 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+                  className="flex-1 py-2 bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg transition-colors border border-neutral-600"
                 >
                   Create Habit
                 </button>
@@ -748,27 +756,27 @@ export default function PlannerPage() {
 
       {/* Add Goal Modal */}
       {showAddGoal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4">
-            <h3 className="text-lg font-semibold mb-4">Set Goal</h3>
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold text-white mb-4">Set Goal</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Goal Title</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Goal Title</label>
                 <input
                   type="text"
                   value={goalForm.title}
                   onChange={(e) => setGoalForm(f => ({ ...f, title: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   placeholder="e.g., Learn Spanish"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Description</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Description</label>
                 <textarea
                   value={goalForm.description}
                   onChange={(e) => setGoalForm(f => ({ ...f, description: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 resize-none"
                   placeholder="Why is this goal important to you?"
                   rows={2}
                 />
@@ -776,11 +784,11 @@ export default function PlannerPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-1">Category</label>
+                  <label className="block text-sm font-medium text-neutral-300 mb-1">Category</label>
                   <select
                     value={goalForm.category}
                     onChange={(e) => setGoalForm(f => ({ ...f, category: e.target.value as any }))}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   >
                     {GOAL_CATEGORIES.map(cat => (
                       <option key={cat} value={cat}>{cat}</option>
@@ -788,12 +796,12 @@ export default function PlannerPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-1">Target Date</label>
+                  <label className="block text-sm font-medium text-neutral-300 mb-1">Target Date</label>
                   <input
                     type="date"
                     value={goalForm.target_date}
                     onChange={(e) => setGoalForm(f => ({ ...f, target_date: e.target.value }))}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   />
                 </div>
               </div>
@@ -801,13 +809,13 @@ export default function PlannerPage() {
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => setShowAddGoal(false)}
-                  className="flex-1 py-2 border border-neutral-300 rounded-lg hover:bg-neutral-50"
+                  className="flex-1 py-2 border border-neutral-700 bg-neutral-800 text-neutral-300 rounded-lg hover:bg-neutral-700 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={addGoal}
-                  className="flex-1 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+                  className="flex-1 py-2 bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg transition-colors border border-neutral-600"
                 >
                   Create Goal
                 </button>

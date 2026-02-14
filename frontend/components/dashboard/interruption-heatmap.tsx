@@ -117,8 +117,9 @@ export function InterruptionHeatmap() {
           })
           value = hourInterruptions.reduce((sum, i) => {
             const cost = calculateInterruptionCost(i, matchingActivities)
-            types[i.type] = (types[i.type] || 0) + cost
-            return sum + cost
+            const score = cost.cost_score
+            types[i.type] = (types[i.type] || 0) + score
+            return sum + score
           }, 0)
         } else {
           value = hourInterruptions.length
@@ -245,9 +246,9 @@ export function InterruptionHeatmap() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg">
+      <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 shadow-soft-lg">
         <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-neutral-100 rounded-lg w-1/3"></div>
+          <div className="h-4 bg-neutral-700 rounded-lg w-1/3"></div>
           <div className="h-96 bg-neutral-100 rounded-xl"></div>
         </div>
       </div>
@@ -256,17 +257,17 @@ export function InterruptionHeatmap() {
 
   if (interruptions.length === 0) {
     return (
-      <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg">
+      <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 shadow-soft-lg">
         <div className="text-center py-12">
           <AlertCircle className="h-12 w-12 text-neutral-300 mx-auto mb-3" />
-          <p className="text-sm text-neutral-500 font-medium">No interruptions logged yet</p>
+          <p className="text-sm text-neutral-400 font-medium">No interruptions logged yet</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="rounded-2xl border border-neutral-200/60 bg-white p-6 shadow-soft-lg card-hover">
+    <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 shadow-soft-lg card-hover">
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
@@ -275,20 +276,20 @@ export function InterruptionHeatmap() {
               <AlertCircle className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-neutral-900">Interruption Heatmap</h2>
-              <p className="text-xs text-neutral-500">7-day pattern analysis</p>
+              <h2 className="text-lg font-semibold text-white">Interruption Heatmap</h2>
+              <p className="text-xs text-neutral-400">7-day pattern analysis</p>
             </div>
           </div>
           
           {/* Controls */}
           <div className="flex items-center gap-2">
-            <div className="flex rounded-lg border border-neutral-200/60 p-0.5 bg-neutral-100/50">
+            <div className="flex rounded-lg border border-neutral-700/50 p-0.5 bg-neutral-800/50">
               <button
                 onClick={() => setViewMode('minutes')}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
                   viewMode === 'minutes'
-                    ? 'bg-white shadow-soft text-neutral-900'
-                    : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/60'
+                    ? 'bg-neutral-700 text-white'
+                    : 'text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800'
                 }`}
               >
                 <Clock className="h-3 w-3 inline mr-1" />
@@ -298,8 +299,8 @@ export function InterruptionHeatmap() {
                 onClick={() => setViewMode('cost')}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
                   viewMode === 'cost'
-                    ? 'bg-white shadow-soft text-neutral-900'
-                    : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/60'
+                    ? 'bg-neutral-700 text-white'
+                    : 'text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800'
                 }`}
               >
                 <Zap className="h-3 w-3 inline mr-1" />
@@ -309,21 +310,21 @@ export function InterruptionHeatmap() {
                 onClick={() => setViewMode('count')}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
                   viewMode === 'count'
-                    ? 'bg-white shadow-soft text-neutral-900'
-                    : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/60'
+                    ? 'bg-neutral-700 text-white'
+                    : 'text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800'
                 }`}
               >
                 #
               </button>
             </div>
 
-            <div className="flex rounded-lg border border-neutral-200/60 p-0.5 bg-neutral-100/50">
+            <div className="flex rounded-lg border border-neutral-700/50 p-0.5 bg-neutral-800/50">
               <button
                 onClick={() => setIntensityFilter('all')}
                 className={`px-2.5 py-1.5 text-xs font-semibold rounded-md transition-all ${
                   intensityFilter === 'all'
-                    ? 'bg-white shadow-soft text-neutral-900'
-                    : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/60'
+                    ? 'bg-neutral-700 text-white'
+                    : 'text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800'
                 }`}
               >
                 All
@@ -332,8 +333,8 @@ export function InterruptionHeatmap() {
                 onClick={() => setIntensityFilter('high')}
                 className={`px-2.5 py-1.5 text-xs font-semibold rounded-md transition-all ${
                   intensityFilter === 'high'
-                    ? 'bg-white shadow-soft text-neutral-900'
-                    : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/60'
+                    ? 'bg-neutral-700 text-white'
+                    : 'text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800'
                 }`}
               >
                 <Filter className="h-3 w-3 inline mr-1" />
@@ -343,8 +344,8 @@ export function InterruptionHeatmap() {
                 onClick={() => setIntensityFilter('low')}
                 className={`px-2.5 py-1.5 text-xs font-semibold rounded-md transition-all ${
                   intensityFilter === 'low'
-                    ? 'bg-white shadow-soft text-neutral-900'
-                    : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/60'
+                    ? 'bg-neutral-700 text-white'
+                    : 'text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800'
                 }`}
               >
                 Low
@@ -393,7 +394,7 @@ export function InterruptionHeatmap() {
           {Array.from({ length: 24 }, (_, hour) => (
             <div key={hour} className="flex gap-1 mb-1">
               <div className="w-12 flex items-center justify-end pr-2">
-                <div className="text-2xs font-semibold text-neutral-500 tracking-tight">
+                <div className="text-2xs font-semibold text-neutral-400 tracking-tight">
                   {hour.toString().padStart(2, '0')}:00
                 </div>
               </div>
@@ -467,7 +468,7 @@ export function InterruptionHeatmap() {
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-between mb-6 pb-6 border-b border-neutral-200/60">
+      <div className="flex items-center justify-between mb-6 pb-6 border-b border-neutral-700/50">
         <div className="flex items-center gap-3">
           <span className="text-xs font-semibold text-neutral-600 uppercase tracking-wide">Intensity:</span>
           <div className="flex items-center gap-1.5">
@@ -483,12 +484,12 @@ export function InterruptionHeatmap() {
             ].map((item, idx) => (
               <div key={idx} className="flex flex-col items-center">
                 <div className={`w-5 h-5 rounded-md ${item.bg} border ${item.border} shadow-sm`}></div>
-                {item.label && <span className="text-2xs text-neutral-500 mt-1 font-medium">{item.label}</span>}
+                {item.label && <span className="text-2xs text-neutral-400 mt-1 font-medium">{item.label}</span>}
               </div>
             ))}
           </div>
         </div>
-        <div className="text-xs text-neutral-500 font-medium">
+        <div className="text-xs text-neutral-400 font-medium">
           Click any cell for details
         </div>
       </div>
@@ -513,7 +514,7 @@ export function InterruptionHeatmap() {
                 <div>
                   <div className="font-semibold text-sm text-neutral-900 mb-0.5">{driver.type}</div>
                   <div className="text-xs text-neutral-600 font-medium">
-                    {driver.count} interruption{driver.count > 1 ? 's' : ''} • {driver.total_minutes}m total
+                    {driver.count} interruption{driver.count > 1 ? 's' : ''} • {driver.total_cost} cost
                   </div>
                 </div>
               </div>

@@ -89,6 +89,19 @@ CREATE TABLE IF NOT EXISTS interruptions (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Add end_time and duration_minutes to interruptions if they don't exist (for app/API compatibility)
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                   WHERE table_name = 'interruptions' AND column_name = 'end_time') THEN
+        ALTER TABLE interruptions ADD COLUMN end_time TIMESTAMPTZ;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                   WHERE table_name = 'interruptions' AND column_name = 'duration_minutes') THEN
+        ALTER TABLE interruptions ADD COLUMN duration_minutes INTEGER CHECK (duration_minutes IS NULL OR (duration_minutes >= 1 AND duration_minutes <= 480));
+    END IF;
+END $$;
+
 -- =============================================
 -- FINANCES TABLES
 -- =============================================

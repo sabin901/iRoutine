@@ -207,107 +207,115 @@ export default function FinancesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neutral-600" />
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-neutral-900">Finances</h1>
-          <p className="text-neutral-600">Track your income, expenses, and savings</p>
+    <div className="space-y-8 animate-fade-in pb-12">
+      {/* Header - Artoo style */}
+      <div className="animate-slide-up rounded-2xl bg-neutral-900/95 border border-neutral-700/50 p-6 lg:p-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-xl bg-neutral-800 border border-neutral-700/50">
+              <DollarSign className="h-6 w-6 text-neutral-300" />
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-0.5">/ Finances</p>
+              <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">Finances</h1>
+              <p className="text-sm text-neutral-400 mt-1">Track your income, expenses, and savings</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowAddTransaction(true)}
+            className="flex items-center gap-2 px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-white rounded-lg transition-colors border border-neutral-700"
+          >
+            <Plus className="h-4 w-4" />
+            Add Transaction
+          </button>
         </div>
-        <button
-          onClick={() => setShowAddTransaction(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-        >
-          <Plus className="h-4 w-4" />
-          Add Transaction
-        </button>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-neutral-200 p-5">
+      {/* Summary Cards - Dark Artoo style */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 animate-slide-up">
+        <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5">
           <div className="flex items-center justify-between">
-            <span className="text-neutral-600 text-sm">Income</span>
-            <TrendingUp className="h-5 w-5 text-green-500" />
+            <span className="text-neutral-400 text-sm">Income</span>
+            <TrendingUp className="h-5 w-5 text-emerald-400" />
           </div>
-          <p className="text-2xl font-bold text-green-600 mt-2">
+          <p className="text-2xl font-bold text-emerald-400 mt-2">
             ${summary?.total_income.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
           </p>
           <p className="text-xs text-neutral-500 mt-1">This month</p>
         </div>
 
-        <div className="bg-white rounded-xl border border-neutral-200 p-5">
+        <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5">
           <div className="flex items-center justify-between">
-            <span className="text-neutral-600 text-sm">Expenses</span>
-            <TrendingDown className="h-5 w-5 text-red-500" />
+            <span className="text-neutral-400 text-sm">Expenses</span>
+            <TrendingDown className="h-5 w-5 text-red-400" />
           </div>
-          <p className="text-2xl font-bold text-red-600 mt-2">
+          <p className="text-2xl font-bold text-red-400 mt-2">
             ${summary?.total_expenses.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
           </p>
           <p className="text-xs text-neutral-500 mt-1">This month</p>
         </div>
 
-        <div className="bg-white rounded-xl border border-neutral-200 p-5">
+        <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5">
           <div className="flex items-center justify-between">
-            <span className="text-neutral-600 text-sm">Net Savings</span>
-            <PiggyBank className="h-5 w-5 text-primary-500" />
+            <span className="text-neutral-400 text-sm">Net Savings</span>
+            <PiggyBank className="h-5 w-5 text-neutral-400" />
           </div>
-          <p className={`text-2xl font-bold mt-2 ${(summary?.net_savings || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+          <p className={`text-2xl font-bold mt-2 ${(summary?.net_savings || 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
             ${Math.abs(summary?.net_savings || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
           </p>
           <p className="text-xs text-neutral-500 mt-1">{(summary?.net_savings || 0) >= 0 ? 'Saved' : 'Over budget'}</p>
         </div>
 
-        <div className="bg-white rounded-xl border border-neutral-200 p-5">
+        <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5">
           <div className="flex items-center justify-between">
-            <span className="text-neutral-600 text-sm">Transactions</span>
-            <Repeat className="h-5 w-5 text-neutral-500" />
+            <span className="text-neutral-400 text-sm">Transactions</span>
+            <Repeat className="h-5 w-5 text-neutral-400" />
           </div>
-          <p className="text-2xl font-bold text-neutral-900 mt-2">
+          <p className="text-2xl font-bold text-white mt-2">
             {summary?.transaction_count || 0}
           </p>
           <p className="text-xs text-neutral-500 mt-1">This month</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-slide-up">
         {/* Recent Transactions */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-neutral-200 p-5">
-          <h2 className="text-lg font-semibold mb-4">Recent Transactions</h2>
+        <div className="lg:col-span-2 rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5">
+          <h2 className="text-lg font-semibold text-white mb-4">Recent Transactions</h2>
           <div className="space-y-3 max-h-96 overflow-y-auto">
             {transactions.length === 0 ? (
               <p className="text-neutral-500 text-center py-8">No transactions yet</p>
             ) : (
               transactions.slice(0, 10).map((t) => (
-                <div key={t.id} className="flex items-center justify-between p-3 bg-neutral-50 rounded-lg group">
+                <div key={t.id} className="flex items-center justify-between p-3 bg-neutral-800/50 rounded-lg group border border-neutral-700/30">
                   <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${t.type === 'income' ? 'bg-green-100' : 'bg-red-100'}`}>
+                    <div className={`p-2 rounded-lg ${t.type === 'income' ? 'bg-emerald-500/20' : 'bg-red-500/20'}`}>
                       {t.type === 'income' ? (
-                        <ArrowUpRight className="h-4 w-4 text-green-600" />
+                        <ArrowUpRight className="h-4 w-4 text-emerald-400" />
                       ) : (
-                        <ArrowDownRight className="h-4 w-4 text-red-600" />
+                        <ArrowDownRight className="h-4 w-4 text-red-400" />
                       )}
                     </div>
                     <div>
-                      <p className="font-medium text-neutral-900">{t.description || t.category}</p>
+                      <p className="font-medium text-white">{t.description || t.category}</p>
                       <p className="text-xs text-neutral-500">{t.category} • {new Date(t.date).toLocaleDateString()}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className={`font-semibold ${t.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
+                    <span className={`font-semibold ${t.type === 'income' ? 'text-emerald-400' : 'text-red-400'}`}>
                       {t.type === 'income' ? '+' : '-'}${t.amount.toFixed(2)}
                     </span>
                     <button 
                       onClick={() => deleteTransaction(t.id)}
-                      className="opacity-0 group-hover:opacity-100 p-1 hover:bg-neutral-200 rounded transition-all"
+                      className="opacity-0 group-hover:opacity-100 p-1 hover:bg-neutral-700 rounded transition-all"
                     >
-                      <X className="h-4 w-4 text-neutral-500" />
+                      <X className="h-4 w-4 text-neutral-400" />
                     </button>
                   </div>
                 </div>
@@ -319,12 +327,12 @@ export default function FinancesPage() {
         {/* Budget & Goals */}
         <div className="space-y-6">
           {/* Budget Progress */}
-          <div className="bg-white rounded-xl border border-neutral-200 p-5">
+          <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Budgets</h2>
+              <h2 className="text-lg font-semibold text-white">Budgets</h2>
               <button 
                 onClick={() => setShowAddBudget(true)}
-                className="text-primary-600 hover:text-primary-700 text-sm font-medium"
+                className="text-neutral-300 hover:text-white text-sm font-medium"
               >
                 + Add
               </button>
@@ -336,15 +344,15 @@ export default function FinancesPage() {
                 summary?.budget_status.map((b) => (
                   <div key={b.category}>
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-neutral-700">{b.category}</span>
-                      <span className={b.percentage > 100 ? 'text-red-600' : 'text-neutral-600'}>
+                      <span className="text-neutral-300">{b.category}</span>
+                      <span className={b.percentage > 100 ? 'text-red-400' : 'text-neutral-400'}>
                         ${b.spent.toFixed(0)} / ${b.budget.toFixed(0)}
                       </span>
                     </div>
-                    <div className="h-2 bg-neutral-100 rounded-full overflow-hidden">
+                    <div className="h-2 bg-neutral-700 rounded-full overflow-hidden">
                       <div 
                         className={`h-full rounded-full transition-all ${
-                          b.percentage > 100 ? 'bg-red-500' : b.percentage > 80 ? 'bg-yellow-500' : 'bg-green-500'
+                          b.percentage > 100 ? 'bg-red-500' : b.percentage > 80 ? 'bg-amber-500' : 'bg-emerald-500'
                         }`}
                         style={{ width: `${Math.min(b.percentage, 100)}%` }}
                       />
@@ -356,12 +364,12 @@ export default function FinancesPage() {
           </div>
 
           {/* Savings Goals */}
-          <div className="bg-white rounded-xl border border-neutral-200 p-5">
+          <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Savings Goals</h2>
+              <h2 className="text-lg font-semibold text-white">Savings Goals</h2>
               <button 
                 onClick={() => setShowAddGoal(true)}
-                className="text-primary-600 hover:text-primary-700 text-sm font-medium"
+                className="text-neutral-300 hover:text-white text-sm font-medium"
               >
                 + Add
               </button>
@@ -371,20 +379,20 @@ export default function FinancesPage() {
                 <p className="text-neutral-500 text-sm text-center py-4">No savings goals</p>
               ) : (
                 savingsGoals.map((goal) => (
-                  <div key={goal.id} className="p-3 bg-neutral-50 rounded-lg">
+                  <div key={goal.id} className="p-3 bg-neutral-800/50 rounded-lg border border-neutral-700/30">
                     <div className="flex items-center gap-2 mb-2">
                       <Target className="h-4 w-4" style={{ color: goal.color }} />
-                      <span className="font-medium text-neutral-900">{goal.name}</span>
+                      <span className="font-medium text-white">{goal.name}</span>
                     </div>
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-neutral-600">
+                      <span className="text-neutral-400">
                         ${goal.current_amount.toFixed(0)} of ${goal.target_amount.toFixed(0)}
                       </span>
                       <span className="text-neutral-500">
                         {Math.round((goal.current_amount / goal.target_amount) * 100)}%
                       </span>
                     </div>
-                    <div className="h-2 bg-neutral-200 rounded-full overflow-hidden">
+                    <div className="h-2 bg-neutral-700 rounded-full overflow-hidden">
                       <div 
                         className="h-full rounded-full transition-all"
                         style={{ 
@@ -403,17 +411,17 @@ export default function FinancesPage() {
 
       {/* Add Transaction Modal */}
       {showAddTransaction && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4">
-            <h3 className="text-lg font-semibold mb-4">Add Transaction</h3>
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold text-white mb-4">Add Transaction</h3>
             <div className="space-y-4">
               <div className="flex gap-2">
                 <button
                   onClick={() => setTransactionForm(f => ({ ...f, type: 'expense', category: 'Food' }))}
                   className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
                     transactionForm.type === 'expense' 
-                      ? 'bg-red-100 text-red-700' 
-                      : 'bg-neutral-100 text-neutral-600'
+                      ? 'bg-red-500/20 text-red-300 border border-red-500/40' 
+                      : 'bg-neutral-800 text-neutral-400 border border-neutral-700'
                   }`}
                 >
                   Expense
@@ -422,8 +430,8 @@ export default function FinancesPage() {
                   onClick={() => setTransactionForm(f => ({ ...f, type: 'income', category: 'Salary' }))}
                   className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
                     transactionForm.type === 'income' 
-                      ? 'bg-green-100 text-green-700' 
-                      : 'bg-neutral-100 text-neutral-600'
+                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' 
+                      : 'bg-neutral-800 text-neutral-400 border border-neutral-700'
                   }`}
                 >
                   Income
@@ -431,23 +439,23 @@ export default function FinancesPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Amount ($)</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Amount ($)</label>
                 <input
                   type="number"
                   step="0.01"
                   value={transactionForm.amount}
                   onChange={(e) => setTransactionForm(f => ({ ...f, amount: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   placeholder="0.00"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Category</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Category</label>
                 <select
                   value={transactionForm.category}
                   onChange={(e) => setTransactionForm(f => ({ ...f, category: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                 >
                   {(transactionForm.type === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES).map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
@@ -456,36 +464,36 @@ export default function FinancesPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Description (optional)</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Description (optional)</label>
                 <input
                   type="text"
                   value={transactionForm.description}
                   onChange={(e) => setTransactionForm(f => ({ ...f, description: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   placeholder="What was this for?"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Date</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Date</label>
                 <input
                   type="date"
                   value={transactionForm.date}
                   onChange={(e) => setTransactionForm(f => ({ ...f, date: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                 />
               </div>
 
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => setShowAddTransaction(false)}
-                  className="flex-1 py-2 border border-neutral-300 rounded-lg text-neutral-700 hover:bg-neutral-50 transition-colors"
+                  className="flex-1 py-2 border border-slate-200 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={addTransaction}
-                  className="flex-1 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                  className="flex-1 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors border border-sky-600"
                 >
                   Add
                 </button>
@@ -497,52 +505,52 @@ export default function FinancesPage() {
 
       {/* Add Goal Modal */}
       {showAddGoal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4">
-            <h3 className="text-lg font-semibold mb-4">Add Savings Goal</h3>
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold text-white mb-4">Add Savings Goal</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Goal Name</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Goal Name</label>
                 <input
                   type="text"
                   value={goalForm.name}
                   onChange={(e) => setGoalForm(f => ({ ...f, name: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   placeholder="e.g., Emergency Fund"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Target Amount ($)</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Target Amount ($)</label>
                 <input
                   type="number"
                   value={goalForm.target_amount}
                   onChange={(e) => setGoalForm(f => ({ ...f, target_amount: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   placeholder="10000"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Target Date (optional)</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Target Date (optional)</label>
                 <input
                   type="date"
                   value={goalForm.deadline}
                   onChange={(e) => setGoalForm(f => ({ ...f, deadline: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                 />
               </div>
 
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => setShowAddGoal(false)}
-                  className="flex-1 py-2 border border-neutral-300 rounded-lg text-neutral-700 hover:bg-neutral-50 transition-colors"
+                  className="flex-1 py-2 border border-slate-200 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={addSavingsGoal}
-                  className="flex-1 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                  className="flex-1 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors border border-sky-600"
                 >
                   Create Goal
                 </button>
@@ -554,16 +562,16 @@ export default function FinancesPage() {
 
       {/* Add Budget Modal */}
       {showAddBudget && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4">
-            <h3 className="text-lg font-semibold mb-4">Set Budget</h3>
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold text-white mb-4">Set Budget</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Category</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Category</label>
                 <select
                   value={budgetForm.category}
                   onChange={(e) => setBudgetForm(f => ({ ...f, category: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                 >
                   {EXPENSE_CATEGORIES.map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
@@ -572,12 +580,12 @@ export default function FinancesPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-1">Monthly Budget ($)</label>
+                <label className="block text-sm font-medium text-neutral-300 mb-1">Monthly Budget ($)</label>
                 <input
                   type="number"
                   value={budgetForm.amount}
                   onChange={(e) => setBudgetForm(f => ({ ...f, amount: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   placeholder="500"
                 />
               </div>
@@ -585,13 +593,13 @@ export default function FinancesPage() {
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => setShowAddBudget(false)}
-                  className="flex-1 py-2 border border-neutral-300 rounded-lg text-neutral-700 hover:bg-neutral-50 transition-colors"
+                  className="flex-1 py-2 border border-slate-200 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={addBudget}
-                  className="flex-1 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                  className="flex-1 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors border border-sky-600"
                 >
                   Set Budget
                 </button>

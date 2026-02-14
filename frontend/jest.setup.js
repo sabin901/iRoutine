@@ -1,6 +1,9 @@
 // Learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom'
 
+// Use UTC for date tests so results are consistent across CI (Linux) and local (any TZ)
+process.env.TZ = 'UTC'
+
 // Mock localStorage
 const localStorageMock = {
   getItem: jest.fn(),

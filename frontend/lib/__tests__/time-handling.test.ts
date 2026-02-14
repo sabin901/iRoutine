@@ -3,7 +3,7 @@
  * Ensures correct time calculations across timezones
  */
 
-import { parseISO, format } from 'date-fns'
+import { parseISO } from 'date-fns'
 import { formatInTimeZone } from 'date-fns-tz'
 
 describe('Time Handling', () => {
@@ -68,9 +68,10 @@ describe('Time Handling', () => {
       ]
 
       const targetDate = new Date('2024-01-15')
+      const targetDay = targetDate.toISOString().slice(0, 10) // UTC date for consistency
       const filtered = activities.filter((a: any) => {
-        const activityDate = format(parseISO(a.start_time), 'yyyy-MM-dd')
-        return activityDate === format(targetDate, 'yyyy-MM-dd')
+        const activityDay = parseISO(a.start_time).toISOString().slice(0, 10)
+        return activityDay === targetDay
       })
 
       expect(filtered.length).toBe(2)

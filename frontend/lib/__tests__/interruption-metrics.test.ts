@@ -111,7 +111,7 @@ describe('Interruption Metrics Engine', () => {
         end_time: '2024-01-15T10:45:00Z',
       }
 
-      const metrics = calculateWeeklyMetrics([interruption], activities)
+      const metrics = calculateWeeklyMetrics([interruption], activities, new Date('2024-01-20'))
       
       expect(metrics.avg_recovery_time).toBeGreaterThan(0)
       expect(metrics.recovery_times.length).toBeGreaterThan(0)
@@ -126,7 +126,7 @@ describe('Interruption Metrics Engine', () => {
         { ...mockInterruption, id: '5', duration_minutes: 90 }, // 60+
       ]
 
-      const metrics = calculateWeeklyMetrics(interruptions, [])
+      const metrics = calculateWeeklyMetrics(interruptions, [], new Date('2024-01-20'))
       
       expect(metrics.interruption_duration_distribution['0-5']).toBe(1)
       expect(metrics.interruption_duration_distribution['5-15']).toBe(1)

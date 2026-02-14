@@ -59,11 +59,17 @@ export async function apiRequest<T>(
     data: { session },
   } = await supabase.auth.getSession()
 
-  // Build headers
-  // Start with Content-Type and any custom headers from options
-  const headers: HeadersInit = {
+  // Build headers as a plain object so we can add Authorization (HeadersInit union doesn't allow indexing)
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    ...options.headers,
+  }
+  if (
+    options.headers &&
+    typeof options.headers === 'object' &&
+    !Array.isArray(options.headers) &&
+    !(options.headers instanceof Headers)
+  ) {
+    Object.assign(headers, options.headers as Record<string, string>)
   }
 
   // Add JWT token to Authorization header if user is logged in

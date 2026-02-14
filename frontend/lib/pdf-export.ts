@@ -69,8 +69,10 @@ export function generateWeeklyReportData(
     hourFocus[hour] = (hourFocus[hour] || 0) + duration
   })
   
-  const peakHour = Object.entries(hourFocus).reduce((a, b) => 
-    hourFocus[parseInt(a[0])] > hourFocus[parseInt(b[0])] ? a : b, ['0', '0'])[0]
+  const peakHour = Object.entries(hourFocus).reduce<[string, number]>(
+    (a, b) => (a[1] > b[1] ? a : b),
+    ['0', 0]
+  )[0]
   const nextHour = (parseInt(peakHour) + 1) % 24
   const bestFocusWindow = `${peakHour.padStart(2, '0')}:00 - ${nextHour.toString().padStart(2, '0')}:00`
   

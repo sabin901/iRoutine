@@ -29,8 +29,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Next.js 14.2.35 uses SWC binaries at 14.2.33 only (14.2.35 was never published for this package).
+      # Must use 14.2.33 - see next optionalDependencies in package-lock.json.
       - name: Install Linux SWC binary for Jest
-        run: npm install @next/swc-linux-x64-gnu@14.2.35
+        run: npm install @next/swc-linux-x64-gnu@14.2.33
 
       - name: Run linter
         run: npm run lint

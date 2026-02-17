@@ -312,7 +312,7 @@ Tests run automatically on push via GitHub Actions. See `.github/workflows/ci.ym
 
 1. Push your code to GitHub
 2. Import the repository in Vercel
-3. **Set Root Directory to `frontend`** (Project Settings → General → Root Directory → Edit → enter `frontend`). Required so Vercel detects Next.js; otherwise you’ll see “No Next.js version detected.”
+3. **Set Root Directory to `frontend`** (Project Settings → General → Root Directory → Edit → enter `frontend`). The repo `vercel.json` uses `npm install` and `npm run build`; with Root Directory = `frontend`, Vercel runs these in the app folder and detects Next.js correctly.
 4. Add environment variables:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`

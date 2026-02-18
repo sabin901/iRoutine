@@ -39,7 +39,7 @@
 
 ### Step 1: Run Supabase Schema
 
-1. Open Supabase Dashboard: https://supabase.com/dashboard/project/nbylefpryatipeotqvis
+1. Open Supabase Dashboard: https://supabase.com/dashboard/project/your-project-ref
 2. Go to **SQL Editor**
 3. Copy entire contents of `backend/supabase/complete_schema.sql`
 4. Paste and click **Run**

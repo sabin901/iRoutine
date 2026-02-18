@@ -16,10 +16,13 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  // Check if using placeholder Supabase (authentication bypassed)
   const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || 
                         process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')
   
+  if (isPlaceholder && process.env.NODE_ENV === 'production') {
+    console.warn('[SECURITY] Supabase URL is missing or placeholder in production — auth is bypassed!')
+  }
+
   let user = mockUser
   
   if (!isPlaceholder) {

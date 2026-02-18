@@ -38,16 +38,16 @@ Run through the **PRE_DEPLOYMENT_CHECKLIST.md** to ensure everything works local
 
 **Backend** (in your hosting platform):
 ```env
-SUPABASE_URL=https://nbylefpryatipeotqvis.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+SUPABASE_ANON_KEY=your-anon-key
 CORS_ORIGINS=https://your-frontend-domain.com
 ```
 
 **Frontend** (in Vercel/Netlify):
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://nbylefpryatipeotqvis.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 NEXT_PUBLIC_API_URL=https://your-backend-domain.com
 ```
 

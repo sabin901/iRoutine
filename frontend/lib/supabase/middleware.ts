@@ -6,12 +6,13 @@ export async function updateSession(request: NextRequest) {
     request,
   })
 
-  // Skip Supabase initialization if using placeholder values (authentication bypassed)
   const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || 
                         process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')
   
   if (isPlaceholder) {
-    // Allow all routes - no authentication required
+    if (process.env.NODE_ENV === 'production') {
+      console.warn('[SECURITY] Supabase URL is missing or placeholder in production — auth is bypassed!')
+    }
     return supabaseResponse
   }
 

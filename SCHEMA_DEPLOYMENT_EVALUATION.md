@@ -208,7 +208,7 @@ All enhanced columns are added via DO blocks with `IF NOT EXISTS` checks:
 ```
 
 ### **Step 2: Run Schema**
-1. Open Supabase Dashboard: https://supabase.com/dashboard/project/nbylefpryatipeotqvis
+1. Open Supabase Dashboard: https://supabase.com/dashboard/project/your-project-ref
 2. Navigate to **SQL Editor**
 3. Copy entire contents of `backend/supabase/complete_schema.sql`
 4. Paste into SQL Editor

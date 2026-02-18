@@ -20,10 +20,10 @@ import type { Task, Goal, Habit, HabitLog, TodaySummary } from '@/lib/types'
 const TASK_CATEGORIES = ['Work', 'Personal', 'Health', 'Learning', 'Errands', 'Other']
 const GOAL_CATEGORIES = ['Career', 'Health', 'Learning', 'Financial', 'Personal', 'Relationships', 'Other']
 const PRIORITY_COLORS = {
-  low: 'bg-neutral-700 text-neutral-300',
-  medium: 'bg-blue-500/20 text-blue-300',
-  high: 'bg-amber-500/20 text-amber-300',
-  urgent: 'bg-red-500/20 text-red-300'
+  low: 'bg-slate-100 text-slate-600',
+  medium: 'bg-blue-50 text-blue-600',
+  high: 'bg-amber-50 text-amber-600',
+  urgent: 'bg-red-50 text-red-600'
 }
 
 export default function PlannerPage() {
@@ -251,7 +251,7 @@ export default function PlannerPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neutral-600" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-300" />
       </div>
     )
   }
@@ -260,37 +260,37 @@ export default function PlannerPage() {
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
-      {/* Header - Artoo style */}
-      <div className="animate-slide-up rounded-2xl bg-neutral-900/95 border border-neutral-700/50 p-6 lg:p-8">
+      {/* Header */}
+      <div className="animate-slide-up card p-6 lg:p-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-neutral-800 border border-neutral-700/50">
-              <Calendar className="h-6 w-6 text-neutral-300" />
+            <div className="p-3 rounded-xl bg-sky-50 border border-sky-100">
+              <Calendar className="h-6 w-6 text-sky-600" />
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-0.5">/ Planner</p>
-              <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">Planner</h1>
-              <p className="text-sm text-neutral-400 mt-1">Plan your day, track habits, achieve goals</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-0.5">/ Planner</p>
+              <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight">Planner</h1>
+              <p className="text-sm text-slate-500 mt-1">Plan your day, track habits, achieve goals</p>
             </div>
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => setShowAddTask(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-lg transition-colors border border-neutral-700"
+              className="flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors border border-sky-600"
             >
               <Plus className="h-4 w-4" />
               Task
             </button>
             <button
               onClick={() => setShowAddHabit(true)}
-              className="flex items-center gap-2 px-4 py-2 border border-neutral-700 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 rounded-lg transition-colors"
             >
               <Flame className="h-4 w-4" />
               Habit
             </button>
             <button
               onClick={() => setShowAddGoal(true)}
-              className="flex items-center gap-2 px-4 py-2 border border-neutral-700 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 rounded-lg transition-colors"
             >
               <Target className="h-4 w-4" />
               Goal
@@ -301,50 +301,50 @@ export default function PlannerPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-slide-up">
-        <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-4">
-          <div className="flex items-center gap-2 text-neutral-400 text-sm mb-1">
+        <div className="card p-4">
+          <div className="flex items-center gap-2 text-slate-500 text-sm mb-1">
             <CheckCircle2 className="h-4 w-4" />
             Tasks Today
           </div>
-          <p className="text-2xl font-bold text-white">
+          <p className="text-2xl font-bold text-slate-900">
             {stats.tasks_completed}/{stats.tasks_total}
           </p>
         </div>
-        <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-4">
-          <div className="flex items-center gap-2 text-neutral-400 text-sm mb-1">
-            <Flame className="h-4 w-4 text-amber-400" />
+        <div className="card p-4">
+          <div className="flex items-center gap-2 text-slate-500 text-sm mb-1">
+            <Flame className="h-4 w-4 text-amber-600" />
             Habits
           </div>
-          <p className="text-2xl font-bold text-white">
+          <p className="text-2xl font-bold text-slate-900">
             {stats.habits_completed}/{stats.habits_total}
           </p>
         </div>
-        <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-4">
-          <div className="flex items-center gap-2 text-neutral-400 text-sm mb-1">
-            <AlertCircle className="h-4 w-4 text-red-400" />
+        <div className="card p-4">
+          <div className="flex items-center gap-2 text-slate-500 text-sm mb-1">
+            <AlertCircle className="h-4 w-4 text-red-600" />
             Overdue
           </div>
-          <p className="text-2xl font-bold text-red-400">{overdueTasks.length}</p>
+          <p className="text-2xl font-bold text-red-600">{overdueTasks.length}</p>
         </div>
-        <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-4">
-          <div className="flex items-center gap-2 text-neutral-400 text-sm mb-1">
-            <Target className="h-4 w-4 text-neutral-400" />
+        <div className="card p-4">
+          <div className="flex items-center gap-2 text-slate-500 text-sm mb-1">
+            <Target className="h-4 w-4 text-slate-500" />
             Active Goals
           </div>
-          <p className="text-2xl font-bold text-white">{goals.length}</p>
+          <p className="text-2xl font-bold text-slate-900">{goals.length}</p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-neutral-700/50">
+      <div className="flex gap-2 border-b border-slate-200">
         {(['today', 'tasks', 'habits', 'goals'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 font-medium capitalize transition-colors border-b-2 -mb-px ${
               activeTab === tab 
-                ? 'border-neutral-400 text-white' 
-                : 'border-transparent text-neutral-500 hover:text-neutral-300'
+                ? 'border-sky-600 text-slate-900' 
+                : 'border-transparent text-slate-400 hover:text-slate-600'
             }`}
           >
             {tab}
@@ -356,31 +356,31 @@ export default function PlannerPage() {
       {activeTab === 'today' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-slide-up">
           {/* Today's Tasks */}
-          <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5">
-            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-neutral-400" />
+          <div className="card p-5">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+              <Calendar className="h-5 w-5 text-slate-500" />
               Today&apos;s Tasks
             </h2>
             <div className="space-y-2">
               {tasks.length === 0 ? (
-                <p className="text-neutral-500 text-center py-8">No tasks for today</p>
+                <p className="text-slate-400 text-center py-8">No tasks for today</p>
               ) : (
                 tasks.map(task => (
                   <div 
                     key={task.id} 
                     className={`flex items-center gap-3 p-3 rounded-lg group transition-colors border ${
-                      task.status === 'completed' ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-neutral-800/50 border-neutral-700/30 hover:bg-neutral-800'
+                      task.status === 'completed' ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-100 hover:bg-slate-100'
                     }`}
                   >
                     <button onClick={() => toggleTaskStatus(task)}>
                       {task.status === 'completed' ? (
-                        <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                        <CheckCircle2 className="h-5 w-5 text-emerald-600" />
                       ) : (
-                        <Circle className="h-5 w-5 text-neutral-500" />
+                        <Circle className="h-5 w-5 text-slate-400" />
                       )}
                     </button>
                     <div className="flex-1 min-w-0">
-                      <p className={`font-medium ${task.status === 'completed' ? 'line-through text-neutral-500' : 'text-white'}`}>
+                      <p className={`font-medium ${task.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-900'}`}>
                         {task.title}
                       </p>
                       <div className="flex items-center gap-2 mt-1">
@@ -388,7 +388,7 @@ export default function PlannerPage() {
                           {task.priority}
                         </span>
                         {task.estimated_minutes && (
-                          <span className="text-xs text-neutral-500 flex items-center gap-1">
+                          <span className="text-xs text-slate-400 flex items-center gap-1">
                             <Clock className="h-3 w-3" />
                             {task.estimated_minutes}m
                           </span>
@@ -397,9 +397,9 @@ export default function PlannerPage() {
                     </div>
                     <button 
                       onClick={() => deleteTask(task.id)}
-                      className="opacity-0 group-hover:opacity-100 p-1 hover:bg-neutral-700 rounded transition-all"
+                      className="opacity-0 group-hover:opacity-100 p-1 hover:bg-slate-200 rounded transition-all"
                     >
-                      <X className="h-4 w-4 text-neutral-400" />
+                      <X className="h-4 w-4 text-slate-500" />
                     </button>
                   </div>
                 ))
@@ -408,17 +408,17 @@ export default function PlannerPage() {
 
             {/* Overdue */}
             {overdueTasks.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-neutral-700/50">
-                <h3 className="text-sm font-medium text-red-400 mb-2 flex items-center gap-1">
+              <div className="mt-4 pt-4 border-t border-slate-200">
+                <h3 className="text-sm font-medium text-red-600 mb-2 flex items-center gap-1">
                   <AlertCircle className="h-4 w-4" />
                   Overdue ({overdueTasks.length})
                 </h3>
                 {overdueTasks.slice(0, 3).map(task => (
-                  <div key={task.id} className="flex items-center gap-3 p-2 bg-red-500/10 rounded-lg mb-1 border border-red-500/30">
+                  <div key={task.id} className="flex items-center gap-3 p-2 bg-red-50 rounded-lg mb-1 border border-red-200">
                     <button onClick={() => toggleTaskStatus(task)}>
-                      <Circle className="h-4 w-4 text-red-400" />
+                      <Circle className="h-4 w-4 text-red-600" />
                     </button>
-                    <span className="text-sm text-red-300">{task.title}</span>
+                    <span className="text-sm text-red-600">{task.title}</span>
                   </div>
                 ))}
               </div>
@@ -426,14 +426,14 @@ export default function PlannerPage() {
           </div>
 
           {/* Habits */}
-          <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5">
-            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <Flame className="h-5 w-5 text-amber-400" />
+          <div className="card p-5">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+              <Flame className="h-5 w-5 text-amber-600" />
               Daily Habits
             </h2>
             <div className="space-y-2">
               {habits.length === 0 ? (
-                <p className="text-neutral-500 text-center py-8">No habits yet</p>
+                <p className="text-slate-400 text-center py-8">No habits yet</p>
               ) : (
                 habits.map(habit => {
                   const isCompleted = completedHabitIds.has(habit.id)
@@ -441,30 +441,30 @@ export default function PlannerPage() {
                     <div 
                       key={habit.id} 
                       className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors border ${
-                        isCompleted ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-neutral-800/50 border-neutral-700/30 hover:bg-neutral-800'
+                        isCompleted ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-100 hover:bg-slate-100'
                       }`}
                       onClick={() => toggleHabit(habit)}
                     >
                       <div 
                         className={`w-8 h-8 rounded-full flex items-center justify-center text-lg transition-colors ${
-                          isCompleted ? 'text-white' : 'bg-neutral-700'
+                          isCompleted ? 'text-white' : 'bg-slate-200'
                         }`}
                         style={{ backgroundColor: isCompleted ? habit.color : undefined }}
                       >
                         {isCompleted ? '✓' : habit.icon}
                       </div>
                       <div className="flex-1">
-                        <p className={`font-medium ${isCompleted ? 'text-emerald-300' : 'text-white'}`}>
+                        <p className={`font-medium ${isCompleted ? 'text-emerald-600' : 'text-slate-900'}`}>
                           {habit.name}
                         </p>
                         {habit.current_streak > 0 && (
-                          <p className="text-xs text-amber-400 flex items-center gap-1">
+                          <p className="text-xs text-amber-600 flex items-center gap-1">
                             <Flame className="h-3 w-3" />
                             {habit.current_streak} day streak
                           </p>
                         )}
                       </div>
-                      {isCompleted && <CheckCircle2 className="h-5 w-5 text-emerald-400" />}
+                      {isCompleted && <CheckCircle2 className="h-5 w-5 text-emerald-600" />}
                     </div>
                   )
                 })
@@ -476,31 +476,31 @@ export default function PlannerPage() {
 
       {/* Tasks Tab */}
       {activeTab === 'tasks' && (
-        <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5 animate-slide-up">
+        <div className="card p-5 animate-slide-up">
           <div className="space-y-2">
             {[...overdueTasks, ...tasks].length === 0 ? (
-              <p className="text-neutral-500 text-center py-12">No tasks. Add one to get started!</p>
+              <p className="text-slate-400 text-center py-12">No tasks. Add one to get started!</p>
             ) : (
               [...overdueTasks, ...tasks].map(task => (
                 <div 
                   key={task.id} 
                   className={`flex items-center gap-3 p-3 rounded-lg group border ${
-                    task.status === 'completed' ? 'bg-emerald-500/10 border-emerald-500/30' : 
-                    overdueTasks.includes(task) ? 'bg-red-500/10 border-red-500/30' : 'bg-neutral-800/50 border-neutral-700/30'
+                    task.status === 'completed' ? 'bg-emerald-50 border-emerald-200' : 
+                    overdueTasks.includes(task) ? 'bg-red-50 border-red-200' : 'bg-slate-50 border-slate-100'
                   }`}
                 >
                   <button onClick={() => toggleTaskStatus(task)}>
                     {task.status === 'completed' ? (
-                      <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                      <CheckCircle2 className="h-5 w-5 text-emerald-600" />
                     ) : (
-                      <Circle className="h-5 w-5 text-neutral-500" />
+                      <Circle className="h-5 w-5 text-slate-400" />
                     )}
                   </button>
                   <div className="flex-1">
-                    <p className={`font-medium ${task.status === 'completed' ? 'line-through text-neutral-500' : 'text-white'}`}>
+                    <p className={`font-medium ${task.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-900'}`}>
                       {task.title}
                     </p>
-                    <div className="flex items-center gap-2 mt-1 text-xs text-neutral-500">
+                    <div className="flex items-center gap-2 mt-1 text-xs text-slate-400">
                       <span className={`px-2 py-0.5 rounded-full ${PRIORITY_COLORS[task.priority]}`}>
                         {task.priority}
                       </span>
@@ -510,9 +510,9 @@ export default function PlannerPage() {
                   </div>
                   <button 
                     onClick={() => deleteTask(task.id)}
-                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-neutral-700 rounded"
+                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-slate-200 rounded"
                   >
-                    <X className="h-4 w-4 text-neutral-400" />
+                    <X className="h-4 w-4 text-slate-500" />
                   </button>
                 </div>
               ))
@@ -525,7 +525,7 @@ export default function PlannerPage() {
       {activeTab === 'habits' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-slide-up">
           {habits.map(habit => (
-            <div key={habit.id} className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5">
+            <div key={habit.id} className="card p-5">
               <div className="flex items-center gap-3 mb-3">
                 <div 
                   className="w-10 h-10 rounded-full flex items-center justify-center text-xl text-white"
@@ -534,21 +534,21 @@ export default function PlannerPage() {
                   {habit.icon}
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">{habit.name}</h3>
-                  <p className="text-xs text-neutral-500">{habit.frequency}</p>
+                  <h3 className="font-semibold text-slate-900">{habit.name}</h3>
+                  <p className="text-xs text-slate-400">{habit.frequency}</p>
                 </div>
               </div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-amber-400">
+                <div className="flex items-center gap-1 text-amber-600">
                   <Flame className="h-4 w-4" />
                   <span className="text-sm font-medium">{habit.current_streak} day streak</span>
                 </div>
-                <span className="text-xs text-neutral-500">Best: {habit.best_streak}</span>
+                <span className="text-xs text-slate-400">Best: {habit.best_streak}</span>
               </div>
             </div>
           ))}
           {habits.length === 0 && (
-            <p className="text-neutral-500 col-span-full text-center py-12">No habits yet. Create one!</p>
+            <p className="text-slate-400 col-span-full text-center py-12">No habits yet. Create one!</p>
           )}
         </div>
       )}
@@ -557,23 +557,23 @@ export default function PlannerPage() {
       {activeTab === 'goals' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-slide-up">
           {goals.map(goal => (
-            <div key={goal.id} className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-5">
+            <div key={goal.id} className="card p-5">
               <div className="flex items-center gap-3 mb-3">
                 <Target className="h-6 w-6" style={{ color: goal.color }} />
                 <div>
-                  <h3 className="font-semibold text-white">{goal.title}</h3>
-                  <p className="text-xs text-neutral-500">{goal.category}</p>
+                  <h3 className="font-semibold text-slate-900">{goal.title}</h3>
+                  <p className="text-xs text-slate-400">{goal.category}</p>
                 </div>
               </div>
               {goal.description && (
-                <p className="text-sm text-neutral-400 mb-3">{goal.description}</p>
+                <p className="text-sm text-slate-500 mb-3">{goal.description}</p>
               )}
               <div className="mb-2">
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="text-neutral-400">Progress</span>
-                  <span className="font-medium text-white">{goal.progress}%</span>
+                  <span className="text-slate-500">Progress</span>
+                  <span className="font-medium text-slate-900">{goal.progress}%</span>
                 </div>
-                <div className="h-2 bg-neutral-700 rounded-full overflow-hidden">
+                <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
                   <div 
                     className="h-full rounded-full transition-all"
                     style={{ width: `${goal.progress}%`, backgroundColor: goal.color }}
@@ -586,7 +586,7 @@ export default function PlannerPage() {
                     key={p}
                     onClick={() => updateGoalProgress(goal.id, p)}
                     className={`flex-1 py-1 text-xs rounded transition-colors ${
-                      goal.progress >= p ? 'bg-neutral-700 text-white' : 'bg-neutral-800 text-neutral-500 border border-neutral-700'
+                      goal.progress >= p ? 'bg-sky-100 text-sky-700' : 'bg-slate-100 text-slate-500 border border-slate-200'
                     }`}
                   >
                     {p}%
@@ -596,19 +596,19 @@ export default function PlannerPage() {
             </div>
           ))}
           {goals.length === 0 && (
-            <p className="text-neutral-500 col-span-full text-center py-12">No goals yet. Set your first goal!</p>
+            <p className="text-slate-400 col-span-full text-center py-12">No goals yet. Set your first goal!</p>
           )}
         </div>
       )}
 
       {/* Add Task Modal */}
       {showAddTask && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 w-full max-w-md mx-4">
-            <h3 className="text-lg font-semibold text-white mb-4">Add Task</h3>
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="card p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">Add Task</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-neutral-300 mb-1">Task Title</label>
+                <label className="block text-sm font-medium text-slate-600 mb-1">Task Title</label>
                 <input
                   type="text"
                   value={taskForm.title}
@@ -620,7 +620,7 @@ export default function PlannerPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-neutral-300 mb-1">Due Date</label>
+                  <label className="block text-sm font-medium text-slate-600 mb-1">Due Date</label>
                   <input
                     type="date"
                     value={taskForm.due_date}
@@ -629,7 +629,7 @@ export default function PlannerPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-neutral-300 mb-1">Priority</label>
+                  <label className="block text-sm font-medium text-slate-600 mb-1">Priority</label>
                   <select
                     value={taskForm.priority}
                     onChange={(e) => setTaskForm(f => ({ ...f, priority: e.target.value as any }))}
@@ -644,7 +644,7 @@ export default function PlannerPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-300 mb-1">Category</label>
+                <label className="block text-sm font-medium text-slate-600 mb-1">Category</label>
                 <select
                   value={taskForm.category}
                   onChange={(e) => setTaskForm(f => ({ ...f, category: e.target.value }))}
@@ -657,7 +657,7 @@ export default function PlannerPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-300 mb-1">Estimated Time (minutes)</label>
+                <label className="block text-sm font-medium text-slate-600 mb-1">Estimated Time (minutes)</label>
                 <input
                   type="number"
                   value={taskForm.estimated_minutes}
@@ -670,13 +670,13 @@ export default function PlannerPage() {
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => setShowAddTask(false)}
-                  className="flex-1 py-2 border border-neutral-700 bg-neutral-800 text-neutral-300 rounded-lg hover:bg-neutral-700 transition-colors"
+                  className="flex-1 py-2 border border-slate-200 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={addTask}
-                  className="flex-1 py-2 bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg transition-colors border border-neutral-600"
+                  className="flex-1 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors border border-sky-600"
                 >
                   Add Task
                 </button>
@@ -688,12 +688,12 @@ export default function PlannerPage() {
 
       {/* Add Habit Modal */}
       {showAddHabit && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 w-full max-w-md mx-4">
-            <h3 className="text-lg font-semibold text-white mb-4">Create Habit</h3>
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="card p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">Create Habit</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-neutral-300 mb-1">Habit Name</label>
+                <label className="block text-sm font-medium text-slate-600 mb-1">Habit Name</label>
                 <input
                   type="text"
                   value={habitForm.name}
@@ -704,7 +704,7 @@ export default function PlannerPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-300 mb-1">Frequency</label>
+                <label className="block text-sm font-medium text-slate-600 mb-1">Frequency</label>
                 <select
                   value={habitForm.frequency}
                   onChange={(e) => setHabitForm(f => ({ ...f, frequency: e.target.value as any }))}
@@ -717,14 +717,14 @@ export default function PlannerPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-300 mb-1">Icon</label>
+                <label className="block text-sm font-medium text-slate-600 mb-1">Icon</label>
                 <div className="flex gap-2 flex-wrap">
                   {['✓', '💪', '📚', '🧘', '💧', '🏃', '✍️', '💤', '🎯', '⭐'].map(icon => (
                     <button
                       key={icon}
                       onClick={() => setHabitForm(f => ({ ...f, icon }))}
                       className={`w-10 h-10 text-xl rounded-lg border-2 transition-colors ${
-                        habitForm.icon === icon ? 'border-neutral-400 bg-neutral-700' : 'border-neutral-700 bg-neutral-800 hover:border-neutral-600'
+                        habitForm.icon === icon ? 'border-sky-400 bg-sky-50' : 'border-slate-200 bg-slate-50 hover:border-slate-300'
                       }`}
                     >
                       {icon}
@@ -736,13 +736,13 @@ export default function PlannerPage() {
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => setShowAddHabit(false)}
-                  className="flex-1 py-2 border border-neutral-700 bg-neutral-800 text-neutral-300 rounded-lg hover:bg-neutral-700 transition-colors"
+                  className="flex-1 py-2 border border-slate-200 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={addHabit}
-                  className="flex-1 py-2 bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg transition-colors border border-neutral-600"
+                  className="flex-1 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors border border-sky-600"
                 >
                   Create Habit
                 </button>
@@ -754,12 +754,12 @@ export default function PlannerPage() {
 
       {/* Add Goal Modal */}
       {showAddGoal && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 w-full max-w-md mx-4">
-            <h3 className="text-lg font-semibold text-white mb-4">Set Goal</h3>
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="card p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">Set Goal</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-neutral-300 mb-1">Goal Title</label>
+                <label className="block text-sm font-medium text-slate-600 mb-1">Goal Title</label>
                 <input
                   type="text"
                   value={goalForm.title}
@@ -770,7 +770,7 @@ export default function PlannerPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-300 mb-1">Description</label>
+                <label className="block text-sm font-medium text-slate-600 mb-1">Description</label>
                 <textarea
                   value={goalForm.description}
                   onChange={(e) => setGoalForm(f => ({ ...f, description: e.target.value }))}
@@ -782,7 +782,7 @@ export default function PlannerPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-neutral-300 mb-1">Category</label>
+                  <label className="block text-sm font-medium text-slate-600 mb-1">Category</label>
                   <select
                     value={goalForm.category}
                     onChange={(e) => setGoalForm(f => ({ ...f, category: e.target.value as any }))}
@@ -794,7 +794,7 @@ export default function PlannerPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-neutral-300 mb-1">Target Date</label>
+                  <label className="block text-sm font-medium text-slate-600 mb-1">Target Date</label>
                   <input
                     type="date"
                     value={goalForm.target_date}
@@ -807,13 +807,13 @@ export default function PlannerPage() {
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => setShowAddGoal(false)}
-                  className="flex-1 py-2 border border-neutral-700 bg-neutral-800 text-neutral-300 rounded-lg hover:bg-neutral-700 transition-colors"
+                  className="flex-1 py-2 border border-slate-200 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={addGoal}
-                  className="flex-1 py-2 bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg transition-colors border border-neutral-600"
+                  className="flex-1 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors border border-sky-600"
                 >
                   Create Goal
                 </button>

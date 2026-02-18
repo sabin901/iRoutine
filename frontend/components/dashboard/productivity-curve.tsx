@@ -41,7 +41,6 @@ export function ProductivityCurve() {
         
         setActivities(weekActivities)
         setInterruptions(weekInterruptions)
-        setLoading(false)
         return
       }
 

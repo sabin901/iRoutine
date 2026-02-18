@@ -44,10 +44,7 @@ export function InsightSection() {
         buildEventsAndNews(storedActivities, storedInterruptions)
       } else {
         const { data: { user } } = await supabase.auth.getUser()
-        if (!user) {
-          setLoading(false)
-          return
-        }
+        if (!user) return
         const weekStart = startOfDay(subDays(new Date(), 7))
         const { data: activitiesData } = await supabase
           .from('activities')

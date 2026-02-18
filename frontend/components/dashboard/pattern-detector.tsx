@@ -40,7 +40,6 @@ export function PatternDetector() {
         
         setActivities(recentActivities)
         setInterruptions(recentInterruptions)
-        setLoading(false)
         return
       }
 

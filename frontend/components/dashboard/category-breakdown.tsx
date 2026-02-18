@@ -57,7 +57,6 @@ export function CategoryBreakdown() {
         }))
         
         setData(breakdown.sort((a, b) => b.total_minutes - a.total_minutes))
-        setLoading(false)
         return
       }
 

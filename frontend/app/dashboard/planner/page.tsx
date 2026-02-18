@@ -74,73 +74,71 @@ export default function PlannerPage() {
 
   const fetchData = async () => {
     setLoading(true)
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { setLoading(false); return }
 
-    const today = new Date().toISOString().split('T')[0]
+      const today = new Date().toISOString().split('T')[0]
 
-    // Fetch today's tasks
-    const { data: todayTasks } = await supabase
-      .from('tasks')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('due_date', today)
-      .order('priority', { ascending: false })
+      const { data: todayTasks } = await supabase
+        .from('tasks')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('due_date', today)
+        .order('priority', { ascending: false })
 
-    if (todayTasks) setTasks(todayTasks)
+      if (todayTasks) setTasks(todayTasks)
 
-    // Fetch overdue tasks
-    const { data: overdue } = await supabase
-      .from('tasks')
-      .select('*')
-      .eq('user_id', user.id)
-      .lt('due_date', today)
-      .neq('status', 'completed')
-      .neq('status', 'cancelled')
+      const { data: overdue } = await supabase
+        .from('tasks')
+        .select('*')
+        .eq('user_id', user.id)
+        .lt('due_date', today)
+        .neq('status', 'completed')
+        .neq('status', 'cancelled')
 
-    if (overdue) setOverdueTasks(overdue)
+      if (overdue) setOverdueTasks(overdue)
 
-    // Fetch habits
-    const { data: habitsData } = await supabase
-      .from('habits')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('is_active', true)
-      .order('created_at', { ascending: true })
+      const { data: habitsData } = await supabase
+        .from('habits')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('is_active', true)
+        .order('created_at', { ascending: true })
 
-    if (habitsData) setHabits(habitsData)
+      if (habitsData) setHabits(habitsData)
 
-    // Fetch today's habit logs
-    const { data: logsData } = await supabase
-      .from('habit_logs')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('date', today)
+      const { data: logsData } = await supabase
+        .from('habit_logs')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('date', today)
 
-    if (logsData) setHabitLogs(logsData)
+      if (logsData) setHabitLogs(logsData)
 
-    // Fetch active goals
-    const { data: goalsData } = await supabase
-      .from('goals')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('status', 'active')
-      .order('created_at', { ascending: false })
+      const { data: goalsData } = await supabase
+        .from('goals')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'active')
+        .order('created_at', { ascending: false })
 
-    if (goalsData) setGoals(goalsData)
+      if (goalsData) setGoals(goalsData)
 
-    // Calculate stats
-    const completedTasks = todayTasks?.filter(t => t.status === 'completed').length || 0
-    const completedHabitIds = new Set(logsData?.filter(l => l.completed).map(l => l.habit_id) || [])
+      const completedTasks = todayTasks?.filter(t => t.status === 'completed').length || 0
+      const completedHabitIds = new Set(logsData?.filter(l => l.completed).map(l => l.habit_id) || [])
 
-    setStats({
-      tasks_completed: completedTasks,
-      tasks_total: todayTasks?.length || 0,
-      habits_completed: completedHabitIds.size,
-      habits_total: habitsData?.length || 0
-    })
-
-    setLoading(false)
+      setStats({
+        tasks_completed: completedTasks,
+        tasks_total: todayTasks?.length || 0,
+        habits_completed: completedHabitIds.size,
+        habits_total: habitsData?.length || 0
+      })
+    } catch (err) {
+      console.error('Failed to load planner data:', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const addTask = async () => {

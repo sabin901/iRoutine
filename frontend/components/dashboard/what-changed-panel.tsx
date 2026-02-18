@@ -38,7 +38,6 @@ export function WhatChangedThisWeek() {
         setInterruptions(storedInterruptions)
         setActivities(storedActivities)
         calculateComparison(storedInterruptions, storedActivities)
-        setLoading(false)
         return
       }
 

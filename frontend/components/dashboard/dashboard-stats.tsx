@@ -41,7 +41,6 @@ export function DashboardStats() {
         
         setActivities(todayActivities)
         setInterruptions(todayInterruptions)
-        setLoading(false)
         return
       }
 

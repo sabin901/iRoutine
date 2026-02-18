@@ -44,7 +44,6 @@ export function InterruptionHeatmap() {
         
         setInterruptions(weekInterruptions)
         setActivities(weekActivities)
-        setLoading(false)
         return
       }
 

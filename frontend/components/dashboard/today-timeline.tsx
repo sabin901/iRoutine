@@ -56,7 +56,6 @@ export function TodayTimeline() {
         
         setActivities(todayActivities)
         setInterruptions(todayInterruptions)
-        setLoading(false)
         return
       }
 

@@ -29,7 +29,6 @@ export function SettingsForm() {
         const profile = JSON.parse(localStorage.getItem('routine_profile') || '{}')
         setName(profile.name || 'Demo User')
         setTimezone(profile.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone)
-        setLoading(false)
         return
       }
 

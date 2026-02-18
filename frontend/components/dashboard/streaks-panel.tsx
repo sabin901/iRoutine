@@ -27,7 +27,6 @@ export function StreaksPanel() {
         const storedActivities = JSON.parse(localStorage.getItem('routine_activities') || '[]')
         setActivities(storedActivities)
         calculateStreaks(storedActivities)
-        setLoading(false)
         return
       }
 

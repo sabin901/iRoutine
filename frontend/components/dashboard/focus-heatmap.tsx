@@ -35,7 +35,6 @@ export function FocusHeatmap() {
         })
         
         setActivities(weekActivities)
-        setLoading(false)
         return
       }
 

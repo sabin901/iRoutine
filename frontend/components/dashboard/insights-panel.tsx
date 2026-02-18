@@ -30,7 +30,6 @@ export function InsightsPanel() {
         
         if (storedActivities.length === 0) {
           setInsights(null)
-          setLoading(false)
           return
         }
         
@@ -106,7 +105,6 @@ export function InsightsPanel() {
           balance_ratio: balanceRatio,
           suggestion,
         })
-        setLoading(false)
         return
       }
 

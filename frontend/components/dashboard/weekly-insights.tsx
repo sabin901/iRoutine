@@ -42,7 +42,6 @@ export function WeeklyInsights() {
         
         setActivities(weekActivities)
         setInterruptions(weekInterruptions)
-        setLoading(false)
         return
       }
 

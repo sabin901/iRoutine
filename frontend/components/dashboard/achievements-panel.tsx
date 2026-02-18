@@ -38,7 +38,6 @@ export function AchievementsPanel() {
         const storedInterruptions = JSON.parse(localStorage.getItem('routine_interruptions') || '[]')
         setActivities(storedActivities)
         setInterruptions(storedInterruptions)
-        setLoading(false)
         return
       }
 

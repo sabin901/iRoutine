@@ -40,7 +40,6 @@ export function SmartRecommendations() {
         
         setActivities(recentActivities)
         setInterruptions(recentInterruptions)
-        setLoading(false)
         return
       }
 

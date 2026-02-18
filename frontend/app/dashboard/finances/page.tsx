@@ -63,70 +63,70 @@ export default function FinancesPage() {
 
   const fetchData = async () => {
     setLoading(true)
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { setLoading(false); return }
 
-    const today = new Date()
-    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0]
+      const today = new Date()
+      const monthStart = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0]
 
-    // Fetch transactions
-    const { data: txns } = await supabase
-      .from('transactions')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('date', { ascending: false })
-      .limit(50)
-    
-    if (txns) setTransactions(txns)
+      const { data: txns } = await supabase
+        .from('transactions')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('date', { ascending: false })
+        .limit(50)
+      
+      if (txns) setTransactions(txns)
 
-    // Fetch budgets for current month
-    const { data: budgetData } = await supabase
-      .from('budgets')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('month', monthStart)
-    
-    if (budgetData) setBudgets(budgetData)
+      const { data: budgetData } = await supabase
+        .from('budgets')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('month', monthStart)
+      
+      if (budgetData) setBudgets(budgetData)
 
-    // Fetch savings goals
-    const { data: goalsData } = await supabase
-      .from('savings_goals')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('status', 'active')
-    
-    if (goalsData) setSavingsGoals(goalsData)
+      const { data: goalsData } = await supabase
+        .from('savings_goals')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'active')
+      
+      if (goalsData) setSavingsGoals(goalsData)
 
-    // Calculate summary
-    const monthTxns = txns?.filter(t => t.date >= monthStart) || []
-    const totalIncome = monthTxns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0)
-    const totalExpenses = monthTxns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0)
-    
-    const expenseByCategory: Record<string, number> = {}
-    monthTxns.filter(t => t.type === 'expense').forEach(t => {
-      expenseByCategory[t.category] = (expenseByCategory[t.category] || 0) + t.amount
-    })
+      const monthTxns = txns?.filter(t => t.date >= monthStart) || []
+      const totalIncome = monthTxns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0)
+      const totalExpenses = monthTxns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0)
+      
+      const expenseByCategory: Record<string, number> = {}
+      monthTxns.filter(t => t.type === 'expense').forEach(t => {
+        expenseByCategory[t.category] = (expenseByCategory[t.category] || 0) + t.amount
+      })
 
-    const budgetStatus = (budgetData || []).map(b => ({
-      category: b.category,
-      budget: b.amount,
-      spent: expenseByCategory[b.category] || 0,
-      remaining: b.amount - (expenseByCategory[b.category] || 0),
-      percentage: Math.round(((expenseByCategory[b.category] || 0) / b.amount) * 100)
-    }))
+      const budgetStatus = (budgetData || []).map(b => ({
+        category: b.category,
+        budget: b.amount,
+        spent: expenseByCategory[b.category] || 0,
+        remaining: b.amount - (expenseByCategory[b.category] || 0),
+        percentage: Math.round(((expenseByCategory[b.category] || 0) / b.amount) * 100)
+      }))
 
-    setSummary({
-      month: monthStart,
-      total_income: totalIncome,
-      total_expenses: totalExpenses,
-      net_savings: totalIncome - totalExpenses,
-      expense_by_category: expenseByCategory,
-      income_by_category: {},
-      budget_status: budgetStatus,
-      transaction_count: monthTxns.length
-    })
-
-    setLoading(false)
+      setSummary({
+        month: monthStart,
+        total_income: totalIncome,
+        total_expenses: totalExpenses,
+        net_savings: totalIncome - totalExpenses,
+        expense_by_category: expenseByCategory,
+        income_by_category: {},
+        budget_status: budgetStatus,
+        transaction_count: monthTxns.length
+      })
+    } catch (err) {
+      console.error('Failed to load finances data:', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const addTransaction = async () => {

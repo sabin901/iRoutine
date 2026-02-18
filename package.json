@@ -1,0 +1,15 @@
+{
+  "name": "routine",
+  "private": true,
+  "description": "iRoutine monorepo — frontend (Next.js) lives in frontend/",
+  "scripts": {
+    "build": "cd frontend && npm run build",
+    "install:frontend": "cd frontend && npm ci"
+  },
+  "dependencies": {
+    "next": "14.2.35"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  }
+}

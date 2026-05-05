@@ -15,6 +15,7 @@
  */
 
 import { createBrowserClient } from '@supabase/ssr'
+import { getSupabaseConfig } from './config'
 
 // Singleton instance - only create once
 let supabaseInstance: ReturnType<typeof createBrowserClient> | null = null
@@ -36,12 +37,11 @@ export function createClient() {
   // Get configuration from environment variables
   // NEXT_PUBLIC_ prefix makes these available in the browser
   // Fallback to placeholder values for development
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key'
+  const { url, key } = getSupabaseConfig()
 
   // Create browser client (handles cookies, SSR, etc.)
   // This client uses the anon key (safe for frontend)
   // Row Level Security (RLS) ensures users can only access their own data
-  supabaseInstance = createBrowserClient(supabaseUrl, supabaseAnonKey)
+  supabaseInstance = createBrowserClient(url, key)
   return supabaseInstance
 }

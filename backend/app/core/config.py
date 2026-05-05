@@ -34,10 +34,10 @@ class Settings(BaseSettings):
     # In production, set to your actual frontend URL(s)
     CORS_ORIGINS: str = "http://localhost:3000"
 
-    # Optional local/OpenAI-compatible LLM for richer insight narratives.
+    # Optional chat-completions-compatible server for richer insight narratives.
     LOCAL_LLM_ENABLED: bool = False
-    LOCAL_LLM_BASE_URL: str = "http://localhost:11434/v1"
-    LOCAL_LLM_MODEL: str = "nemotron-3-nano:30b"
+    LOCAL_LLM_BASE_URL: str = "http://127.0.0.1:8080/v1"
+    LOCAL_LLM_MODEL: str = "your-model-id"
     LOCAL_LLM_API_KEY: str = "local"
     LOCAL_LLM_TIMEOUT_SECONDS: float = 20.0
 

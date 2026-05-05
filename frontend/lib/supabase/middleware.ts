@@ -1,13 +1,15 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { getSupabaseConfig } from './config'
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   })
 
-  const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || 
-                        process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')
+  const { url: supabaseUrl, key: supabaseKey } = getSupabaseConfig()
+  const isPlaceholder =
+    supabaseUrl.includes('placeholder') || supabaseKey.includes('placeholder')
   
   if (isPlaceholder) {
     if (process.env.NODE_ENV === 'production') {
@@ -22,8 +24,8 @@ export async function updateSession(request: NextRequest) {
   }
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseKey,
     {
       cookies: {
         getAll() {

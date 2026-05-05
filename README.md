@@ -73,6 +73,8 @@ Create `frontend/.env.local`:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+# Or use Supabase's newer publishable key name:
+# NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 NEXT_PUBLIC_API_URL=http://127.0.0.1:8000
 ```
 
@@ -104,18 +106,25 @@ python -m pytest
 
 ## Deployment
 
-Frontend:
+### Pre-deploy checklist
 
-- Deploy the repo to Vercel.
-- Use the root `vercel.json`.
-- Add the frontend environment variables in Vercel.
+1. Run `npm run lint`, `npm run test`, `npm run build`, and `npm run test:e2e` in `frontend/`.
+2. Run `python -m pytest` in `backend/`.
+3. Apply `backend/database/complete_schema.sql` in Supabase if you use production auth.
+4. Point `NEXT_PUBLIC_API_URL` at your deployed API URL (not `localhost`).
 
-Backend:
+### Frontend (Vercel)
 
-- Deploy `backend/` to Render or another Python host.
+- Create a Vercel project from this repo and keep the **repository root** as the project root (the root `vercel.json` runs install/build inside `frontend/`).
+- Alternatively, set Vercel **Root Directory** to `frontend` and use default Next.js build settings; then you can ignore the root `vercel.json` or remove it for that project.
+- Add environment variables from `frontend/.env.example` (production values for Supabase and `NEXT_PUBLIC_API_URL`).
+
+### Backend (Render or similar)
+
+- Deploy the `backend/` folder (see root `render.yaml` as a template).
 - Build command: `pip install -r requirements.txt`
 - Start command: `python -m uvicorn main:app --host 0.0.0.0 --port $PORT`
-- Add Supabase keys and production `CORS_ORIGINS`.
+- Set Supabase keys and production `CORS_ORIGINS` (comma-separated frontend origins, e.g. `https://your-app.vercel.app`).
 
 ## License
 

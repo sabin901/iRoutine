@@ -1,8 +1,13 @@
 import os
 
 os.environ.setdefault("SUPABASE_URL", "https://placeholder.supabase.co")
-os.environ.setdefault("SUPABASE_SERVICE_ROLE_KEY", "placeholder")
-os.environ.setdefault("SUPABASE_ANON_KEY", "placeholder")
+FAKE_KEY = (
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
+    "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSJ9."
+    "signature"
+)
+os.environ.setdefault("SUPABASE_SERVICE_ROLE_KEY", FAKE_KEY)
+os.environ.setdefault("SUPABASE_ANON_KEY", FAKE_KEY)
 
 from app.services.local_llm import build_insight_snapshot  # noqa: E402
 

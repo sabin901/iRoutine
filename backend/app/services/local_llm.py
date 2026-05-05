@@ -1,4 +1,4 @@
-"""Optional local LLM adapter for insight narration."""
+"""Optional chat-completions adapter for extended insight narration."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ def build_insight_snapshot(
     activities: list[dict[str, Any]],
     interruptions: list[dict[str, Any]],
 ) -> dict[str, Any]:
-    """Condense raw logs before sending them to an LLM."""
+    """Condense raw logs before optional narration."""
     deterministic = generate_insights(activities, interruptions)
     focus_categories = {"Study", "Coding", "Work", "Reading"}
     focus_minutes = sum(
@@ -70,17 +70,17 @@ async def generate_local_llm_insight(
     activities: list[dict[str, Any]],
     interruptions: list[dict[str, Any]],
 ) -> dict[str, Any]:
-    """Call any local OpenAI-compatible chat server when enabled."""
+    """Call the configured chat-completions endpoint when enabled."""
     snapshot = build_insight_snapshot(activities, interruptions)
 
     if not settings.LOCAL_LLM_ENABLED:
         return {
             "enabled": False,
-            "provider": "OpenAI-compatible local endpoint",
+            "provider": "Private analysis endpoint",
             "model": settings.LOCAL_LLM_MODEL,
-            "summary": "Local LLM insights are not enabled on this backend.",
+            "summary": "Extended pattern narration is not enabled on this backend.",
             "actions": [
-                "Set LOCAL_LLM_ENABLED=true after starting Ollama, LM Studio, llama.cpp, vLLM, TensorRT-LLM, or NVIDIA NIM.",
+                "Set LOCAL_LLM_ENABLED=true after your chat-completions server is running and LOCAL_LLM_BASE_URL / LOCAL_LLM_MODEL are correct.",
             ],
             "snapshot": snapshot,
         }

@@ -86,7 +86,7 @@ async def get_llm_insights(
     request: Request,
     user_id: str = Depends(get_current_user),
 ):
-    """Use a configured local LLM to narrate recent routine patterns."""
+    """Narrate recent routine patterns from the configured narration endpoint."""
     try:
         end_date = utc_now()
         start_date = end_date - timedelta(days=14)
@@ -116,7 +116,7 @@ async def get_llm_insights(
         raise HTTPException(
             status_code=503,
             detail=(
-                "Local LLM insight generation is unavailable. "
-                "Check LOCAL_LLM_* settings and your local model server."
+                "Pattern narration is unavailable. "
+                "Check LOCAL_LLM_* settings and your narration server."
             ),
         ) from exc

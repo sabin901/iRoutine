@@ -50,6 +50,14 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  // Allow preview mode for unauthenticated users to see a sample dashboard
+  const isPreview = request.nextUrl.searchParams.get('preview') === 'true'
+
+  if (isPreview && request.nextUrl.pathname.startsWith('/dashboard')) {
+    supabaseResponse.headers.set('x-preview-mode', 'true')
+    return supabaseResponse
+  }
+
   // Protect dashboard routes
   if (request.nextUrl.pathname.startsWith('/dashboard') && !user) {
     const url = request.nextUrl.clone()

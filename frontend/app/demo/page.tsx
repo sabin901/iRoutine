@@ -52,8 +52,8 @@ export default function DemoPage() {
               Explore how iRoutine connects focused work, interruptions, planning drift, and money decisions in one place.
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Link href="/dashboard" className="btn-primary inline-flex items-center justify-center gap-2">
-                Open live dashboard
+              <Link href="/dashboard?preview=true" className="btn-primary inline-flex items-center justify-center gap-2">
+                Try sample dashboard
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link href="/auth/signup" className="btn-secondary inline-flex items-center justify-center">

@@ -149,8 +149,8 @@ export default function HomePage() {
                   Create account
                   <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href="/demo" className="inline-flex flex-1 items-center justify-center rounded-xl border border-slate-300 px-5 py-3.5 text-sm font-bold text-slate-950 transition hover:bg-slate-50">
-                  View demo workspace
+                <Link href="/dashboard?preview=true" className="inline-flex flex-1 items-center justify-center rounded-xl border border-slate-300 px-5 py-3.5 text-sm font-bold text-slate-950 transition hover:bg-slate-50">
+                  Try sample dashboard
                 </Link>
               </div>
             </div>

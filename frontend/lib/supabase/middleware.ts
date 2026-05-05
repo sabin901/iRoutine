@@ -2,10 +2,38 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { getSupabaseConfig } from './config'
 
+const previewCookie = 'iroutine_preview'
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   })
+
+  const isDashboardRoute = request.nextUrl.pathname.startsWith('/dashboard')
+  const isPreviewRequest =
+    isDashboardRoute && request.nextUrl.searchParams.get('preview') === 'true'
+  const hasPreviewCookie = request.cookies.get(previewCookie)?.value === 'true'
+
+  // Public demo dashboard: allow sample access without Supabase auth.
+  if (isPreviewRequest || (isDashboardRoute && hasPreviewCookie)) {
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.set('x-preview-mode', 'true')
+
+    const response = NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    })
+
+    response.cookies.set(previewCookie, 'true', {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    })
+
+    return response
+  }
 
   const { url: supabaseUrl, key: supabaseKey } = getSupabaseConfig()
   const isPlaceholder =
@@ -50,16 +78,8 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Allow preview mode for unauthenticated users to see a sample dashboard
-  const isPreview = request.nextUrl.searchParams.get('preview') === 'true'
-
-  if (isPreview && request.nextUrl.pathname.startsWith('/dashboard')) {
-    supabaseResponse.headers.set('x-preview-mode', 'true')
-    return supabaseResponse
-  }
-
   // Protect dashboard routes
-  if (request.nextUrl.pathname.startsWith('/dashboard') && !user) {
+  if (isDashboardRoute && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/auth/login'
     return NextResponse.redirect(url)

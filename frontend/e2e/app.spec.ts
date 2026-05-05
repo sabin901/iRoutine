@@ -2,10 +2,10 @@ import { expect, test } from '@playwright/test'
 
 test('public funnel links to the mock workspace', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('link', { name: 'View demo workspace' })).toBeVisible()
-  await page.getByRole('link', { name: 'View demo workspace' }).click()
-  await expect(page).toHaveURL('/demo')
-  await expect(page.getByRole('heading', { name: /realistic workspace/i })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Try sample dashboard' })).toBeVisible()
+  await page.getByRole('link', { name: 'Try sample dashboard' }).click()
+  await expect(page).toHaveURL('/dashboard?preview=true')
+  await expect(page.getByText('Built onboarding flow and demo-data seeding')).toBeVisible()
 })
 
 test('dashboard auto-populates the sample workspace', async ({ page }) => {

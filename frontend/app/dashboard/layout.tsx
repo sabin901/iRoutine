@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { headers } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { DashboardNav, type DashboardUser } from '@/components/dashboard/nav'
 import { isDemoMode } from '@/lib/env'
@@ -23,7 +23,10 @@ export default async function DashboardLayout({
 
   // Check if this is a preview visit (unauthenticated sample dashboard)
   const headersList = await headers()
-  const isPreview = headersList.get('x-preview-mode') === 'true'
+  const cookieStore = await cookies()
+  const isPreview =
+    headersList.get('x-preview-mode') === 'true' ||
+    cookieStore.get('iroutine_preview')?.value === 'true'
 
   if (demoMode && process.env.NODE_ENV === 'production' && !isPreview) {
     redirect('/auth/login?error=auth_not_configured')

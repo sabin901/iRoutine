@@ -10,12 +10,13 @@ export async function updateSession(request: NextRequest) {
   })
 
   const isDashboardRoute = request.nextUrl.pathname.startsWith('/dashboard')
+  const isPublicInsightsRoute = request.nextUrl.pathname === '/dashboard/insights'
   const isPreviewRequest =
     isDashboardRoute && request.nextUrl.searchParams.get('preview') === 'true'
   const hasPreviewCookie = request.cookies.get(previewCookie)?.value === 'true'
 
   // Public demo dashboard: allow sample access without Supabase auth.
-  if (isPreviewRequest || (isDashboardRoute && hasPreviewCookie)) {
+  if (isPublicInsightsRoute || isPreviewRequest || (isDashboardRoute && hasPreviewCookie)) {
     const requestHeaders = new Headers(request.headers)
     requestHeaders.set('x-preview-mode', 'true')
 

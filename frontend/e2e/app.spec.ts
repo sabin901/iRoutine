@@ -8,6 +8,14 @@ test('public funnel links to the mock workspace', async ({ page }) => {
   await expect(page.getByText('Built onboarding flow and demo-data seeding')).toBeVisible()
 })
 
+test('public insights are accessible without login', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('link', { name: 'Insights' }).click()
+  await expect(page).toHaveURL('/dashboard/insights')
+  await expect(page.getByText('Pattern Review')).toBeVisible()
+  await expect(page.getByText('Recommended next moves')).toBeVisible()
+})
+
 test('dashboard auto-populates the sample workspace', async ({ page }) => {
   await page.goto('/dashboard')
   await page.evaluate(() => localStorage.clear())

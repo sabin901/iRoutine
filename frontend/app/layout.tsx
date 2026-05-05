@@ -6,6 +6,9 @@ import { ToastProvider } from '@/contexts/toast-context'
 export const metadata: Metadata = {
   title: 'iRoutine — Personal Life Operating System',
   description: 'A calm system that connects time, money, energy, and focus so your routine is easier to understand.',
+  icons: {
+    icon: '/icon.svg',
+  },
 }
 
 export default function RootLayout({

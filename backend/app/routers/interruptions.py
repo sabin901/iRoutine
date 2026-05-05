@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Optional, Literal
 from datetime import datetime
 from app.core.auth import get_current_user
@@ -15,6 +15,8 @@ VALID_INTERRUPTION_TYPES = ["Phone", "Social Media", "Noise", "Other"]
 
 
 class InterruptionCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     activity_id: Optional[str] = Field(None, description="Associated activity ID")
     time: datetime = Field(..., description="Interruption time (UTC)")
     end_time: Optional[datetime] = Field(
@@ -40,10 +42,6 @@ class InterruptionCreate(BaseModel):
         if len(v) > 500:
             raise ValueError("Note must be 500 characters or less")
         return v
-
-    class Config:
-        # Reject unexpected fields
-        extra = "forbid"
 
 
 class InterruptionResponse(BaseModel):

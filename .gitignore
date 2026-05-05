@@ -40,6 +40,7 @@ lerna-debug.log*
 # IDE
 .vscode/
 .idea/
+.project/
 *.swp
 *.swo
 *~
@@ -56,6 +57,8 @@ Thumbs.db
 # Testing
 .coverage
 .pytest_cache/
+htmlcov/
+test-results/
 .nyc_output/
 coverage/
 

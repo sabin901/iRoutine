@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Activity, Interruption } from '@/lib/types'
 import { format, parseISO, subDays, startOfDay } from 'date-fns'
-import { Calendar, FileText, TrendingUp, Zap, Target, Sparkles } from 'lucide-react'
+import { Calendar, FileText, Zap, Target } from 'lucide-react'
+import { ensureDemoWorkspaceSeeded } from '@/lib/demo-data'
 
 interface RecentItem {
   id: string
@@ -27,11 +28,9 @@ export function InsightSection() {
   const [news, setNews] = useState<NewsItem[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadData = async () => {
     try {
@@ -39,6 +38,7 @@ export function InsightSection() {
         process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')
 
       if (isPlaceholder) {
+        ensureDemoWorkspaceSeeded()
         const storedActivities = JSON.parse(localStorage.getItem('routine_activities') || '[]')
         const storedInterruptions = JSON.parse(localStorage.getItem('routine_interruptions') || '[]')
         buildEventsAndNews(storedActivities, storedInterruptions)

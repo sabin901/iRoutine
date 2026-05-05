@@ -12,7 +12,7 @@ Environment Variables Required:
 - CORS_ORIGINS: Comma-separated list of allowed frontend URLs
 """
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
 
 
@@ -34,6 +34,13 @@ class Settings(BaseSettings):
     # In production, set to your actual frontend URL(s)
     CORS_ORIGINS: str = "http://localhost:3000"
 
+    # Optional local/OpenAI-compatible LLM for richer insight narratives.
+    LOCAL_LLM_ENABLED: bool = False
+    LOCAL_LLM_BASE_URL: str = "http://localhost:11434/v1"
+    LOCAL_LLM_MODEL: str = "nemotron-3-nano:30b"
+    LOCAL_LLM_API_KEY: str = "local"
+    LOCAL_LLM_TIMEOUT_SECONDS: float = 20.0
+
     @property
     def cors_origins_list(self) -> List[str]:
         """
@@ -44,18 +51,11 @@ class Settings(BaseSettings):
 
         This is used by CORS middleware to allow requests from these origins.
         """
-        return [origin.strip() for origin in self.CORS_ORIGINS.split(",")]
+        return [
+            origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()
+        ]
 
-    class Config:
-        """
-        Pydantic configuration.
-
-        Loads from .env when present (local dev). In production, platforms
-        (Render, Fly.io, etc.) inject env vars directly; .env is not required.
-        """
-
-        env_file = ".env"
-        extra = "ignore"
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
 # Create global settings instance

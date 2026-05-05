@@ -32,6 +32,17 @@ CREATE TABLE IF NOT EXISTS profiles (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Product feedback table (for founder/user learning loops)
+CREATE TABLE IF NOT EXISTS product_feedback (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    product_area TEXT NOT NULL DEFAULT 'overall' CHECK (product_area IN ('today', 'finances', 'planner', 'insights', 'settings', 'overall')),
+    rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    message TEXT NOT NULL CHECK (char_length(message) >= 5 AND char_length(message) <= 2000),
+    email TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- Activities table (enhanced with energy_cost, work_type, planned vs actual)
 CREATE TABLE IF NOT EXISTS activities (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -351,6 +362,8 @@ CREATE TABLE IF NOT EXISTS monthly_reflections (
 -- =============================================
 
 CREATE INDEX IF NOT EXISTS idx_activities_user_id ON activities(user_id);
+CREATE INDEX IF NOT EXISTS idx_product_feedback_user_id ON product_feedback(user_id);
+CREATE INDEX IF NOT EXISTS idx_product_feedback_created_at ON product_feedback(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_activities_start_time ON activities(start_time);
 CREATE INDEX IF NOT EXISTS idx_activities_work_type ON activities(user_id, work_type);
 CREATE INDEX IF NOT EXISTS idx_activities_task_id ON activities(task_id);
@@ -538,6 +551,7 @@ CREATE TRIGGER update_monthly_reflections_updated_at
 -- =============================================
 
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE product_feedback ENABLE ROW LEVEL SECURITY;
 ALTER TABLE activities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE interruptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
@@ -564,6 +578,9 @@ BEGIN
     DROP POLICY IF EXISTS "Users can view own profile" ON profiles;
     DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
     DROP POLICY IF EXISTS "Users can insert own profile" ON profiles;
+
+    -- Product feedback
+    DROP POLICY IF EXISTS "Users crud own product_feedback" ON product_feedback;
     
     -- Activities
     DROP POLICY IF EXISTS "Users can view own activities" ON activities;
@@ -590,6 +607,11 @@ CREATE POLICY "Users can update own profile"
 CREATE POLICY "Users can insert own profile"
     ON profiles FOR INSERT
     WITH CHECK (auth.uid() = id);
+
+CREATE POLICY "Users crud own product_feedback"
+    ON product_feedback FOR ALL TO authenticated
+    USING (auth.uid() = user_id)
+    WITH CHECK (auth.uid() = user_id);
 
 -- Activities policies
 CREATE POLICY "Users can view own activities"
@@ -726,6 +748,7 @@ CREATE POLICY "Users crud own monthly_reflections"
 -- =============================================
 
 GRANT ALL ON profiles TO postgres, service_role;
+GRANT ALL ON product_feedback TO postgres, service_role;
 GRANT ALL ON activities TO postgres, service_role;
 GRANT ALL ON interruptions TO postgres, service_role;
 GRANT ALL ON transactions TO postgres, service_role;
@@ -742,6 +765,7 @@ GRANT ALL ON weekly_reflections TO postgres, service_role;
 GRANT ALL ON monthly_reflections TO postgres, service_role;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON profiles TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON product_feedback TO authenticated;
 GRANT SELECT, INSERT, UPDATE, DELETE ON activities TO authenticated;
 GRANT SELECT, INSERT, UPDATE, DELETE ON interruptions TO authenticated;
 GRANT SELECT, INSERT, UPDATE, DELETE ON transactions TO authenticated;

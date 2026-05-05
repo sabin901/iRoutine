@@ -27,6 +27,7 @@ import { BookOpen, CheckCircle2 } from 'lucide-react'
 import { DailyReflection } from '@/lib/types'
 import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/contexts/toast-context'
+import { isDemoMode } from '@/lib/env'
 
 // Backend API URL from environment variables
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
@@ -49,14 +50,27 @@ export function DailyReflectionComponent() {
   
   const supabase = createClient()
   const toast = useToast()
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadTodayReflection()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadTodayReflection = async () => {
     try {
+      if (isDemoMode()) {
+        const today = new Date().toISOString().slice(0, 10)
+        const reflections = JSON.parse(localStorage.getItem('routine_daily_reflections') || '[]') as DailyReflection[]
+        const data = reflections.find(item => item.date === today)
+
+        if (data) {
+          setReflection(data)
+          setWhatWorked(data.what_worked || '')
+          setWhatDidnt(data.what_didnt || '')
+          setWhy(data.why || '')
+          setAdjustment(data.adjustment || '')
+        }
+        return
+      }
+
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) return
 
@@ -96,6 +110,29 @@ export function DailyReflectionComponent() {
   const saveReflection = async () => {
     setSaving(true)  // Prevent duplicate submissions
     try {
+      if (isDemoMode()) {
+        const today = new Date().toISOString().slice(0, 10)
+        const reflections = JSON.parse(localStorage.getItem('routine_daily_reflections') || '[]') as DailyReflection[]
+        const now = new Date().toISOString()
+        const nextReflection: DailyReflection = {
+          id: reflection?.id || `reflection-${Date.now()}`,
+          user_id: 'demo-user',
+          date: today,
+          what_worked: whatWorked || null,
+          what_didnt: whatDidnt || null,
+          why: why || null,
+          adjustment: adjustment || null,
+          created_at: reflection?.created_at || now,
+          updated_at: now,
+        }
+
+        const nextReflections = [nextReflection, ...reflections.filter(item => item.date !== today)]
+        localStorage.setItem('routine_daily_reflections', JSON.stringify(nextReflections))
+        setReflection(nextReflection)
+        toast.success('Reflection saved')
+        return
+      }
+
       // Check authentication
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) return
@@ -158,7 +195,7 @@ export function DailyReflectionComponent() {
 
       <div className="rounded-xl bg-slate-50 border border-slate-200 p-4">
         <label className="flex text-sm font-semibold text-slate-700 mb-3 items-center gap-2">
-          <span className="text-lg">✨</span>
+          <span className="h-4 w-1 rounded-full bg-emerald-400" />
           What worked today?
         </label>
         <textarea
@@ -172,7 +209,7 @@ export function DailyReflectionComponent() {
 
       <div className="rounded-xl bg-slate-50 border border-slate-200 p-4">
         <label className="flex text-sm font-semibold text-slate-700 mb-3 items-center gap-2">
-          <span className="text-lg">🤔</span>
+          <span className="h-4 w-1 rounded-full bg-amber-400" />
           What didn&apos;t work?
         </label>
         <textarea
@@ -186,7 +223,7 @@ export function DailyReflectionComponent() {
 
       <div className="rounded-xl bg-slate-50 border border-slate-200 p-4">
         <label className="flex text-sm font-semibold text-slate-700 mb-3 items-center gap-2">
-          <span className="text-lg">💭</span>
+          <span className="h-4 w-1 rounded-full bg-slate-300" />
           Why? (Optional)
         </label>
         <textarea
@@ -200,7 +237,7 @@ export function DailyReflectionComponent() {
 
       <div className="rounded-xl bg-slate-50 border border-slate-200 p-4">
         <label className="flex text-sm font-semibold text-slate-700 mb-3 items-center gap-2">
-          <span className="text-lg">🎯</span>
+          <span className="h-4 w-1 rounded-full bg-sky-400" />
           One adjustment for tomorrow
         </label>
         <textarea

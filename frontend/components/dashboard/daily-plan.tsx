@@ -29,11 +29,9 @@ export function DailyPlanComponent() {
   })
 
   const today = format(new Date(), 'yyyy-MM-dd')
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadTodayPlan()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadTodayPlan = () => {
     const plans = JSON.parse(localStorage.getItem('routine_daily_plans') || '[]')

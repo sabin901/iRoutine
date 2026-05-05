@@ -1,7 +1,8 @@
 'use client'
 
 import { lazy, Suspense } from 'react'
-import { BarChart3, Sparkles, Brain } from 'lucide-react'
+import { BarChart3, CheckCircle2 } from 'lucide-react'
+import { InsightStrip, PageHeader } from '@/components/dashboard/section-shell'
 
 // Lazy load components for better performance
 const InsightSection = lazy(() => import('@/components/dashboard/insight-section').then(m => ({ default: m.InsightSection })))
@@ -15,6 +16,7 @@ const InterruptionHeatmap = lazy(() => import('@/components/dashboard/interrupti
 const WeeklyInsights = lazy(() => import('@/components/dashboard/weekly-insights').then(m => ({ default: m.WeeklyInsights })))
 const CategoryBreakdown = lazy(() => import('@/components/dashboard/category-breakdown').then(m => ({ default: m.CategoryBreakdown })))
 const InsightsPanel = lazy(() => import('@/components/dashboard/insights-panel').then(m => ({ default: m.InsightsPanel })))
+const LocalLlmInsights = lazy(() => import('@/components/dashboard/local-llm-insights').then(m => ({ default: m.LocalLlmInsights })))
 
 function LoadingSkeleton() {
   return (
@@ -46,28 +48,32 @@ function LoadingSkeletonDark() {
 export default function InsightsPage() {
   return (
     <div className="space-y-8 animate-fade-in pb-12">
-      <div className="animate-slide-up card overflow-hidden">
-        <div className="p-6 lg:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-sky-50 border border-sky-100">
-              <BarChart3 className="h-7 w-7 text-sky-600" />
-            </div>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-0.5">/ Insights</p>
-              <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight">
-                Advanced Insights
-              </h1>
-            </div>
+      <PageHeader
+        icon={BarChart3}
+        section="Insights"
+        title="Advanced Insights"
+        description="Discover the patterns that connect time, money, energy, focus, interruptions, and weekly momentum."
+        action={
+          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-50 border border-emerald-100">
+            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+            <span className="text-sm font-medium text-emerald-800">Analysis ready</span>
           </div>
-          <p className="text-slate-500 text-sm lg:max-w-md flex items-center gap-2">
-            <Brain className="h-4 w-4 text-slate-400 shrink-0" />
-            Discover patterns across time, money, energy, and focus
-          </p>
-          <div className="hidden lg:flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-50 border border-amber-100 ml-auto">
-            <Sparkles className="h-4 w-4 text-amber-600" />
-            <span className="text-sm font-medium text-amber-800">Smart Analytics</span>
-          </div>
-        </div>
+        }
+      >
+        <InsightStrip
+          items={[
+            { label: 'Explainable', value: 'Every insight is based on visible activity and interruption math', tone: 'sky' },
+            { label: 'Cross-domain', value: 'Compare focus, spending, energy, and completion together', tone: 'emerald' },
+            { label: 'Weekly rhythm', value: 'See what changed before small drift becomes a trend', tone: 'amber' },
+            { label: 'Actionable', value: 'Recommendations point to concrete behavior changes', tone: 'slate' },
+          ]}
+        />
+      </PageHeader>
+
+      <div className="animate-slide-up">
+        <Suspense fallback={<LoadingSkeleton />}>
+          <LocalLlmInsights />
+        </Suspense>
       </div>
 
       {/* Insight section – EVENTS + NEWS style (dark, modern) */}
@@ -98,7 +104,7 @@ export default function InsightsPage() {
         </Suspense>
       </div>
 
-      {/* AI Pattern Detection */}
+      {/* Pattern detection */}
       <div className="animate-slide-up">
         <Suspense fallback={<LoadingSkeleton />}>
           <PatternDetector />

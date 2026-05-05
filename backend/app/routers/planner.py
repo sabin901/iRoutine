@@ -6,7 +6,7 @@ Handles tasks, goals, habits, and habit logs
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, Field
 from typing import Optional, Literal, List, Any
-from datetime import date, time, datetime
+from datetime import date, time, datetime, timezone
 from app.core.auth import get_current_user
 from app.core.database import supabase
 from slowapi import Limiter
@@ -149,7 +149,7 @@ async def update_task(
 
     # If marking as completed, set completed_at
     if data.get("status") == "completed":
-        data["completed_at"] = datetime.utcnow().isoformat()
+        data["completed_at"] = datetime.now(timezone.utc).isoformat()
 
     try:
         result = (

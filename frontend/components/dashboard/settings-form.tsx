@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { apiRequest } from '@/lib/api'
 import { useToast } from '@/contexts/toast-context'
+import { Download, FileText, Globe2, ShieldCheck, UserRound } from 'lucide-react'
+import { isDemoMode } from '@/lib/env'
+import { getErrorMessage } from '@/lib/errors'
 
 export function SettingsForm() {
   const [name, setName] = useState('')
@@ -12,19 +15,15 @@ export function SettingsForm() {
   const [saving, setSaving] = useState(false)
   const supabase = createClient()
   const toast = useToast()
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const demoMode = isDemoMode()
   useEffect(() => {
     loadProfile()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadProfile = async () => {
     try {
       // Check if using placeholder Supabase (demo mode)
-      const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || 
-                            process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')
-      
-      if (isPlaceholder) {
+      if (demoMode) {
         // Load from localStorage
         const profile = JSON.parse(localStorage.getItem('routine_profile') || '{}')
         setName(profile.name || 'Demo User')
@@ -61,10 +60,7 @@ export function SettingsForm() {
 
     try {
       // Check if using placeholder Supabase (demo mode)
-      const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || 
-                            process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')
-      
-      if (isPlaceholder) {
+      if (demoMode) {
         localStorage.setItem('routine_profile', JSON.stringify({ name, timezone }))
         toast.success('Settings saved')
         setSaving(false)
@@ -88,8 +84,8 @@ export function SettingsForm() {
       if (error) throw error
 
       toast.success('Settings saved')
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to save settings')
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err, 'Failed to save settings'))
     } finally {
       setSaving(false)
     }
@@ -98,10 +94,7 @@ export function SettingsForm() {
   const handleExport = async () => {
     try {
       // Check if using placeholder Supabase (demo mode)
-      const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || 
-                            process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')
-      
-      if (isPlaceholder) {
+      if (demoMode) {
         // Export from localStorage
         const activities = JSON.parse(localStorage.getItem('routine_activities') || '[]')
         const interruptions = JSON.parse(localStorage.getItem('routine_interruptions') || '[]')
@@ -131,8 +124,8 @@ export function SettingsForm() {
 
       const data = await apiRequest<{ url: string }>('/api/export')
       window.open(data.url, '_blank')
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to export data')
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err, 'Failed to export data'))
     }
   }
 
@@ -141,10 +134,7 @@ export function SettingsForm() {
       const { exportWeeklyPDF, generateWeeklyReportData } = await import('@/lib/pdf-export')
       
       // Check if using placeholder Supabase (demo mode)
-      const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || 
-                            process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')
-      
-      if (isPlaceholder) {
+      if (demoMode) {
         const activities = JSON.parse(localStorage.getItem('routine_activities') || '[]')
         const interruptions = JSON.parse(localStorage.getItem('routine_interruptions') || '[]')
         const reportData = generateWeeklyReportData(activities, interruptions)
@@ -153,8 +143,8 @@ export function SettingsForm() {
       }
 
       toast.show('PDF export requires data from server. Use CSV export for now.', 'info')
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to export PDF')
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err, 'Failed to export PDF'))
     }
   }
 
@@ -167,60 +157,96 @@ export function SettingsForm() {
   }
 
   return (
-    <div className="card p-6 animate-slide-up">
-      <h2 className="text-lg font-semibold text-slate-900 mb-6">Profile</h2>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-          />
+    <div className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
+      <div className="card p-6 animate-slide-up">
+        <div className="mb-6 flex items-center gap-3">
+          <div className="rounded-xl border border-sky-100 bg-sky-50 p-2.5">
+            <UserRound className="h-5 w-5 text-sky-600" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">Profile</h2>
+            <p className="text-sm text-slate-500">Used for greetings, reports, and day boundaries.</p>
+          </div>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Timezone</label>
+            <select
+              value={timezone}
+              onChange={(e) => setTimezone(e.target.value)}
+              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+            >
+              {Intl.supportedValuesOf('timeZone').map((tz) => (
+                <option key={tz} value={tz}>
+                  {tz}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            disabled={saving}
+            className="w-full rounded-lg btn-primary px-4 py-2 text-sm font-medium disabled:opacity-50"
+          >
+            {saving ? 'Saving...' : 'Save Settings'}
+          </button>
+        </form>
+      </div>
+
+      <div className="space-y-6">
+        <div className="card p-6 animate-slide-up">
+          <div className="mb-5 flex items-center gap-3">
+            <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-2.5">
+              <ShieldCheck className="h-5 w-5 text-emerald-600" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900">App status</h3>
+              <p className="text-sm text-slate-500">{demoMode ? 'Demo mode with browser-local data' : 'Connected to Supabase'}</p>
+            </div>
+          </div>
+          <div className="space-y-3 text-sm">
+            <div className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2">
+              <span className="flex items-center gap-2 text-slate-600"><Globe2 className="h-4 w-4" />Timezone</span>
+              <span className="max-w-[11rem] truncate font-medium text-slate-900">{timezone || 'Detecting'}</span>
+            </div>
+            <div className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2">
+              <span className="text-slate-600">Storage</span>
+              <span className="font-medium text-slate-900">{demoMode ? 'Local browser' : 'Cloud database'}</span>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Timezone</label>
-          <select
-            value={timezone}
-            onChange={(e) => setTimezone(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-          >
-            {Intl.supportedValuesOf('timeZone').map((tz) => (
-              <option key={tz} value={tz}>
-                {tz}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <button
-          type="submit"
-          disabled={saving}
-          className="w-full rounded-lg btn-primary px-4 py-2 text-sm font-medium disabled:opacity-50"
-        >
-          {saving ? 'Saving...' : 'Save Settings'}
-        </button>
-      </form>
-
-      <div className="mt-8 pt-8 border-t border-slate-200">
-        <h3 className="text-sm font-semibold text-slate-900 mb-4">Data Export</h3>
-        <div className="space-y-3">
-          <button
-            type="button"
-            onClick={handleExport}
-            className="w-full rounded-lg btn-secondary px-4 py-2.5 text-sm font-medium"
-          >
-            Export Data (CSV)
-          </button>
-          <button
-            type="button"
-            onClick={handleExportPDF}
-            className="w-full rounded-lg btn-primary px-4 py-2.5 text-sm font-medium"
-          >
-            Export Weekly Report (PDF)
-          </button>
+        <div className="card p-6 animate-slide-up">
+          <h3 className="text-sm font-semibold text-slate-900 mb-4">Data Export</h3>
+          <div className="space-y-3">
+            <button
+              type="button"
+              onClick={handleExport}
+              className="w-full rounded-lg btn-secondary px-4 py-2.5 text-sm font-medium inline-flex items-center justify-center gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Export Data (CSV)
+            </button>
+            <button
+              type="button"
+              onClick={handleExportPDF}
+              className="w-full rounded-lg btn-primary px-4 py-2.5 text-sm font-medium inline-flex items-center justify-center gap-2"
+            >
+              <FileText className="h-4 w-4" />
+              Export Weekly Report (PDF)
+            </button>
+          </div>
         </div>
       </div>
     </div>

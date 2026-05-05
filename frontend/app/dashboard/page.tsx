@@ -8,7 +8,12 @@ import { AchievementsPanel } from '@/components/dashboard/achievements-panel'
 import { DashboardStats } from '@/components/dashboard/dashboard-stats'
 import { EnergyTracker } from '@/components/dashboard/energy-tracker'
 import { DailyReflectionComponent } from '@/components/dashboard/daily-reflection'
+import { InsightStrip, PageHeader } from '@/components/dashboard/section-shell'
+import { ActivationOnboarding } from '@/components/dashboard/activation-onboarding'
+import { NextActionPanel } from '@/components/dashboard/next-action-panel'
 import { format } from 'date-fns'
+import Link from 'next/link'
+import { LayoutDashboard, Plus } from 'lucide-react'
 
 function getGreeting() {
   const hour = new Date().getHours()
@@ -23,12 +28,32 @@ export default function DashboardPage() {
 
   return (
     <div className="animate-fade-in pb-16">
-      <header className="mb-8">
-        <p className="text-sm font-medium text-slate-500 mb-0.5">{today}</p>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight sm:text-3xl">
-          {greeting}
-        </h1>
-      </header>
+      <div className="mb-8">
+        <PageHeader
+          icon={LayoutDashboard}
+          section="Today"
+          title={greeting}
+          description={`${today}. Capture what happened, compare it to your plan, and close the loop before the day gets noisy.`}
+          action={
+            <Link href="/dashboard/planner" className="btn-primary inline-flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              Plan day
+            </Link>
+          }
+        >
+          <InsightStrip
+            items={[
+              { label: 'Start here', value: 'Plan the day, then log reality as it happens', tone: 'sky' },
+              { label: 'Protect', value: 'Watch interruption minutes before they become invisible loss', tone: 'amber' },
+              { label: 'Recover', value: 'Energy and reflection make tomorrow easier to steer', tone: 'emerald' },
+              { label: 'Review', value: 'Insights connect time, money, focus, and stress patterns', tone: 'slate' },
+            ]}
+          />
+        </PageHeader>
+      </div>
+
+      <ActivationOnboarding />
+      <NextActionPanel />
 
       <div className="mb-8 animate-slide-up">
         <DashboardStats />

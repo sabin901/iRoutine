@@ -4,10 +4,10 @@
   "description": "iRoutine monorepo — frontend (Next.js) lives in frontend/",
   "scripts": {
     "build": "cd frontend && npm run build",
+    "lint": "cd frontend && npm run lint",
+    "test": "cd frontend && npm test -- --runInBand",
+    "test:e2e": "cd frontend && npm run test:e2e",
     "install:frontend": "cd frontend && npm ci"
-  },
-  "dependencies": {
-    "next": "14.2.35"
   },
   "engines": {
     "node": ">=18.17.0"

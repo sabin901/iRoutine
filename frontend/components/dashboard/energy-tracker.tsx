@@ -5,6 +5,7 @@ import { Battery, CheckCircle2 } from 'lucide-react'
 import { EnergyLog, Mood } from '@/lib/types'
 import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/contexts/toast-context'
+import { isDemoMode } from '@/lib/env'
 
 export function EnergyTracker() {
   const [energyLog, setEnergyLog] = useState<EnergyLog | null>(null)
@@ -19,10 +20,9 @@ export function EnergyTracker() {
   const toast = useToast()
 
   // Load today's energy log when component mounts
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadTodayEnergy()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
    * Load today's energy log from the backend.
@@ -32,6 +32,22 @@ export function EnergyTracker() {
    */
   const loadTodayEnergy = async () => {
     try {
+      if (isDemoMode()) {
+        const today = new Date().toISOString().slice(0, 10)
+        const logs = JSON.parse(localStorage.getItem('routine_energy_logs') || '[]') as EnergyLog[]
+        const data = logs.find(log => log.date === today)
+
+        if (data) {
+          setEnergyLog(data)
+          setEnergyLevel(data.energy_level)
+          setStressLevel(data.stress_level)
+          setMood(data.mood || '')
+          setSleepHours(data.sleep_hours || '')
+          setNote(data.note || '')
+        }
+        return
+      }
+
       // Check if user is authenticated
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) return  // Don't load if not logged in
@@ -78,6 +94,29 @@ export function EnergyTracker() {
   const saveEnergyLog = async () => {
     setSaving(true)  // Prevent duplicate submissions
     try {
+      if (isDemoMode()) {
+        const today = new Date().toISOString().slice(0, 10)
+        const logs = JSON.parse(localStorage.getItem('routine_energy_logs') || '[]') as EnergyLog[]
+        const now = new Date().toISOString()
+        const nextLog: EnergyLog = {
+          id: energyLog?.id || `energy-${Date.now()}`,
+          user_id: 'demo-user',
+          date: today,
+          energy_level: energyLevel,
+          stress_level: stressLevel,
+          mood: mood || null,
+          sleep_hours: sleepHours ? parseFloat(sleepHours.toString()) : null,
+          note: note || null,
+          created_at: energyLog?.created_at || now,
+          updated_at: now,
+        }
+        const nextLogs = [nextLog, ...logs.filter(log => log.date !== today)]
+        localStorage.setItem('routine_energy_logs', JSON.stringify(nextLogs))
+        setEnergyLog(nextLog)
+        toast.success('Energy log saved')
+        return
+      }
+
       // Check authentication
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) return
@@ -201,8 +240,8 @@ export function EnergyTracker() {
           }}
         />
         <div className="flex justify-between text-xs text-slate-500 mt-2 font-medium">
-          <span>😌 Calm</span>
-          <span>😰 Stressed</span>
+          <span>Calm</span>
+          <span>Stressed</span>
         </div>
       </div>
 
@@ -214,15 +253,15 @@ export function EnergyTracker() {
           className="w-full px-4 py-3 border border-slate-300 rounded-xl bg-white text-slate-900 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all"
         >
           <option value="">Select mood...</option>
-          <option value="excited">🎉 Excited</option>
-          <option value="happy">😊 Happy</option>
-          <option value="neutral">😐 Neutral</option>
-          <option value="tired">😴 Tired</option>
-          <option value="stressed">😰 Stressed</option>
-          <option value="anxious">😟 Anxious</option>
-          <option value="calm">😌 Calm</option>
-          <option value="focused">🎯 Focused</option>
-          <option value="other">🤔 Other</option>
+          <option value="excited">Excited</option>
+          <option value="happy">Happy</option>
+          <option value="neutral">Neutral</option>
+          <option value="tired">Tired</option>
+          <option value="stressed">Stressed</option>
+          <option value="anxious">Anxious</option>
+          <option value="calm">Calm</option>
+          <option value="focused">Focused</option>
+          <option value="other">Other</option>
         </select>
       </div>
 

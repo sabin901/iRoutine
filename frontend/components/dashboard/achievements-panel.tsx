@@ -3,14 +3,12 @@
 import { useEffect, useState, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Activity, Interruption } from '@/lib/types'
-import { Trophy, Target, Zap, Star, Calendar, TrendingUp } from 'lucide-react'
 import { calculateAverageFocusQuality } from '@/lib/interruption-metrics'
 
 interface Achievement {
   id: string
   name: string
   description: string
-  icon: typeof Trophy
   unlocked: boolean
   progress: number
   maxProgress: number
@@ -22,11 +20,9 @@ export function AchievementsPanel() {
   const [interruptions, setInterruptions] = useState<Interruption[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadData = async () => {
     try {
@@ -87,7 +83,6 @@ export function AchievementsPanel() {
         id: 'first-log',
         name: 'Getting Started',
         description: 'Log your first activity',
-        icon: Target,
         unlocked: activities.length > 0,
         progress: activities.length > 0 ? 1 : 0,
         maxProgress: 1,
@@ -97,7 +92,6 @@ export function AchievementsPanel() {
         id: 'focus-hours',
         name: 'Focus Master',
         description: 'Log 10 hours of focus time',
-        icon: Zap,
         unlocked: totalFocusMinutes >= 600,
         progress: Math.min(totalFocusMinutes / 60, 10),
         maxProgress: 10,
@@ -107,7 +101,6 @@ export function AchievementsPanel() {
         id: 'quality',
         name: 'Quality Focus',
         description: 'Achieve 80% average focus quality',
-        icon: Star,
         unlocked: qualityMetrics.avg_quality >= 80,
         progress: qualityMetrics.avg_quality,
         maxProgress: 100,
@@ -117,7 +110,6 @@ export function AchievementsPanel() {
         id: 'consistency',
         name: 'Consistent Tracker',
         description: 'Log activities for 7 days',
-        icon: Calendar,
         unlocked: daysWithActivity >= 7,
         progress: daysWithActivity,
         maxProgress: 7,
@@ -127,7 +119,6 @@ export function AchievementsPanel() {
         id: 'improvement',
         name: 'On the Rise',
         description: 'Improve focus quality by 20%',
-        icon: TrendingUp,
         unlocked: false, // Would need historical data
         progress: 0,
         maxProgress: 20,
@@ -155,9 +146,7 @@ export function AchievementsPanel() {
     <div className="card card-hover p-5">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-amber-50 border border-amber-100">
-            <Trophy className="h-4 w-4 text-amber-600" />
-          </div>
+          <span className="h-1.5 w-8 rounded-full bg-amber-500" aria-hidden="true" />
           <h2 className="text-base font-semibold text-slate-900">Achievements</h2>
         </div>
         <span className="text-xs font-semibold text-slate-500">{unlockedCount}/{achievements.length}</span>
@@ -165,7 +154,6 @@ export function AchievementsPanel() {
 
       <div className="space-y-3">
         {achievements.map((achievement) => {
-          const Icon = achievement.icon
           const progressPercent = (achievement.progress / achievement.maxProgress) * 100
 
           return (
@@ -178,13 +166,6 @@ export function AchievementsPanel() {
               }`}
             >
               <div className="flex items-start gap-3">
-                <div className={`p-2 rounded-lg ${
-                  achievement.unlocked
-                    ? 'bg-amber-500 text-white'
-                    : 'bg-slate-200 text-slate-500'
-                }`}>
-                  <Icon className="h-4 w-4" />
-                </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
                     <h3 className={`text-sm font-semibold ${achievement.unlocked ? 'text-slate-900' : 'text-slate-700'}`}>

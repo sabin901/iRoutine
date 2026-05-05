@@ -61,6 +61,41 @@ export interface Insight {
   suggestion: string
 }
 
+export interface LocalLlmInsight {
+  enabled: boolean
+  provider: string
+  model: string
+  summary: string
+  actions: string[]
+  snapshot: {
+    generated_at: string
+    activity_count: number
+    interruption_count: number
+    focus_hours: number
+    deterministic_insights: Insight
+    recent_activity_categories: string[]
+    recent_interruption_types: string[]
+  }
+}
+
+export type FeedbackProductArea =
+  | 'today'
+  | 'finances'
+  | 'planner'
+  | 'insights'
+  | 'settings'
+  | 'overall'
+
+export interface ProductFeedback {
+  id: string
+  user_id: string
+  product_area: FeedbackProductArea
+  rating: number
+  message: string
+  email: string | null
+  created_at: string
+}
+
 export interface PlannedActivity {
   id: string
   description: string

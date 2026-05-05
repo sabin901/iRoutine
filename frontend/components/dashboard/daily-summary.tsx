@@ -14,11 +14,9 @@ export function DailySummary() {
   const [showReflection, setShowReflection] = useState(false)
 
   const today = format(new Date(), 'yyyy-MM-dd')
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadData = () => {
     // Load plan

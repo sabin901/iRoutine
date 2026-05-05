@@ -121,7 +121,7 @@ async def create_energy_log(
             # Update existing
             result = (
                 supabase.table("energy_logs")
-                .update(log.dict(exclude_none=True, exclude={"date": True}))
+                .update(log.model_dump(exclude_none=True, exclude={"date"}))
                 .eq("user_id", user_id)
                 .eq("date", log_date.isoformat())
                 .execute()
@@ -134,7 +134,7 @@ async def create_energy_log(
                     {
                         "user_id": user_id,
                         "date": log_date.isoformat(),
-                        **log.dict(exclude_none=True, exclude={"date": True}),
+                        **log.model_dump(exclude_none=True, exclude={"date"}),
                     }
                 )
                 .execute()
@@ -239,7 +239,7 @@ async def update_energy_log(
     try:
         result = (
             supabase.table("energy_logs")
-            .update(log.dict(exclude_none=True))
+            .update(log.model_dump(exclude_none=True))
             .eq("id", log_id)
             .eq("user_id", user_id)
             .execute()

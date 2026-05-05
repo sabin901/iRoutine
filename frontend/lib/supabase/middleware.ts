@@ -11,7 +11,12 @@ export async function updateSession(request: NextRequest) {
   
   if (isPlaceholder) {
     if (process.env.NODE_ENV === 'production') {
-      console.warn('[SECURITY] Supabase URL is missing or placeholder in production — auth is bypassed!')
+      if (request.nextUrl.pathname.startsWith('/dashboard')) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/auth/login'
+        url.searchParams.set('error', 'auth_not_configured')
+        return NextResponse.redirect(url)
+      }
     }
     return supabaseResponse
   }

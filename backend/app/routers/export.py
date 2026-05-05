@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Request, HTTPException
 from fastapi.responses import StreamingResponse
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from io import StringIO
 import csv
 from app.core.auth import get_current_user
@@ -12,6 +12,11 @@ router = APIRouter()
 limiter = Limiter(key_func=get_remote_address)
 
 
+def utc_now() -> datetime:
+    """Return a timezone-aware UTC timestamp for export date windows."""
+    return datetime.now(timezone.utc)
+
+
 @router.get("/export")
 @limiter.limit("30/minute")  # Stricter limit for export (can be resource-intensive)
 async def export_data(
@@ -21,7 +26,7 @@ async def export_data(
     """Export user data as CSV. Rate limited to 30 requests per minute."""
     try:
         # Get all activities and interruptions
-        end_date = datetime.utcnow()
+        end_date = utc_now()
         start_date = end_date - timedelta(days=365)  # Last year
 
         activities_result = (
@@ -84,7 +89,7 @@ async def export_data(
             iter([output.getvalue()]),
             media_type="text/csv",
             headers={
-                "Content-Disposition": f'attachment; filename="routine-export-{datetime.now().strftime("%Y%m%d")}.csv"'
+                "Content-Disposition": f'attachment; filename="routine-export-{utc_now().strftime("%Y%m%d")}.csv"'
             },
         )
     except Exception as e:

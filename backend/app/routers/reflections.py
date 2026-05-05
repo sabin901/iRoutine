@@ -112,7 +112,7 @@ async def create_daily_reflection(
         if existing.data:
             result = (
                 supabase.table("daily_reflections")
-                .update(reflection.dict(exclude_none=True, exclude={"date": True}))
+                .update(reflection.model_dump(exclude_none=True, exclude={"date"}))
                 .eq("user_id", user_id)
                 .eq("date", reflection_date.isoformat())
                 .execute()
@@ -124,7 +124,7 @@ async def create_daily_reflection(
                     {
                         "user_id": user_id,
                         "date": reflection_date.isoformat(),
-                        **reflection.dict(exclude_none=True, exclude={"date": True}),
+                        **reflection.model_dump(exclude_none=True, exclude={"date"}),
                     }
                 )
                 .execute()
@@ -218,7 +218,7 @@ async def create_weekly_reflection(
             result = (
                 supabase.table("weekly_reflections")
                 .update(
-                    reflection.dict(exclude_none=True, exclude={"week_start": True})
+                    reflection.model_dump(exclude_none=True, exclude={"week_start"})
                 )
                 .eq("user_id", user_id)
                 .eq("week_start", week_start.isoformat())
@@ -231,8 +231,8 @@ async def create_weekly_reflection(
                     {
                         "user_id": user_id,
                         "week_start": week_start.isoformat(),
-                        **reflection.dict(
-                            exclude_none=True, exclude={"week_start": True}
+                        **reflection.model_dump(
+                            exclude_none=True, exclude={"week_start"}
                         ),
                     }
                 )
@@ -296,7 +296,7 @@ async def create_monthly_reflection(
         if existing.data:
             result = (
                 supabase.table("monthly_reflections")
-                .update(reflection.dict(exclude_none=True, exclude={"month": True}))
+                .update(reflection.model_dump(exclude_none=True, exclude={"month"}))
                 .eq("user_id", user_id)
                 .eq("month", month_start.isoformat())
                 .execute()
@@ -308,7 +308,7 @@ async def create_monthly_reflection(
                     {
                         "user_id": user_id,
                         "month": month_start.isoformat(),
-                        **reflection.dict(exclude_none=True, exclude={"month": True}),
+                        **reflection.model_dump(exclude_none=True, exclude={"month"}),
                     }
                 )
                 .execute()

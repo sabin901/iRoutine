@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Activity, Interruption } from '@/lib/types'
 import { parseISO, subDays, startOfDay } from 'date-fns'
-import { Brain, TrendingUp, TrendingDown, AlertTriangle, CheckCircle2, Sparkles } from 'lucide-react'
 import { detectPatterns, type PatternDetection } from '@/lib/advanced-insights'
 
 export function PatternDetector() {
@@ -12,11 +11,9 @@ export function PatternDetector() {
   const [interruptions, setInterruptions] = useState<Interruption[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadData = async () => {
     try {
@@ -84,7 +81,7 @@ export function PatternDetector() {
     return (
       <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6">
         <div className="text-center py-12">
-          <Brain className="h-10 w-10 text-neutral-600 mx-auto mb-3" />
+          <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-neutral-700" aria-hidden="true" />
           <p className="text-sm text-neutral-400 font-medium">
             Need more data to detect patterns. Keep tracking!
           </p>
@@ -95,23 +92,13 @@ export function PatternDetector() {
 
   const patterns = detectPatterns(activities, interruptions)
 
-  const getPatternIcon = (type: PatternDetection['type']) => {
-    switch (type) {
-      case 'positive':
-        return CheckCircle2
-      case 'negative':
-        return AlertTriangle
-      default:
-        return Sparkles
-    }
-  }
-
   const getPatternColor = (type: PatternDetection['type']) => {
     switch (type) {
       case 'positive':
         return {
           bg: 'bg-emerald-500/10',
           border: 'border-emerald-500/30',
+          accent: 'bg-emerald-400',
           text: 'text-white',
           subtext: 'text-neutral-300',
           badge: 'bg-emerald-500/20 text-emerald-300',
@@ -120,6 +107,7 @@ export function PatternDetector() {
         return {
           bg: 'bg-red-500/10',
           border: 'border-red-500/30',
+          accent: 'bg-red-400',
           text: 'text-white',
           subtext: 'text-neutral-300',
           badge: 'bg-red-500/20 text-red-300',
@@ -128,6 +116,7 @@ export function PatternDetector() {
         return {
           bg: 'bg-neutral-800/50',
           border: 'border-neutral-700/50',
+          accent: 'bg-neutral-500',
           text: 'text-white',
           subtext: 'text-neutral-300',
           badge: 'bg-neutral-700 text-neutral-300',
@@ -139,11 +128,9 @@ export function PatternDetector() {
     <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/95 p-6 card-hover">
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2.5 rounded-xl bg-neutral-800 border border-neutral-700/50">
-            <Brain className="h-5 w-5 text-neutral-300" />
-          </div>
+          <div className="h-10 w-1.5 rounded-full bg-neutral-600" aria-hidden="true" />
           <div>
-            <h2 className="text-lg font-semibold text-white">AI Pattern Detection</h2>
+            <h2 className="text-lg font-semibold text-white">Pattern Detection</h2>
             <p className="text-xs text-neutral-400">Discovered patterns in your behavior and productivity</p>
           </div>
         </div>
@@ -151,7 +138,6 @@ export function PatternDetector() {
 
       <div className="space-y-3">
         {patterns.map((pattern, idx) => {
-          const Icon = getPatternIcon(pattern.type)
           const colors = getPatternColor(pattern.type)
 
           return (
@@ -161,9 +147,7 @@ export function PatternDetector() {
               style={{ animationDelay: `${idx * 100}ms` }}
             >
               <div className="flex items-start gap-3">
-                <div className={`p-2 rounded-lg ${colors.badge}`}>
-                  <Icon className="h-4 w-4" />
-                </div>
+                <div className={`mt-2 h-1.5 w-8 shrink-0 rounded-full ${colors.accent}`} aria-hidden="true" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className={`text-sm font-semibold ${colors.text}`}>
@@ -177,7 +161,7 @@ export function PatternDetector() {
                     {pattern.description}
                   </p>
                   <div className="flex items-start gap-2 mt-3 pt-3 border-t border-neutral-700/50">
-                    <Sparkles className={`h-3 w-3 mt-0.5 ${colors.subtext}`} />
+                    <div className="mt-1.5 h-1.5 w-5 shrink-0 rounded-full bg-neutral-600" aria-hidden="true" />
                     <p className={`text-xs ${colors.subtext} italic`}>
                       {pattern.suggestion}
                     </p>
@@ -191,7 +175,7 @@ export function PatternDetector() {
 
       {patterns.length === 0 && (
         <div className="text-center py-8">
-          <Brain className="h-12 w-12 text-neutral-600 mx-auto mb-3" />
+          <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-neutral-700" aria-hidden="true" />
           <p className="text-sm text-neutral-400">
             No clear patterns detected yet. Keep tracking consistently!
           </p>

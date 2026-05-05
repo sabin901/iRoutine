@@ -19,7 +19,7 @@ Key Features:
 """
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Optional, Literal
 from datetime import datetime
 from app.core.auth import get_current_user
@@ -46,6 +46,8 @@ class ActivityCreate(BaseModel):
     This defines what data the API expects when creating an activity.
     Pydantic automatically validates the data types and constraints.
     """
+
+    model_config = ConfigDict(extra="forbid")
 
     # Required fields
     category: Literal[
@@ -131,10 +133,6 @@ class ActivityCreate(BaseModel):
             if duration < 0:
                 raise ValueError("Invalid time range")
         return v
-
-    class Config:
-        # Reject unexpected fields
-        extra = "forbid"
 
 
 class ActivityResponse(BaseModel):

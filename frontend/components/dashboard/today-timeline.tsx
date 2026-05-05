@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Activity, Interruption, PlannedActivity } from '@/lib/types'
 import { format, parseISO, startOfDay, endOfDay, isWithinInterval, differenceInMinutes } from 'date-fns'
-import { Clock, AlertCircle, Target, CheckCircle2 } from 'lucide-react'
+import { AlertCircle, Clock } from 'lucide-react'
 
 const categoryColors: Record<string, string> = {
   Study: 'border-l-blue-500 bg-blue-50',
@@ -22,11 +22,9 @@ export function TodayTimeline() {
   const [plannedActivities, setPlannedActivities] = useState<PlannedActivity[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadTodayData()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadTodayData = async () => {
     try {
@@ -153,9 +151,9 @@ export function TodayTimeline() {
   }
 
   return (
-    <div className="card card-hover p-6">
+    <div className="card card-hover p-5 sm:p-6">
       <div className="mb-5 flex items-center gap-3">
-        <div className="p-2.5 rounded-xl bg-sky-50 border border-sky-100">
+        <div className="rounded-xl border border-sky-100 bg-sky-50 p-2.5">
           <Clock className="h-5 w-5 text-sky-600" />
         </div>
         <div>
@@ -176,11 +174,11 @@ export function TodayTimeline() {
             return (
               <div
                 key={activity.id}
-                className={`rounded-xl border-l-4 ${categoryColor} p-3.5 border border-slate-200/80 bg-white transition-shadow hover:shadow-sm`}
+                className={`rounded-xl border-l-4 ${categoryColor} border border-slate-200/80 bg-white p-4 transition-shadow hover:shadow-sm`}
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-1 flex flex-wrap items-center gap-2">
                       <span className="text-sm font-semibold text-slate-900">{activity.category}</span>
                       <span className="text-xs text-slate-500 font-medium">
                         {format(start, 'h:mm a')} - {format(end, 'h:mm a')}
@@ -190,7 +188,7 @@ export function TodayTimeline() {
                       <p className="text-sm text-slate-600 mt-1">{activity.note}</p>
                     )}
                   </div>
-                  <div className="text-right">
+                  <div className="w-fit rounded-lg bg-white/70 px-2.5 py-1 text-left sm:text-right">
                     <div className="text-sm font-bold text-slate-900">
                       {Math.floor(duration / 60) > 0 && `${Math.floor(duration / 60)}h `}
                       {duration % 60}m
@@ -209,11 +207,11 @@ export function TodayTimeline() {
             return (
               <div
                 key={interruption.id}
-                className="rounded-xl border-l-4 border-red-500 bg-red-50/80 p-3.5 border border-slate-200/80 transition-shadow hover:shadow-sm"
+                className="rounded-xl border border-slate-200/80 border-l-4 border-l-red-500 bg-red-50/80 p-4 transition-shadow hover:shadow-sm"
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-1 flex flex-wrap items-center gap-2">
                       <AlertCircle className="h-4 w-4 text-red-500" />
                       <span className="text-sm font-semibold text-red-700">{interruption.type}</span>
                       <span className="text-xs text-red-600 font-medium">
@@ -225,7 +223,7 @@ export function TodayTimeline() {
                       <p className="text-sm text-slate-600 mt-1">{interruption.note}</p>
                     )}
                   </div>
-                  <div className="text-right">
+                  <div className="w-fit rounded-lg bg-white/70 px-2.5 py-1 text-left sm:text-right">
                     <div className="text-sm font-bold text-slate-900">
                       {Math.floor(duration / 60) > 0 && `${Math.floor(duration / 60)}h `}
                       {duration % 60}m
@@ -248,26 +246,24 @@ export function TodayTimeline() {
             return (
               <div
                 key={planned.id}
-                className={`rounded-xl border-l-4 border-slate-400 bg-slate-50 p-3.5 border border-slate-200/80 ${
+                className={`rounded-xl border border-slate-200/80 border-l-4 border-l-slate-400 bg-slate-50 p-4 ${
                   isCompleted ? 'opacity-70' : ''
                 } transition-shadow hover:shadow-sm`}
               >
                 <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      {isCompleted ? (
-                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                      ) : (
-                        <Target className="h-4 w-4 text-slate-500" />
-                      )}
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-1 flex flex-wrap items-center gap-2">
                       <span className={`text-sm font-semibold ${isCompleted ? 'text-slate-500 line-through' : 'text-slate-800'}`}>
                         {planned.description}
+                      </span>
+                      <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${isCompleted ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>
+                        {isCompleted ? 'Logged' : 'Planned'}
                       </span>
                       <span className="text-xs text-slate-500">
                         {format(start, 'h:mm a')} - {format(end, 'h:mm a')}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="mt-1 flex flex-wrap items-center gap-2">
                       <span className="text-xs px-2 py-0.5 rounded-full bg-slate-200 text-slate-700">
                         {planned.category}
                       </span>

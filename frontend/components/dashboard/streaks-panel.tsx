@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Activity } from '@/lib/types'
 import { format, subDays, startOfDay, parseISO, isSameDay, differenceInDays } from 'date-fns'
-import { Flame, Calendar, Target } from 'lucide-react'
 
 export function StreaksPanel() {
   const [activities, setActivities] = useState<Activity[]>([])
@@ -12,11 +11,9 @@ export function StreaksPanel() {
   const [streak, setStreak] = useState(0)
   const [longestStreak, setLongestStreak] = useState(0)
   const supabase = createClient()
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadData = async () => {
     try {
@@ -118,9 +115,7 @@ export function StreaksPanel() {
   return (
     <div className="card card-hover p-5">
       <div className="flex items-center gap-2.5 mb-4">
-        <div className="p-2 rounded-xl bg-amber-50 border border-amber-100">
-          <Flame className="h-4 w-4 text-amber-600" />
-        </div>
+        <span className="h-1.5 w-8 rounded-full bg-amber-500" aria-hidden="true" />
         <h2 className="text-base font-semibold text-slate-900">Streaks</h2>
       </div>
 
@@ -135,10 +130,7 @@ export function StreaksPanel() {
 
         <div className="rounded-xl bg-slate-50 border border-slate-200 p-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-slate-500" />
-              <span className="text-sm font-medium text-slate-700">Longest Streak</span>
-            </div>
+            <span className="text-sm font-medium text-slate-700">Longest Streak</span>
             <div className="text-2xl font-bold text-slate-900">{longestStreak}</div>
           </div>
           <div className="text-xs text-slate-500 mt-1">Your best run</div>
@@ -147,7 +139,7 @@ export function StreaksPanel() {
         {streak > 0 && (
           <div className="rounded-lg bg-sky-50 border border-sky-200 p-3">
             <div className="text-xs text-sky-700">
-              🔥 Keep it up! You&apos;re on a {streak}-day streak. Log an activity today to continue.
+              You&apos;re on a {streak}-day streak. Log an activity today to continue.
             </div>
           </div>
         )}

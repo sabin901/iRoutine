@@ -3,27 +3,36 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { 
-  CheckCircle2, 
-  Circle,
   Plus,
   Calendar,
+  ListChecks,
+  Repeat2,
   Target,
-  Flame,
   Clock,
   AlertCircle,
   ChevronRight,
-  X,
-  Sparkles
+  X
 } from 'lucide-react'
-import type { Task, Goal, Habit, HabitLog, TodaySummary } from '@/lib/types'
+import type { GoalCategory, HabitFrequency, Task, Goal, Habit, HabitLog, TaskPriority } from '@/lib/types'
+import { EmptyState, InsightStrip, PageHeader } from '@/components/dashboard/section-shell'
+import { ensureDemoWorkspaceSeeded } from '@/lib/demo-data'
+import { isDemoMode } from '@/lib/env'
 
 const TASK_CATEGORIES = ['Work', 'Personal', 'Health', 'Learning', 'Errands', 'Other']
 const GOAL_CATEGORIES = ['Career', 'Health', 'Learning', 'Financial', 'Personal', 'Relationships', 'Other']
+const TASK_PRIORITIES: TaskPriority[] = ['low', 'medium', 'high', 'urgent']
+const HABIT_FREQUENCIES: HabitFrequency[] = ['daily', 'weekdays', 'weekly']
+const HABIT_MARKERS = ['Focus', 'Move', 'Read', 'Plan', 'Water', 'Write', 'Sleep', 'Review']
 const PRIORITY_COLORS = {
   low: 'bg-slate-100 text-slate-600',
   medium: 'bg-blue-50 text-blue-600',
   high: 'bg-amber-50 text-amber-600',
   urgent: 'bg-red-50 text-red-600'
+}
+
+function getLocalDateString(date = new Date()) {
+  const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+  return offsetDate.toISOString().split('T')[0]
 }
 
 export default function PlannerPage() {
@@ -43,8 +52,8 @@ export default function PlannerPage() {
   const [taskForm, setTaskForm] = useState({
     title: '',
     description: '',
-    due_date: new Date().toISOString().split('T')[0],
-    priority: 'medium' as 'low' | 'medium' | 'high' | 'urgent',
+    due_date: getLocalDateString(),
+    priority: 'medium' as TaskPriority,
     category: 'Personal',
     estimated_minutes: ''
   })
@@ -52,33 +61,57 @@ export default function PlannerPage() {
   const [habitForm, setHabitForm] = useState({
     name: '',
     description: '',
-    frequency: 'daily' as 'daily' | 'weekdays' | 'weekly',
-    icon: '✓',
+    frequency: 'daily' as HabitFrequency,
+    icon: 'Focus',
     color: '#6172f3'
   })
 
   const [goalForm, setGoalForm] = useState({
     title: '',
     description: '',
-    category: 'Personal' as any,
+    category: 'Personal' as GoalCategory,
     target_date: '',
     color: '#6172f3'
   })
 
   const supabase = createClient()
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchData()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchData = async () => {
     setLoading(true)
     try {
+      if (isDemoMode()) {
+        ensureDemoWorkspaceSeeded()
+        const today = getLocalDateString()
+        const allTasks = JSON.parse(localStorage.getItem('routine_tasks') || '[]') as Task[]
+        const activeHabits = JSON.parse(localStorage.getItem('routine_habits') || '[]') as Habit[]
+        const logs = JSON.parse(localStorage.getItem('routine_habit_logs') || '[]') as HabitLog[]
+        const activeGoals = JSON.parse(localStorage.getItem('routine_goals') || '[]') as Goal[]
+        const todayTasks = allTasks.filter(task => task.due_date === today)
+        const overdue = allTasks.filter(task => task.due_date && task.due_date < today && task.status !== 'completed' && task.status !== 'cancelled')
+        const todayLogs = logs.filter(log => log.date === today)
+        const completedHabitIds = new Set(todayLogs.filter(log => log.completed).map(log => log.habit_id))
+
+        setTasks(todayTasks)
+        setOverdueTasks(overdue)
+        setHabits(activeHabits.filter(habit => habit.is_active))
+        setHabitLogs(todayLogs)
+        setGoals(activeGoals.filter(goal => goal.status === 'active'))
+        setStats({
+          tasks_completed: todayTasks.filter(task => task.status === 'completed').length,
+          tasks_total: todayTasks.length,
+          habits_completed: completedHabitIds.size,
+          habits_total: activeHabits.filter(habit => habit.is_active).length,
+        })
+        return
+      }
+
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { setLoading(false); return }
 
-      const today = new Date().toISOString().split('T')[0]
+      const today = getLocalDateString()
 
       const { data: todayTasks } = await supabase
         .from('tasks')
@@ -142,6 +175,37 @@ export default function PlannerPage() {
   }
 
   const addTask = async () => {
+    if (isDemoMode()) {
+      if (!taskForm.title) return
+      const allTasks = JSON.parse(localStorage.getItem('routine_tasks') || '[]') as Task[]
+      allTasks.unshift({
+        id: crypto.randomUUID(),
+        user_id: 'demo-user',
+        title: taskForm.title,
+        description: taskForm.description || null,
+        due_date: taskForm.due_date,
+        due_time: null,
+        priority: taskForm.priority,
+        status: 'pending',
+        category: taskForm.category,
+        estimated_minutes: taskForm.estimated_minutes ? parseInt(taskForm.estimated_minutes) : null,
+        actual_minutes: null,
+        completed_at: null,
+        is_recurring: false,
+        recurring_pattern: null,
+        energy_required: null,
+        avoidance_count: 0,
+        last_postponed_at: null,
+        breakdown_suggested: false,
+        created_at: new Date().toISOString(),
+      })
+      localStorage.setItem('routine_tasks', JSON.stringify(allTasks))
+      setShowAddTask(false)
+      setTaskForm({ title: '', description: '', due_date: getLocalDateString(), priority: 'medium', category: 'Personal', estimated_minutes: '' })
+      fetchData()
+      return
+    }
+
     const { data: { user } } = await supabase.auth.getUser()
     if (!user || !taskForm.title) return
 
@@ -160,7 +224,7 @@ export default function PlannerPage() {
       setTaskForm({
         title: '',
         description: '',
-        due_date: new Date().toISOString().split('T')[0],
+        due_date: getLocalDateString(),
         priority: 'medium',
         category: 'Personal',
         estimated_minutes: ''
@@ -170,6 +234,30 @@ export default function PlannerPage() {
   }
 
   const addHabit = async () => {
+    if (isDemoMode()) {
+      if (!habitForm.name) return
+      const allHabits = JSON.parse(localStorage.getItem('routine_habits') || '[]') as Habit[]
+      allHabits.unshift({
+        id: crypto.randomUUID(),
+        user_id: 'demo-user',
+        name: habitForm.name,
+        description: habitForm.description || null,
+        frequency: habitForm.frequency,
+        target_count: 1,
+        color: habitForm.color,
+        icon: habitForm.icon,
+        is_active: true,
+        current_streak: 0,
+        best_streak: 0,
+        created_at: new Date().toISOString(),
+      })
+      localStorage.setItem('routine_habits', JSON.stringify(allHabits))
+      setShowAddHabit(false)
+      setHabitForm({ name: '', description: '', frequency: 'daily', icon: 'Focus', color: '#6172f3' })
+      fetchData()
+      return
+    }
+
     const { data: { user } } = await supabase.auth.getUser()
     if (!user || !habitForm.name) return
 
@@ -184,12 +272,35 @@ export default function PlannerPage() {
 
     if (!error) {
       setShowAddHabit(false)
-      setHabitForm({ name: '', description: '', frequency: 'daily', icon: '✓', color: '#6172f3' })
+      setHabitForm({ name: '', description: '', frequency: 'daily', icon: 'Focus', color: '#6172f3' })
       fetchData()
     }
   }
 
   const addGoal = async () => {
+    if (isDemoMode()) {
+      if (!goalForm.title) return
+      const allGoals = JSON.parse(localStorage.getItem('routine_goals') || '[]') as Goal[]
+      allGoals.unshift({
+        id: crypto.randomUUID(),
+        user_id: 'demo-user',
+        title: goalForm.title,
+        description: goalForm.description || null,
+        category: goalForm.category,
+        target_date: goalForm.target_date || null,
+        status: 'active',
+        progress: 0,
+        milestones: [],
+        color: goalForm.color,
+        created_at: new Date().toISOString(),
+      })
+      localStorage.setItem('routine_goals', JSON.stringify(allGoals))
+      setShowAddGoal(false)
+      setGoalForm({ title: '', description: '', category: 'Personal', target_date: '', color: '#6172f3' })
+      fetchData()
+      return
+    }
+
     const { data: { user } } = await supabase.auth.getUser()
     if (!user || !goalForm.title) return
 
@@ -211,6 +322,15 @@ export default function PlannerPage() {
 
   const toggleTaskStatus = async (task: Task) => {
     const newStatus = task.status === 'completed' ? 'pending' : 'completed'
+    if (isDemoMode()) {
+      const allTasks = JSON.parse(localStorage.getItem('routine_tasks') || '[]') as Task[]
+      localStorage.setItem('routine_tasks', JSON.stringify(allTasks.map(item => (
+        item.id === task.id ? { ...item, status: newStatus, completed_at: newStatus === 'completed' ? new Date().toISOString() : null } : item
+      ))))
+      fetchData()
+      return
+    }
+
     await supabase.from('tasks').update({ 
       status: newStatus,
       completed_at: newStatus === 'completed' ? new Date().toISOString() : null
@@ -219,10 +339,22 @@ export default function PlannerPage() {
   }
 
   const toggleHabit = async (habit: Habit) => {
+    if (isDemoMode()) {
+      const today = getLocalDateString()
+      const logs = JSON.parse(localStorage.getItem('routine_habit_logs') || '[]') as HabitLog[]
+      const existingLog = logs.find(log => log.habit_id === habit.id && log.date === today)
+      const nextLogs = existingLog
+        ? logs.map(log => log.id === existingLog.id ? { ...log, completed: !log.completed } : log)
+        : [...logs, { id: crypto.randomUUID(), habit_id: habit.id, user_id: 'demo-user', date: today, completed: true, count: 1, note: null, created_at: new Date().toISOString() }]
+      localStorage.setItem('routine_habit_logs', JSON.stringify(nextLogs))
+      fetchData()
+      return
+    }
+
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
-    const today = new Date().toISOString().split('T')[0]
+    const today = getLocalDateString()
     const existingLog = habitLogs.find(l => l.habit_id === habit.id)
 
     if (existingLog) {
@@ -239,11 +371,27 @@ export default function PlannerPage() {
   }
 
   const deleteTask = async (id: string) => {
+    if (isDemoMode()) {
+      const allTasks = JSON.parse(localStorage.getItem('routine_tasks') || '[]') as Task[]
+      localStorage.setItem('routine_tasks', JSON.stringify(allTasks.filter(task => task.id !== id)))
+      fetchData()
+      return
+    }
+
     await supabase.from('tasks').delete().eq('id', id)
     fetchData()
   }
 
   const updateGoalProgress = async (goalId: string, progress: number) => {
+    if (isDemoMode()) {
+      const allGoals = JSON.parse(localStorage.getItem('routine_goals') || '[]') as Goal[]
+      localStorage.setItem('routine_goals', JSON.stringify(allGoals.map(goal => (
+        goal.id === goalId ? { ...goal, progress } : goal
+      ))))
+      fetchData()
+      return
+    }
+
     await supabase.from('goals').update({ progress }).eq('id', goalId)
     fetchData()
   }
@@ -257,23 +405,20 @@ export default function PlannerPage() {
   }
 
   const completedHabitIds = new Set(habitLogs.filter(l => l.completed).map(l => l.habit_id))
+  const taskCompletionRate = stats.tasks_total > 0 ? Math.round((stats.tasks_completed / stats.tasks_total) * 100) : 0
+  const habitCompletionRate = stats.habits_total > 0 ? Math.round((stats.habits_completed / stats.habits_total) * 100) : 0
+  const highPriorityTasks = [...overdueTasks, ...tasks].filter((task) => task.priority === 'high' || task.priority === 'urgent').length
+  const nextGoal = goals.find((goal) => goal.target_date)
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
-      {/* Header */}
-      <div className="animate-slide-up card p-6 lg:p-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-sky-50 border border-sky-100">
-              <Calendar className="h-6 w-6 text-sky-600" />
-            </div>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-0.5">/ Planner</p>
-              <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight">Planner</h1>
-              <p className="text-sm text-slate-500 mt-1">Plan your day, track habits, achieve goals</p>
-            </div>
-          </div>
-          <div className="flex gap-2">
+      <PageHeader
+        icon={Calendar}
+        section="Planner"
+        title="Execution Planner"
+        description="Turn intentions into tasks, habits, and goal progress without losing sight of overdue work or energy demand."
+        action={
+          <>
             <button
               onClick={() => setShowAddTask(true)}
               className="flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors border border-sky-600"
@@ -285,25 +430,32 @@ export default function PlannerPage() {
               onClick={() => setShowAddHabit(true)}
               className="flex items-center gap-2 px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 rounded-lg transition-colors"
             >
-              <Flame className="h-4 w-4" />
               Habit
             </button>
             <button
               onClick={() => setShowAddGoal(true)}
               className="flex items-center gap-2 px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 rounded-lg transition-colors"
             >
-              <Target className="h-4 w-4" />
               Goal
             </button>
-          </div>
-        </div>
-      </div>
+          </>
+        }
+      >
+        <InsightStrip
+          items={[
+            { label: 'Task progress', value: stats.tasks_total ? `${taskCompletionRate}% complete today` : 'No tasks due today', tone: taskCompletionRate >= 70 ? 'emerald' : 'amber' },
+            { label: 'Habit pulse', value: stats.habits_total ? `${habitCompletionRate}% checked off` : 'No active habits yet', tone: habitCompletionRate >= 70 ? 'emerald' : 'sky' },
+            { label: 'Priority load', value: highPriorityTasks ? `${highPriorityTasks} high-pressure item${highPriorityTasks === 1 ? '' : 's'}` : 'No urgent pressure', tone: highPriorityTasks ? 'red' : 'emerald' },
+            { label: 'Next milestone', value: nextGoal?.target_date ? `${nextGoal.title} by ${new Date(nextGoal.target_date).toLocaleDateString()}` : 'Add a goal target date', tone: 'slate' },
+          ]}
+        />
+      </PageHeader>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-slide-up">
         <div className="card p-4">
           <div className="flex items-center gap-2 text-slate-500 text-sm mb-1">
-            <CheckCircle2 className="h-4 w-4" />
+            <ListChecks className="h-4 w-4 text-sky-600" />
             Tasks Today
           </div>
           <p className="text-2xl font-bold text-slate-900">
@@ -312,7 +464,7 @@ export default function PlannerPage() {
         </div>
         <div className="card p-4">
           <div className="flex items-center gap-2 text-slate-500 text-sm mb-1">
-            <Flame className="h-4 w-4 text-amber-600" />
+            <Repeat2 className="h-4 w-4 text-emerald-600" />
             Habits
           </div>
           <p className="text-2xl font-bold text-slate-900">
@@ -357,13 +509,16 @@ export default function PlannerPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-slide-up">
           {/* Today's Tasks */}
           <div className="card p-5">
-            <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-slate-500" />
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">
               Today&apos;s Tasks
             </h2>
             <div className="space-y-2">
               {tasks.length === 0 ? (
-                <p className="text-slate-400 text-center py-8">No tasks for today</p>
+                <EmptyState
+                  title="No tasks for today"
+                  description="Add one concrete next action so your plan has a visible starting point."
+                  action={<button onClick={() => setShowAddTask(true)} className="btn-primary inline-flex items-center gap-2"><Plus className="h-4 w-4" />Add task</button>}
+                />
               ) : (
                 tasks.map(task => (
                   <div 
@@ -373,11 +528,9 @@ export default function PlannerPage() {
                     }`}
                   >
                     <button onClick={() => toggleTaskStatus(task)}>
-                      {task.status === 'completed' ? (
-                        <CheckCircle2 className="h-5 w-5 text-emerald-600" />
-                      ) : (
-                        <Circle className="h-5 w-5 text-slate-400" />
-                      )}
+                      <span className={`block h-5 w-5 rounded-full border transition-colors ${
+                        task.status === 'completed' ? 'border-emerald-500 bg-emerald-500' : 'border-slate-300 bg-white'
+                      }`} />
                     </button>
                     <div className="flex-1 min-w-0">
                       <p className={`font-medium ${task.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-900'}`}>
@@ -416,7 +569,7 @@ export default function PlannerPage() {
                 {overdueTasks.slice(0, 3).map(task => (
                   <div key={task.id} className="flex items-center gap-3 p-2 bg-red-50 rounded-lg mb-1 border border-red-200">
                     <button onClick={() => toggleTaskStatus(task)}>
-                      <Circle className="h-4 w-4 text-red-600" />
+                      <span className="block h-4 w-4 rounded-full border border-red-300 bg-white" />
                     </button>
                     <span className="text-sm text-red-600">{task.title}</span>
                   </div>
@@ -427,13 +580,16 @@ export default function PlannerPage() {
 
           {/* Habits */}
           <div className="card p-5">
-            <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-              <Flame className="h-5 w-5 text-amber-600" />
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">
               Daily Habits
             </h2>
             <div className="space-y-2">
               {habits.length === 0 ? (
-                <p className="text-slate-400 text-center py-8">No habits yet</p>
+                <EmptyState
+                  title="No habits yet"
+                  description="Create a lightweight repeatable action for the behavior you want to make automatic."
+                  action={<button onClick={() => setShowAddHabit(true)} className="btn-secondary text-sm">Create habit</button>}
+                />
               ) : (
                 habits.map(habit => {
                   const isCompleted = completedHabitIds.has(habit.id)
@@ -445,26 +601,21 @@ export default function PlannerPage() {
                       }`}
                       onClick={() => toggleHabit(habit)}
                     >
-                      <div 
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-lg transition-colors ${
-                          isCompleted ? 'text-white' : 'bg-slate-200'
-                        }`}
-                        style={{ backgroundColor: isCompleted ? habit.color : undefined }}
-                      >
-                        {isCompleted ? '✓' : habit.icon}
+                      <div className="w-1.5 self-stretch rounded-full" style={{ backgroundColor: habit.color }} />
+                      <div className="min-w-[56px] rounded-md border border-slate-200 bg-white px-2 py-1 text-center text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                        {isCompleted ? 'Done' : habit.icon}
                       </div>
                       <div className="flex-1">
                         <p className={`font-medium ${isCompleted ? 'text-emerald-600' : 'text-slate-900'}`}>
                           {habit.name}
                         </p>
                         {habit.current_streak > 0 && (
-                          <p className="text-xs text-amber-600 flex items-center gap-1">
-                            <Flame className="h-3 w-3" />
+                          <p className="text-xs text-amber-600">
                             {habit.current_streak} day streak
                           </p>
                         )}
                       </div>
-                      {isCompleted && <CheckCircle2 className="h-5 w-5 text-emerald-600" />}
+                      {isCompleted && <span className="text-xs font-semibold text-emerald-700">Completed</span>}
                     </div>
                   )
                 })
@@ -479,7 +630,11 @@ export default function PlannerPage() {
         <div className="card p-5 animate-slide-up">
           <div className="space-y-2">
             {[...overdueTasks, ...tasks].length === 0 ? (
-              <p className="text-slate-400 text-center py-12">No tasks. Add one to get started!</p>
+              <EmptyState
+                title="No tasks"
+                description="Your task list is clear. Add the next commitment when you are ready to schedule it."
+                action={<button onClick={() => setShowAddTask(true)} className="btn-primary inline-flex items-center gap-2"><Plus className="h-4 w-4" />Add task</button>}
+              />
             ) : (
               [...overdueTasks, ...tasks].map(task => (
                 <div 
@@ -490,11 +645,9 @@ export default function PlannerPage() {
                   }`}
                 >
                   <button onClick={() => toggleTaskStatus(task)}>
-                    {task.status === 'completed' ? (
-                      <CheckCircle2 className="h-5 w-5 text-emerald-600" />
-                    ) : (
-                      <Circle className="h-5 w-5 text-slate-400" />
-                    )}
+                    <span className={`block h-5 w-5 rounded-full border transition-colors ${
+                      task.status === 'completed' ? 'border-emerald-500 bg-emerald-500' : 'border-slate-300 bg-white'
+                    }`} />
                   </button>
                   <div className="flex-1">
                     <p className={`font-medium ${task.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-900'}`}>
@@ -527,20 +680,14 @@ export default function PlannerPage() {
           {habits.map(habit => (
             <div key={habit.id} className="card p-5">
               <div className="flex items-center gap-3 mb-3">
-                <div 
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-xl text-white"
-                  style={{ backgroundColor: habit.color }}
-                >
-                  {habit.icon}
-                </div>
+                <div className="h-10 w-1.5 rounded-full" style={{ backgroundColor: habit.color }} />
                 <div>
                   <h3 className="font-semibold text-slate-900">{habit.name}</h3>
-                  <p className="text-xs text-slate-400">{habit.frequency}</p>
+                  <p className="text-xs text-slate-400">{habit.frequency} · {habit.icon}</p>
                 </div>
               </div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-amber-600">
-                  <Flame className="h-4 w-4" />
+                <div className="text-amber-600">
                   <span className="text-sm font-medium">{habit.current_streak} day streak</span>
                 </div>
                 <span className="text-xs text-slate-400">Best: {habit.best_streak}</span>
@@ -548,7 +695,13 @@ export default function PlannerPage() {
             </div>
           ))}
           {habits.length === 0 && (
-            <p className="text-slate-400 col-span-full text-center py-12">No habits yet. Create one!</p>
+            <div className="col-span-full">
+              <EmptyState
+                title="No habits yet"
+                description="Start with one small repeatable behavior and let streaks make progress visible."
+                action={<button onClick={() => setShowAddHabit(true)} className="btn-secondary text-sm">Create habit</button>}
+              />
+            </div>
           )}
         </div>
       )}
@@ -559,7 +712,7 @@ export default function PlannerPage() {
           {goals.map(goal => (
             <div key={goal.id} className="card p-5">
               <div className="flex items-center gap-3 mb-3">
-                <Target className="h-6 w-6" style={{ color: goal.color }} />
+                <div className="h-10 w-1.5 rounded-full" style={{ backgroundColor: goal.color }} />
                 <div>
                   <h3 className="font-semibold text-slate-900">{goal.title}</h3>
                   <p className="text-xs text-slate-400">{goal.category}</p>
@@ -596,7 +749,13 @@ export default function PlannerPage() {
             </div>
           ))}
           {goals.length === 0 && (
-            <p className="text-slate-400 col-span-full text-center py-12">No goals yet. Set your first goal!</p>
+            <div className="col-span-full">
+              <EmptyState
+                title="No goals yet"
+                description="Set a goal with a target date so tasks and habits can point somewhere."
+                action={<button onClick={() => setShowAddGoal(true)} className="btn-secondary text-sm">Set goal</button>}
+              />
+            </div>
           )}
         </div>
       )}
@@ -632,13 +791,12 @@ export default function PlannerPage() {
                   <label className="block text-sm font-medium text-slate-600 mb-1">Priority</label>
                   <select
                     value={taskForm.priority}
-                    onChange={(e) => setTaskForm(f => ({ ...f, priority: e.target.value as any }))}
+                    onChange={(e) => setTaskForm(f => ({ ...f, priority: e.target.value as TaskPriority }))}
                     className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   >
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                    <option value="urgent">Urgent</option>
+                    {TASK_PRIORITIES.map(priority => (
+                      <option key={priority} value={priority}>{priority}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -707,24 +865,24 @@ export default function PlannerPage() {
                 <label className="block text-sm font-medium text-slate-600 mb-1">Frequency</label>
                 <select
                   value={habitForm.frequency}
-                  onChange={(e) => setHabitForm(f => ({ ...f, frequency: e.target.value as any }))}
+                  onChange={(e) => setHabitForm(f => ({ ...f, frequency: e.target.value as HabitFrequency }))}
                   className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                 >
-                  <option value="daily">Daily</option>
-                  <option value="weekdays">Weekdays</option>
-                  <option value="weekly">Weekly</option>
+                  {HABIT_FREQUENCIES.map(frequency => (
+                    <option key={frequency} value={frequency}>{frequency}</option>
+                  ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-600 mb-1">Icon</label>
+                <label className="block text-sm font-medium text-slate-600 mb-1">Marker</label>
                 <div className="flex gap-2 flex-wrap">
-                  {['✓', '💪', '📚', '🧘', '💧', '🏃', '✍️', '💤', '🎯', '⭐'].map(icon => (
+                  {HABIT_MARKERS.map(icon => (
                     <button
                       key={icon}
                       onClick={() => setHabitForm(f => ({ ...f, icon }))}
-                      className={`w-10 h-10 text-xl rounded-lg border-2 transition-colors ${
-                        habitForm.icon === icon ? 'border-sky-400 bg-sky-50' : 'border-slate-200 bg-slate-50 hover:border-slate-300'
+                      className={`rounded-md border px-3 py-2 text-xs font-semibold transition-colors ${
+                        habitForm.icon === icon ? 'border-sky-400 bg-sky-50 text-sky-700' : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300'
                       }`}
                     >
                       {icon}
@@ -785,7 +943,7 @@ export default function PlannerPage() {
                   <label className="block text-sm font-medium text-slate-600 mb-1">Category</label>
                   <select
                     value={goalForm.category}
-                    onChange={(e) => setGoalForm(f => ({ ...f, category: e.target.value as any }))}
+                    onChange={(e) => setGoalForm(f => ({ ...f, category: e.target.value as GoalCategory }))}
                     className="w-full px-3 py-2 border border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   >
                     {GOAL_CATEGORIES.map(cat => (

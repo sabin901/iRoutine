@@ -1,10 +1,88 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { TrendingUp, TrendingDown, DollarSign, Activity, Zap, AlertCircle, Sparkles, Brain, CheckCircle2 } from 'lucide-react'
+import { Activity, DollarSign, Zap } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, Area, AreaChart } from 'recharts'
-import { TimeMoneyCorrelation, EnergySpendingCorrelation, CrossDomainInsight } from '@/lib/types'
+import { ensureDemoWorkspaceSeeded } from '@/lib/demo-data'
+import { Activity as RoutineActivity, CrossDomainInsight, EnergyLog, EnergySpendingCorrelation, TimeMoneyCorrelation, Transaction } from '@/lib/types'
 import { createClient } from '@/lib/supabase/client'
+
+function dateKey(value: string) {
+  return new Date(value).toISOString().slice(0, 10)
+}
+
+function activityHours(activity: RoutineActivity) {
+  const start = new Date(activity.start_time).getTime()
+  const end = new Date(activity.end_time).getTime()
+  return Math.max((end - start) / 3600000, 0)
+}
+
+function buildDemoCrossDomainData() {
+  ensureDemoWorkspaceSeeded()
+  const activities = JSON.parse(localStorage.getItem('routine_activities') || '[]') as RoutineActivity[]
+  const interruptions = JSON.parse(localStorage.getItem('routine_interruptions') || '[]') as { time: string }[]
+  const transactions = JSON.parse(localStorage.getItem('routine_transactions') || '[]') as Transaction[]
+  const energyLogs = JSON.parse(localStorage.getItem('routine_energy_logs') || '[]') as EnergyLog[]
+  const days = Array.from(new Set([
+    ...activities.map(activity => dateKey(activity.start_time)),
+    ...transactions.map(transaction => transaction.date),
+    ...energyLogs.map(log => log.date),
+  ])).sort()
+
+  const timeMoneyData: TimeMoneyCorrelation[] = days.map(day => {
+    const dayActivities = activities.filter(activity => dateKey(activity.start_time) === day)
+    const dayTransactions = transactions.filter(transaction => transaction.date === day)
+    const dayInterruptions = interruptions.filter(interruption => dateKey(interruption.time) === day)
+
+    return {
+      date: day,
+      activity_count: dayActivities.length,
+      total_hours: Number(dayActivities.reduce((total, activity) => total + activityHours(activity), 0).toFixed(2)),
+      interruption_count: dayInterruptions.length,
+      daily_expenses: Number(dayTransactions.filter(transaction => transaction.type === 'expense').reduce((total, transaction) => total + transaction.amount, 0).toFixed(2)),
+      daily_income: Number(dayTransactions.filter(transaction => transaction.type === 'income').reduce((total, transaction) => total + transaction.amount, 0).toFixed(2)),
+      correlation_score: dayInterruptions.length ? 0.68 : 0.82,
+    }
+  })
+
+  const energySpendingData: EnergySpendingCorrelation[] = energyLogs.map(log => {
+    const dayTransactions = transactions.filter(transaction => transaction.date === log.date && transaction.type === 'expense')
+    return {
+      date: log.date,
+      energy_level: log.energy_level,
+      stress_level: log.stress_level,
+      daily_expenses: Number(dayTransactions.reduce((total, transaction) => total + transaction.amount, 0).toFixed(2)),
+      expense_count: dayTransactions.length,
+      correlation_score: log.stress_level >= 3 ? 0.71 : 0.44,
+    }
+  }).sort((a, b) => a.date.localeCompare(b.date))
+
+  const insights: CrossDomainInsight[] = [
+    {
+      type: 'focus_quality',
+      title: 'Morning focus is your highest-leverage asset',
+      description: 'Your best work clusters before lunch, especially when planning happens before inbox triage.',
+      data: { window: '9:00 AM - 11:35 AM', focus_hours: 2.58 },
+      recommendation: 'Protect this window for building, analytics, or writing. Do admin after the first deep block.',
+    },
+    {
+      type: 'energy_spending',
+      title: 'Stress and spending overlap in the afternoon',
+      description: 'The 2-4 PM window combines interruptions, heavier energy cost, and the spending that felt least worth it.',
+      data: { window: '2:00 PM - 4:00 PM', flagged_spend: 91.49 },
+      recommendation: 'Batch messages at 1 PM and review spending before dinner while the pattern is still visible.',
+    },
+    {
+      type: 'task_completion',
+      title: 'Activation work is moving, retention is next',
+      description: 'The sample workspace shows activation completed, digest work in progress, and feedback pointing to weekly retention loops.',
+      data: { activation: 100, feedback_items: 3 },
+      recommendation: 'Keep the first-run checklist, then make the weekly digest the next habit-forming loop.',
+    },
+  ]
+
+  return { timeMoneyData, energySpendingData, insights }
+}
 
 export function CrossDomainInsights() {
   const [timeMoneyData, setTimeMoneyData] = useState<TimeMoneyCorrelation[]>([])
@@ -13,11 +91,9 @@ export function CrossDomainInsights() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const supabase = createClient()
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
    * Load all cross-domain data in parallel for better performance
@@ -27,6 +103,17 @@ export function CrossDomainInsights() {
     try {
       setLoading(true)
       setError(null)
+
+      const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+        process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')
+
+      if (isPlaceholder) {
+        const demo = buildDemoCrossDomainData()
+        setTimeMoneyData(demo.timeMoneyData)
+        setEnergySpendingData(demo.energySpendingData)
+        setInsights(demo.insights)
+        return
+      }
       
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) return
@@ -84,12 +171,9 @@ export function CrossDomainInsights() {
 
   return (
     <div className="relative space-y-8">
-      {/* Header - Dark Artoo style */}
       <div className="rounded-xl card p-6">
         <div className="flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-slate-100 border border-slate-200">
-            <Brain className="h-6 w-6 text-slate-600" />
-          </div>
+          <div className="h-12 w-1.5 rounded-full bg-slate-700" aria-hidden="true" />
           <div>
             <h2 className="text-2xl font-bold text-slate-900">
               Cross-Domain Insights
@@ -105,13 +189,12 @@ export function CrossDomainInsights() {
       {insights.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {insights.map((insight, idx) => {
-            const iconConfig = {
-              energy_spending: { icon: DollarSign, gradient: 'from-orange-400 via-red-500 to-pink-500', bg: 'from-orange-50 to-pink-50' },
-              focus_quality: { icon: Zap, gradient: 'from-yellow-400 via-amber-500 to-orange-500', bg: 'from-yellow-50 to-orange-50' },
-              task_completion: { icon: AlertCircle, gradient: 'from-blue-400 via-indigo-500 to-purple-500', bg: 'from-blue-50 to-purple-50' },
+            const accentConfig = {
+              energy_spending: 'bg-amber-500',
+              focus_quality: 'bg-emerald-500',
+              task_completion: 'bg-sky-500',
             }
-            const config = iconConfig[insight.type as keyof typeof iconConfig] || iconConfig.focus_quality
-            const Icon = config.icon
+            const accent = accentConfig[insight.type as keyof typeof accentConfig] || accentConfig.focus_quality
             
             return (
               <div
@@ -120,9 +203,7 @@ export function CrossDomainInsights() {
                 style={{ animationDelay: `${idx * 100}ms` }}
               >
                 <div className="flex items-start gap-4 mb-4">
-                  <div className={`p-3 rounded-xl bg-slate-100 border border-slate-200`}>
-                    <Icon className="h-5 w-5 text-slate-600" />
-                  </div>
+                  <div className={`mt-2 h-1.5 w-10 rounded-full ${accent}`} aria-hidden="true" />
                   <div className="flex-1">
                     <h3 className="text-lg font-bold text-slate-900 mb-2">{insight.title}</h3>
                     <p className="text-sm text-slate-500 leading-relaxed">{insight.description}</p>
@@ -131,8 +212,8 @@ export function CrossDomainInsights() {
                 
                 {insight.recommendation && (
                   <div className="mt-4 p-4 bg-slate-100/50 rounded-xl border border-slate-200">
-                    <div className="flex items-start gap-2">
-                      <Sparkles className="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                    <div className="flex items-start gap-3">
+                      <div className="mt-2 h-1.5 w-6 shrink-0 rounded-full bg-slate-300" aria-hidden="true" />
                       <p className="text-sm font-medium text-slate-600 leading-relaxed">
                         {insight.recommendation}
                       </p>
@@ -145,7 +226,7 @@ export function CrossDomainInsights() {
         </div>
       ) : (
         <div className="rounded-xl card p-12 text-center border-dashed">
-          <Brain className="h-12 w-12 text-neutral-600 mx-auto mb-4" />
+          <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-slate-300" aria-hidden="true" />
           <h3 className="text-lg font-semibold text-slate-900 mb-2">No Insights Yet</h3>
           <p className="text-sm text-slate-500">Start tracking your activities, energy, and spending to see insights here.</p>
         </div>

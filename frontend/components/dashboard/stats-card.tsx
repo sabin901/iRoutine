@@ -37,11 +37,23 @@ export function StatsCard({
   className = ''
 }: StatsCardProps) {
   const iconStyle = gradientStyles[gradient] || gradientStyles.primary
+  const accentBar = {
+    blue: 'bg-sky-500',
+    purple: 'bg-violet-500',
+    orange: 'bg-amber-500',
+    green: 'bg-emerald-500',
+    primary: 'bg-sky-500',
+    success: 'bg-emerald-500',
+    warning: 'bg-amber-500',
+    danger: 'bg-rose-500',
+    neutral: 'bg-slate-400',
+  }[gradient] || 'bg-sky-500'
 
   return (
-    <div className={`card card-hover p-5 sm:p-6 ${className}`}>
+    <div className={`card card-hover relative p-5 sm:p-6 ${className}`}>
+      <div className={`absolute inset-x-0 top-0 h-1 ${accentBar}`} aria-hidden="true" />
       <div className="flex items-start justify-between gap-3">
-        <div className={`p-2.5 rounded-xl border ${iconStyle}`}>
+        <div className={`rounded-xl border p-2.5 ${iconStyle}`}>
           <Icon className="h-5 w-5" />
         </div>
         {trend && (
@@ -57,7 +69,7 @@ export function StatsCard({
         )}
       </div>
       <div className="mt-4">
-        <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{title}</p>
+        <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-500">{title}</p>
         <p className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1">{value}</p>
         {subtitle && <p className="text-sm text-slate-500 mt-0.5">{subtitle}</p>}
       </div>

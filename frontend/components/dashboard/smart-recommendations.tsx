@@ -12,11 +12,9 @@ export function SmartRecommendations() {
   const [interruptions, setInterruptions] = useState<Interruption[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadData = async () => {
     try {

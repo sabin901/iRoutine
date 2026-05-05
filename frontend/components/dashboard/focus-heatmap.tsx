@@ -14,11 +14,9 @@ export function FocusHeatmap() {
   const [hoveredCell, setHoveredCell] = useState<{ day: string; hour: number } | null>(null)
   const [selectedCell, setSelectedCell] = useState<{ day: string; hour: number } | null>(null)
   const supabase = createClient()
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadData = async () => {
     try {

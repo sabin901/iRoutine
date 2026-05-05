@@ -46,6 +46,13 @@ const TYPE_WEIGHTS: Record<string, number> = {
   'Other': 1.1,
 }
 
+function getUtcDayBounds(date: Date) {
+  return {
+    start: new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())),
+    end: new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 23, 59, 59, 999)),
+  }
+}
+
 /**
  * Calculate interruption cost score
  */
@@ -117,8 +124,7 @@ export function calculateDailyMetrics(
   activities: Activity[],
   date: Date = new Date()
 ): Partial<InterruptionMetrics> {
-  const dayStart = startOfDay(date)
-  const dayEnd = endOfDay(date)
+  const { start: dayStart, end: dayEnd } = getUtcDayBounds(date)
   
   const dayInterruptions = interruptions.filter((i) => {
     const time = parseISO(i.time)

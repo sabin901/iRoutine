@@ -15,6 +15,9 @@ import {
   X
 } from 'lucide-react'
 import type { Transaction, Budget, SavingsGoal, FinancialSummary } from '@/lib/types'
+import { EmptyState, InsightStrip, PageHeader } from '@/components/dashboard/section-shell'
+import { ensureDemoWorkspaceSeeded } from '@/lib/demo-data'
+import { isDemoMode } from '@/lib/env'
 
 const EXPENSE_CATEGORIES = [
   'Food', 'Transport', 'Entertainment', 'Shopping', 'Bills', 
@@ -55,15 +58,52 @@ export default function FinancesPage() {
   })
 
   const supabase = createClient()
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchData()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchData = async () => {
     setLoading(true)
     try {
+      if (isDemoMode()) {
+        ensureDemoWorkspaceSeeded()
+        const txns = JSON.parse(localStorage.getItem('routine_transactions') || '[]') as Transaction[]
+        const budgetData = JSON.parse(localStorage.getItem('routine_budgets') || '[]') as Budget[]
+        const goalsData = JSON.parse(localStorage.getItem('routine_savings_goals') || '[]') as SavingsGoal[]
+        setTransactions(txns)
+        setBudgets(budgetData)
+        setSavingsGoals(goalsData.filter(goal => goal.status === 'active'))
+
+        const today = new Date()
+        const monthStart = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0]
+        const monthTxns = txns.filter(t => t.date >= monthStart)
+        const totalIncome = monthTxns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0)
+        const totalExpenses = monthTxns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0)
+        const expenseByCategory: Record<string, number> = {}
+        const incomeByCategory: Record<string, number> = {}
+        monthTxns.forEach(t => {
+          const bucket = t.type === 'expense' ? expenseByCategory : incomeByCategory
+          bucket[t.category] = (bucket[t.category] || 0) + t.amount
+        })
+        setSummary({
+          month: monthStart,
+          total_income: totalIncome,
+          total_expenses: totalExpenses,
+          net_savings: totalIncome - totalExpenses,
+          expense_by_category: expenseByCategory,
+          income_by_category: incomeByCategory,
+          budget_status: budgetData.map(b => ({
+            category: b.category,
+            budget: b.amount,
+            spent: expenseByCategory[b.category] || 0,
+            remaining: b.amount - (expenseByCategory[b.category] || 0),
+            percentage: Math.round(((expenseByCategory[b.category] || 0) / b.amount) * 100),
+          })),
+          transaction_count: monthTxns.length,
+        })
+        return
+      }
+
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { setLoading(false); return }
 
@@ -130,6 +170,31 @@ export default function FinancesPage() {
   }
 
   const addTransaction = async () => {
+    if (isDemoMode()) {
+      if (!transactionForm.amount) return
+      const txns = JSON.parse(localStorage.getItem('routine_transactions') || '[]') as Transaction[]
+      txns.unshift({
+        id: crypto.randomUUID(),
+        user_id: 'demo-user',
+        amount: parseFloat(transactionForm.amount),
+        type: transactionForm.type,
+        category: transactionForm.category,
+        description: transactionForm.description || null,
+        date: transactionForm.date,
+        is_recurring: false,
+        recurring_id: null,
+        intent: null,
+        emotion: null,
+        worth_it: null,
+        created_at: new Date().toISOString(),
+      })
+      localStorage.setItem('routine_transactions', JSON.stringify(txns))
+      setShowAddTransaction(false)
+      setTransactionForm({ amount: '', type: 'expense', category: 'Food', description: '', date: new Date().toISOString().split('T')[0] })
+      fetchData()
+      return
+    }
+
     const { data: { user } } = await supabase.auth.getUser()
     if (!user || !transactionForm.amount) return
 
@@ -156,6 +221,28 @@ export default function FinancesPage() {
   }
 
   const addSavingsGoal = async () => {
+    if (isDemoMode()) {
+      if (!goalForm.name || !goalForm.target_amount) return
+      const goals = JSON.parse(localStorage.getItem('routine_savings_goals') || '[]') as SavingsGoal[]
+      goals.unshift({
+        id: crypto.randomUUID(),
+        user_id: 'demo-user',
+        name: goalForm.name,
+        description: null,
+        target_amount: parseFloat(goalForm.target_amount),
+        current_amount: 0,
+        deadline: goalForm.deadline || null,
+        color: goalForm.color,
+        status: 'active',
+        created_at: new Date().toISOString(),
+      })
+      localStorage.setItem('routine_savings_goals', JSON.stringify(goals))
+      setShowAddGoal(false)
+      setGoalForm({ name: '', target_amount: '', deadline: '', color: '#6172f3' })
+      fetchData()
+      return
+    }
+
     const { data: { user } } = await supabase.auth.getUser()
     if (!user || !goalForm.name || !goalForm.target_amount) return
 
@@ -175,6 +262,28 @@ export default function FinancesPage() {
   }
 
   const addBudget = async () => {
+    if (isDemoMode()) {
+      if (!budgetForm.amount) return
+      const budgets = JSON.parse(localStorage.getItem('routine_budgets') || '[]') as Budget[]
+      const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0]
+      const nextBudget: Budget = {
+        id: crypto.randomUUID(),
+        user_id: 'demo-user',
+        category: budgetForm.category,
+        amount: parseFloat(budgetForm.amount),
+        month: monthStart,
+        created_at: new Date().toISOString(),
+      }
+      const existingIndex = budgets.findIndex(b => b.category === nextBudget.category && b.month === nextBudget.month)
+      if (existingIndex >= 0) budgets[existingIndex] = nextBudget
+      else budgets.push(nextBudget)
+      localStorage.setItem('routine_budgets', JSON.stringify(budgets))
+      setShowAddBudget(false)
+      setBudgetForm({ category: 'Food', amount: '' })
+      fetchData()
+      return
+    }
+
     const { data: { user } } = await supabase.auth.getUser()
     if (!user || !budgetForm.amount) return
 
@@ -195,14 +304,39 @@ export default function FinancesPage() {
   }
 
   const deleteTransaction = async (id: string) => {
+    if (isDemoMode()) {
+      const txns = JSON.parse(localStorage.getItem('routine_transactions') || '[]') as Transaction[]
+      localStorage.setItem('routine_transactions', JSON.stringify(txns.filter(t => t.id !== id)))
+      fetchData()
+      return
+    }
+
     await supabase.from('transactions').delete().eq('id', id)
     fetchData()
   }
 
   const updateGoalAmount = async (goalId: string, amount: number) => {
+    if (isDemoMode()) {
+      const goals = JSON.parse(localStorage.getItem('routine_savings_goals') || '[]') as SavingsGoal[]
+      localStorage.setItem('routine_savings_goals', JSON.stringify(goals.map(goal => (
+        goal.id === goalId ? { ...goal, current_amount: amount } : goal
+      ))))
+      fetchData()
+      return
+    }
+
     await supabase.from('savings_goals').update({ current_amount: amount }).eq('id', goalId)
     fetchData()
   }
+
+  const topExpense = summary
+    ? Object.entries(summary.expense_by_category).sort((a, b) => b[1] - a[1])[0]
+    : null
+  const savingsRate = summary && summary.total_income > 0
+    ? Math.round((summary.net_savings / summary.total_income) * 100)
+    : 0
+  const budgetsOverLimit = summary?.budget_status.filter((b) => b.percentage > 100).length || 0
+  const goalsFunded = savingsGoals.filter((goal) => goal.current_amount >= goal.target_amount).length
 
   if (loading) {
     return (
@@ -214,19 +348,12 @@ export default function FinancesPage() {
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
-      {/* Header */}
-      <div className="animate-slide-up card p-6 lg:p-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-sky-50 border border-sky-100">
-              <DollarSign className="h-6 w-6 text-sky-600" />
-            </div>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-0.5">/ Finances</p>
-              <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight">Finances</h1>
-              <p className="text-sm text-slate-500 mt-1">Track your income, expenses, and savings</p>
-            </div>
-          </div>
+      <PageHeader
+        icon={DollarSign}
+        section="Finances"
+        title="Money Command Center"
+        description="Track cash flow, spending pressure, budgets, and savings goals in the same rhythm as your focus and energy."
+        action={
           <button
             onClick={() => setShowAddTransaction(true)}
             className="flex items-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors border border-sky-600"
@@ -234,8 +361,33 @@ export default function FinancesPage() {
             <Plus className="h-4 w-4" />
             Add Transaction
           </button>
-        </div>
-      </div>
+        }
+      >
+        <InsightStrip
+          items={[
+            {
+              label: 'Savings rate',
+              value: summary?.total_income ? `${savingsRate}% of income this month` : 'Add income to calculate rate',
+              tone: savingsRate >= 20 ? 'emerald' : savingsRate < 0 ? 'red' : 'amber',
+            },
+            {
+              label: 'Top spend',
+              value: topExpense ? `${topExpense[0]} at $${topExpense[1].toFixed(0)}` : 'No expense trend yet',
+              tone: 'slate',
+            },
+            {
+              label: 'Budget pressure',
+              value: budgetsOverLimit ? `${budgetsOverLimit} category over limit` : 'No budget overruns',
+              tone: budgetsOverLimit ? 'red' : 'emerald',
+            },
+            {
+              label: 'Goal progress',
+              value: savingsGoals.length ? `${goalsFunded}/${savingsGoals.length} goals fully funded` : 'Create a savings target',
+              tone: 'sky',
+            },
+          ]}
+        />
+      </PageHeader>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 animate-slide-up">
@@ -290,7 +442,17 @@ export default function FinancesPage() {
           <h2 className="text-lg font-semibold text-slate-900 mb-4">Recent Transactions</h2>
           <div className="space-y-3 max-h-96 overflow-y-auto">
             {transactions.length === 0 ? (
-              <p className="text-slate-400 text-center py-8">No transactions yet</p>
+              <EmptyState
+                icon={Repeat}
+                title="No transactions yet"
+                description="Add income, expenses, and spending notes so the finance section can explain where attention turns into money."
+                action={
+                  <button onClick={() => setShowAddTransaction(true)} className="btn-primary inline-flex items-center gap-2">
+                    <Plus className="h-4 w-4" />
+                    Add first transaction
+                  </button>
+                }
+              />
             ) : (
               transactions.slice(0, 10).map((t) => (
                 <div key={t.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg group border border-slate-100">
@@ -339,7 +501,12 @@ export default function FinancesPage() {
             </div>
             <div className="space-y-4">
               {summary?.budget_status.length === 0 ? (
-                <p className="text-slate-400 text-sm text-center py-4">No budgets set</p>
+                <EmptyState
+                  icon={Target}
+                  title="No budgets set"
+                  description="Set guardrails for the categories that drift most often."
+                  action={<button onClick={() => setShowAddBudget(true)} className="btn-secondary text-sm">Set budget</button>}
+                />
               ) : (
                 summary?.budget_status.map((b) => (
                   <div key={b.category}>
@@ -376,7 +543,12 @@ export default function FinancesPage() {
             </div>
             <div className="space-y-4">
               {savingsGoals.length === 0 ? (
-                <p className="text-slate-400 text-sm text-center py-4">No savings goals</p>
+                <EmptyState
+                  icon={PiggyBank}
+                  title="No savings goals"
+                  description="Give surplus a job so progress is visible before the month ends."
+                  action={<button onClick={() => setShowAddGoal(true)} className="btn-secondary text-sm">Create goal</button>}
+                />
               ) : (
                 savingsGoals.map((goal) => (
                   <div key={goal.id} className="p-3 bg-slate-50 rounded-lg border border-slate-100">

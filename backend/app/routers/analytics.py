@@ -5,7 +5,7 @@ Provides deeper insights and aggregated data
 
 from fastapi import APIRouter, Depends, Request, HTTPException
 from pydantic import BaseModel
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Dict, Optional
 from app.core.auth import get_current_user
 from app.core.database import supabase
@@ -14,6 +14,11 @@ from slowapi.util import get_remote_address
 
 router = APIRouter()
 limiter = Limiter(key_func=get_remote_address)
+
+
+def utc_now() -> datetime:
+    """Return a timezone-aware UTC timestamp for date-range queries."""
+    return datetime.now(timezone.utc)
 
 
 class StreakResponse(BaseModel):
@@ -48,7 +53,7 @@ async def get_streaks(
     """Calculate user's activity streaks."""
     try:
         # Get last year of activities
-        one_year_ago = datetime.utcnow() - timedelta(days=365)
+        one_year_ago = utc_now() - timedelta(days=365)
 
         result = (
             supabase.table("activities")
@@ -71,7 +76,7 @@ async def get_streaks(
 
         # Current streak
         current_streak = 0
-        today = datetime.utcnow().date()
+        today = utc_now().date()
 
         for i, day in enumerate(sorted_days):
             expected_day = today - timedelta(days=i)
@@ -113,7 +118,7 @@ async def get_category_breakdown(
 ):
     """Get breakdown of time spent by category."""
     try:
-        start_date = datetime.utcnow() - timedelta(days=days)
+        start_date = utc_now() - timedelta(days=days)
 
         result = (
             supabase.table("activities")
@@ -191,7 +196,7 @@ async def get_analytics_summary(
 ):
     """Get comprehensive analytics summary."""
     try:
-        start_date = datetime.utcnow() - timedelta(days=days)
+        start_date = utc_now() - timedelta(days=days)
 
         # Get activities
         activities_result = (
@@ -290,7 +295,7 @@ async def get_analytics_summary(
         )
 
         current_streak = 0
-        today = datetime.utcnow().date()
+        today = utc_now().date()
         for i, day in enumerate(sorted_days):
             if day == today - timedelta(days=i):
                 current_streak += 1

@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { DashboardNav } from '@/components/dashboard/nav'
+import { DashboardNav, type DashboardUser } from '@/components/dashboard/nav'
+import { isDemoMode } from '@/lib/env'
+import { DemoWorkspaceProvider } from '@/components/dashboard/demo-workspace-provider'
 
 // Mock user for demo mode
 const mockUser = {
@@ -9,23 +11,22 @@ const mockUser = {
   user_metadata: {
     name: 'Demo User',
   },
-} as any
+} satisfies DashboardUser
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || 
-                        process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')
+  const demoMode = isDemoMode()
   
-  if (isPlaceholder && process.env.NODE_ENV === 'production') {
-    console.warn('[SECURITY] Supabase URL is missing or placeholder in production — auth is bypassed!')
+  if (demoMode && process.env.NODE_ENV === 'production') {
+    redirect('/auth/login?error=auth_not_configured')
   }
 
-  let user = mockUser
+  let user: DashboardUser = mockUser
   
-  if (!isPlaceholder) {
+  if (!demoMode) {
     const supabase = await createClient()
     const {
       data: { user: authUser },
@@ -39,9 +40,11 @@ export default async function DashboardLayout({
   }
 
   return (
-      <div className="min-h-screen" style={{ backgroundColor: 'var(--page-bg)' }}>
-        <DashboardNav user={user} />
-        <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">{children}</main>
-      </div>
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--page-bg)' }}>
+      <DashboardNav user={user} />
+      <DemoWorkspaceProvider>
+        <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-8 lg:px-8">{children}</main>
+      </DemoWorkspaceProvider>
+    </div>
   )
 }

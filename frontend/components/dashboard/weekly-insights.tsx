@@ -14,11 +14,9 @@ export function WeeklyInsights() {
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'focus' | 'interruptions'>('focus')
   const supabase = createClient()
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadWeeklyData()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadWeeklyData = async () => {
     try {

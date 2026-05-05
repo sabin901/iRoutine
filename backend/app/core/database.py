@@ -21,13 +21,32 @@ even though service role could technically access all data.
 from supabase import create_client, Client
 from app.core.config import settings
 
-# Create Supabase client with service role key
-# Service role key has admin privileges and bypasses Row Level Security
+# Lazy-initialised Supabase client.
+# Using a lazy pattern so that importing this module during tests
+# does not immediately attempt to connect to Supabase with placeholder keys.
+_supabase_client: Client | None = None
+
+
+def _get_client() -> Client:
+    global _supabase_client
+    if _supabase_client is None:
+        _supabase_client = create_client(
+            settings.SUPABASE_URL,
+            settings.SUPABASE_SERVICE_ROLE_KEY,
+        )
+    return _supabase_client
+
+
+class _LazySupabase:
+    """Proxy that defers client creation until first attribute access."""
+
+    def __getattr__(self, name: str):
+        return getattr(_get_client(), name)
+
+
+# Service role key has admin privileges and bypasses Row Level Security.
 # This is safe because:
 # 1. This code only runs on the backend (never exposed to frontend)
 # 2. All endpoints validate user authentication first
 # 3. All queries filter by user_id to ensure data isolation
-supabase: Client = create_client(
-    settings.SUPABASE_URL,
-    settings.SUPABASE_SERVICE_ROLE_KEY,
-)
+supabase: Client = _LazySupabase()  # type: ignore[assignment]

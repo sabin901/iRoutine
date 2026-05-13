@@ -14,9 +14,13 @@ export async function updateSession(request: NextRequest) {
   const isPreviewRequest =
     isDashboardRoute && request.nextUrl.searchParams.get('preview') === 'true'
   const hasPreviewCookie = request.cookies.get(previewCookie)?.value === 'true'
+  const wantsPreview = isPublicInsightsRoute || isPreviewRequest || (isDashboardRoute && hasPreviewCookie)
 
-  // Public demo dashboard: allow sample access without Supabase auth.
-  if (isPublicInsightsRoute || isPreviewRequest || (isDashboardRoute && hasPreviewCookie)) {
+  const { url: supabaseUrl, key: supabaseKey } = getSupabaseConfig()
+  const isPlaceholder =
+    supabaseUrl.includes('placeholder') || supabaseKey.includes('placeholder')
+  
+  const createPreviewResponse = () => {
     const requestHeaders = new Headers(request.headers)
     requestHeaders.set('x-preview-mode', 'true')
 
@@ -36,11 +40,19 @@ export async function updateSession(request: NextRequest) {
     return response
   }
 
-  const { url: supabaseUrl, key: supabaseKey } = getSupabaseConfig()
-  const isPlaceholder =
-    supabaseUrl.includes('placeholder') || supabaseKey.includes('placeholder')
-  
+  const clearPreviewCookie = (response: NextResponse) => {
+    response.cookies.set(previewCookie, '', {
+      path: '/',
+      maxAge: 0,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    })
+    return response
+  }
+
   if (isPlaceholder) {
+    if (wantsPreview) return createPreviewResponse()
+
     if (process.env.NODE_ENV === 'production') {
       if (request.nextUrl.pathname.startsWith('/dashboard')) {
         const url = request.nextUrl.clone()
@@ -79,6 +91,12 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  // A real signed-in user always gets their own clean workspace, even after
+  // visiting the public sample dashboard in the same browser.
+  if (user && hasPreviewCookie) clearPreviewCookie(supabaseResponse)
+
+  if (!user && wantsPreview) return createPreviewResponse()
+
   // Protect dashboard routes
   if (isDashboardRoute && !user) {
     const url = request.nextUrl.clone()
@@ -94,7 +112,7 @@ export async function updateSession(request: NextRequest) {
   ) {
     const url = request.nextUrl.clone()
     url.pathname = '/dashboard'
-    return NextResponse.redirect(url)
+    return clearPreviewCookie(NextResponse.redirect(url))
   }
 
   return supabaseResponse

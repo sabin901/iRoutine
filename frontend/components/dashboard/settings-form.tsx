@@ -37,15 +37,29 @@ export function SettingsForm() {
 
       if (!user) return
 
+      const fallbackName =
+        user.user_metadata?.name ||
+        user.email?.split('@')[0] ||
+        ''
+      const fallbackTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
       const { data } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
-        .single()
+        .maybeSingle()
 
       if (data) {
-        setName(data.name || '')
-        setTimezone(data.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone)
+        setName(data.name || fallbackName)
+        setTimezone(data.timezone || fallbackTimezone)
+      } else {
+        setName(fallbackName)
+        setTimezone(fallbackTimezone)
+        await supabase.from('profiles').upsert({
+          id: user.id,
+          name: fallbackName,
+          timezone: fallbackTimezone,
+        }, { onConflict: 'id' })
       }
     } catch (err) {
       console.error('Error loading profile:', err)
@@ -75,11 +89,11 @@ export function SettingsForm() {
 
       const { error } = await supabase
         .from('profiles')
-        .update({
+        .upsert({
+          id: user.id,
           name,
           timezone,
-        })
-        .eq('id', user.id)
+        }, { onConflict: 'id' })
 
       if (error) throw error
 

@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowRight, BatteryMedium, Clock3, Eye, EyeOff, LineChart } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { isDemoMode } from '@/lib/env'
+import { clearPreviewSession, isDemoMode } from '@/lib/env'
+import { clearDemoWorkspace } from '@/lib/demo-data'
 import { getErrorMessage } from '@/lib/errors'
 
 const signupImage =
@@ -47,6 +48,8 @@ export default function SignUpPage() {
     setLoading(true)
 
     try {
+      clearPreviewSession()
+
       if (isDemoMode()) {
         router.push('/dashboard')
         router.refresh()
@@ -69,6 +72,7 @@ export default function SignUpPage() {
         }, { onConflict: 'id' })
       }
 
+      clearDemoWorkspace()
       router.push('/dashboard')
       router.refresh()
     } catch (err: unknown) {

@@ -21,20 +21,21 @@ export default async function DashboardLayout({
 }) {
   const demoMode = isDemoMode()
 
-  // Check if this is a preview visit (unauthenticated sample dashboard)
+  // Preview is only for unauthenticated sample pages. Real auth wins below.
   const headersList = await headers()
   const cookieStore = await cookies()
-  const isPreview =
+  const previewRequested =
     headersList.get('x-preview-mode') === 'true' ||
     cookieStore.get('iroutine_preview')?.value === 'true'
 
-  if (demoMode && process.env.NODE_ENV === 'production' && !isPreview) {
+  if (demoMode && process.env.NODE_ENV === 'production' && !previewRequested) {
     redirect('/auth/login?error=auth_not_configured')
   }
 
   let user: DashboardUser = mockUser
+  let isPreview = previewRequested
 
-  if (!demoMode && !isPreview) {
+  if (!demoMode) {
     const supabase = await createClient()
     const {
       data: { user: authUser },
@@ -42,7 +43,8 @@ export default async function DashboardLayout({
 
     if (authUser) {
       user = authUser
-    } else {
+      isPreview = false
+    } else if (!previewRequested) {
       redirect('/auth/login')
     }
   }

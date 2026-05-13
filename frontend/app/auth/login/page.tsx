@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowRight, BatteryMedium, Clock3, Eye, EyeOff, LineChart } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { isDemoMode } from '@/lib/env'
+import { clearPreviewSession, isDemoMode } from '@/lib/env'
+import { clearDemoWorkspace } from '@/lib/demo-data'
 import { getErrorMessage } from '@/lib/errors'
 
 const loginImage =
@@ -46,6 +47,8 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
+      clearPreviewSession()
+
       if (isDemoMode()) {
         router.push('/dashboard')
         router.refresh()
@@ -55,6 +58,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) throw error
 
+      clearDemoWorkspace()
       router.push('/dashboard')
       router.refresh()
     } catch (err: unknown) {

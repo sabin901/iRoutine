@@ -271,6 +271,30 @@ export function ensureDemoWorkspaceSeeded() {
   }
 }
 
+export function clearDemoWorkspace() {
+  if (typeof window === 'undefined') return
+
+  [
+    'routine_activities',
+    'routine_interruptions',
+    'routine_daily_plans',
+    'routine_product_feedback',
+    'routine_transactions',
+    'routine_budgets',
+    'routine_savings_goals',
+    'routine_tasks',
+    'routine_goals',
+    'routine_habits',
+    'routine_habit_logs',
+    'routine_energy_logs',
+    'routine_daily_reflections',
+    'routine_completed_goals',
+    'routine_daily_reviews',
+    'routine_profile',
+    'routine_demo_seeded_version',
+  ].forEach(key => localStorage.removeItem(key))
+}
+
 export function getActivationState() {
   if (typeof window === 'undefined') {
     const steps = [

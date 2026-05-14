@@ -62,7 +62,12 @@ export default function LoginPage() {
       router.push('/dashboard')
       router.refresh()
     } catch (err: unknown) {
-      setError(getErrorMessage(err, 'Unable to sign in'))
+      const message = getErrorMessage(err, 'Unable to sign in')
+      setError(
+        message.toLowerCase().includes('email not confirmed')
+          ? 'Please confirm your email first, then sign in again.'
+          : message
+      )
     } finally {
       setLoading(false)
     }

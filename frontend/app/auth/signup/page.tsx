@@ -38,6 +38,7 @@ export default function SignUpPage() {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [notice, setNotice] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const supabase = createClient()
@@ -45,6 +46,7 @@ export default function SignUpPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    setNotice(null)
     setLoading(true)
 
     try {
@@ -59,7 +61,10 @@ export default function SignUpPage() {
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { name } },
+        options: {
+          data: { name },
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+        },
       })
 
       if (signUpError) throw signUpError
@@ -72,9 +77,14 @@ export default function SignUpPage() {
         }, { onConflict: 'id' })
       }
 
-      clearDemoWorkspace()
-      router.push('/dashboard')
-      router.refresh()
+      if (data.session) {
+        clearDemoWorkspace()
+        router.push('/dashboard')
+        router.refresh()
+        return
+      }
+
+      setNotice('Account created. Check your email to confirm it, then sign in from this device.')
     } catch (err: unknown) {
       setError(getErrorMessage(err, 'Unable to create account'))
     } finally {
@@ -154,6 +164,11 @@ export default function SignUpPage() {
                 {error && (
                   <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
                     {error}
+                  </div>
+                )}
+                {notice && (
+                  <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+                    {notice}
                   </div>
                 )}
 

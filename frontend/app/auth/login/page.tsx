@@ -66,6 +66,8 @@ export default function LoginPage() {
       setError(
         message.toLowerCase().includes('email not confirmed')
           ? 'Please confirm your email first, then sign in again.'
+          : message.toLowerCase().includes('failed to fetch')
+            ? 'Sign in is temporarily unavailable because the authentication service cannot be reached.'
           : message
       )
     } finally {

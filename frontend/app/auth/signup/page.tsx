@@ -86,7 +86,12 @@ export default function SignUpPage() {
 
       setNotice('Account created. Check your email to confirm it, then sign in from this device.')
     } catch (err: unknown) {
-      setError(getErrorMessage(err, 'Unable to create account'))
+      const message = getErrorMessage(err, 'Unable to create account')
+      setError(
+        message.toLowerCase().includes('failed to fetch')
+          ? 'Account creation is temporarily unavailable because the authentication service cannot be reached.'
+          : message
+      )
     } finally {
       setLoading(false)
     }
